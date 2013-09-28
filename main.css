@@ -71,7 +71,7 @@ h1 {
 }
 
 nav {
-    background: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.75);
     height: 80px;
     max-width: 1248px;
     margin: 0 auto;
@@ -80,6 +80,7 @@ nav {
 nav .inner{
     position: relative;
     float:left;
+    -moz-box-sizing: border-box;
     box-sizing: border-box;
     padding: 0 40px;
     width:100%;
@@ -188,8 +189,9 @@ a#lang-switcher{
     top:0;
     width:100%;
     bottom:0;
-    background: #393b40;
-    background-image: -webkit-gradient( linear, left bottom, left top, color-stop(0, rgb(42,42,45)), color-stop(1, rgb(55,55,58)) );
+    background: #eaeaea;
+    /*background: #393b40;
+    background-image: -webkit-gradient( linear, left bottom, left top, color-stop(0, rgb(42,42,45)), color-stop(1, rgb(55,55,58)) );*/
 }
 
 .blurb {
@@ -205,7 +207,8 @@ a#lang-switcher{
     padding-left: 50px;
 }
 .blurb.top{
-    position:relative;
+    position:adsolute;
+    left:470px;
     vertical-align: top;
 }
 .img-right{
@@ -253,14 +256,14 @@ a#lang-switcher{
 }
 
 #screens {
-    height: 1540px;
+    height: 1560px;
 }
 #gallery {
     margin: 60px 0 0 60px;
 }
 #gallery img {
     float: left;
-    padding-bottom: 20px;
+    padding-bottom: 30px;
     padding-right: 30px;
     width:260px;
     height: 462px;

@@ -68,9 +68,13 @@ App = {
         var checkCredits = function(top){
             var k = 1, tK = top / document.body.scrollHeight;
             if (top > window.innerHeight - 100) {
-                k = 2.3;
+                k = -0.8;
             }
-            var i = Math.round(130 + 170 * k * tK);
+
+            if (top > window.innerHeight*2 - 100) {
+                k = -0.5;
+            }
+            var i = Math.round(130 + 70 * k * tK);
             if (i > 255) {
                 i = 255;
             }
@@ -135,8 +139,10 @@ App = {
         }
         T.byId("tablet").style.top = tabletTop + Style.navHeight + 20 + 'px';
         T.byId("demo-frame").style.top = T.byId("tablet").offsetTop + 162*k + 'px';
+
+        T.byId("tablet").style.left = 470 + 'px';
         if (k < 1) {
-            T.byId("tablet").style.left = (750 - T.byId("tablet").width) / 2 + 'px';
+            T.byId("tablet").style.left = 450 + (750 - T.byId("tablet").width) / 2 + 'px';
         }
         T.byId("demo-frame").style.left = T.byId("tablet").offsetLeft + 70*k + 'px';
         T.byId("demo-frame").style.height = 862*k + 'px';
