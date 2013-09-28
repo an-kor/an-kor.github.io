@@ -120,7 +120,6 @@ App = {
             T.byId("iphone").height = Math.round(samsungH*k);
             T.byId("iphone").width = Math.round(T.byId("iphone").width*k);
         }
-
         var tabletH = T.byId("tablet").height;
         k = 1;
         if (tabletH > windowH) {
