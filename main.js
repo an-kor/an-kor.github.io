@@ -67,12 +67,12 @@ App = {
         //    T.byId("top").style.height = window.innerHeight + 'px';
         var checkCredits = function(top){
             var k = 1, tK = top / document.body.scrollHeight;
-            if (tK > 0.3) {
-                k = 2;
+            if (top > window.innerHeight - 100) {
+                k = 2.3;
             }
             var i = Math.round(130 + 170 * k * tK);
-            if (i > 240) {
-                i = 240;
+            if (i > 255) {
+                i = 255;
             }
             T.byId("msg-credits").style.color = "rgba("+i+","+i+","+i+",0.9)"
         };
