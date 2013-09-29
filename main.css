@@ -186,12 +186,12 @@ a#lang-switcher{
     background: #45474d;
     background-image: -webkit-gradient( linear, left bottom, left top, color-stop(0, rgb(59,61,67)), color-stop(1, rgb(123,125,130)) );
 }
-.top-bg-darkgray{
+.top-bg-white{
     position: absolute;
     top:0;
     width:100%;
     bottom:0;
-    background: #eaeaea;
+    background: #f0f0f0;
     /*background: #393b40;
     background-image: -webkit-gradient( linear, left bottom, left top, color-stop(0, rgb(42,42,45)), color-stop(1, rgb(55,55,58)) );*/
 }
@@ -258,10 +258,10 @@ a#lang-switcher{
 }
 
 #screens {
-    height: 1560px;
+    height: 1600px;
 }
 #gallery {
-    margin: 60px 0 0 60px;
+    margin: 80px 0 0 60px;
 }
 #gallery img {
     float: left;
