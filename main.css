@@ -67,6 +67,7 @@ h1 {
     z-index: 99999999;
     background: transparent;
     width: 100%;
+    min-width: 1248px;
     height: 80px;
 }
 
@@ -173,8 +174,8 @@ a#lang-switcher{
     top:0;
     width:100%;
     bottom:0;
-    background-color: #fff;
-    background-image: url(./img/light_gray_bg.jpg);
+    background-color: #afb2b9;
+    background-image: url(./img/light_gray_bg.jpg) repeat-x;
 }
 .top-bg-gray{
     position: absolute;

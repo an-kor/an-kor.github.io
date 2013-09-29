@@ -64,7 +64,7 @@ App = {
         T.byId('msg-screens').className="hover";
     },
     init: function(){
-        //    T.byId("top").style.height = window.innerHeight + 'px';
+        FastClick.attach(document.body);
         var checkCredits = function(top){
             var k = 1, tK = top / document.body.scrollHeight;
             if (top > window.innerHeight - 100) {
