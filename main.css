@@ -175,7 +175,8 @@ a#lang-switcher{
     width:100%;
     bottom:0;
     background-color: #afb2b9;
-    background-image: url(./img/light_gray_bg.jpg) repeat-x;
+    background-image: url(./img/light_gray_bg.jpg);
+    background-repeat: repeat-x;
 }
 .top-bg-gray{
     position: absolute;
