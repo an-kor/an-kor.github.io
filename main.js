@@ -86,13 +86,13 @@ App = {
             checkCredits(top);
 
             if (!animRunning) {
-                if (top < window.innerHeight - 100) {
+                if (top < window.innerHeight*0.75) {
                     App.scroll_about()
                 }
-                if (top >= window.innerHeight - 100 && top < window.innerHeight * 2 - 100) {
+                if (top >= window.innerHeight*0.75 && top < window.innerHeight + window.innerHeight*0.75) {
                     App.scroll_demo()
                 }
-                if (top >= window.innerHeight*2 - 100) {
+                if (top >= window.innerHeight + window.innerHeight*0.75) {
                     App.scroll_screens();
                 }
             }
@@ -147,7 +147,7 @@ App = {
         T.byId("demo-frame").style.left = T.byId("tablet").offsetLeft + 70*k + 'px';
         T.byId("demo-frame").style.height = 862*k + 'px';
         T.byId("demo-frame").style.width = 561*k + 'px';
-        T.byId("demo-frame").src="http://001.taxi.taxamobile.ru:5902";
+        T.byId("demo-frame").src="http://100.taxi.taxamobile.ru:5902";
     }
 };
 T.bindReady(App.init);

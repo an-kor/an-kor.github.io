@@ -174,8 +174,10 @@ a#lang-switcher{
     top:0;
     width:100%;
     bottom:0;
-    background-color: #afb2b9;
-    background-image: url(./img/light_gray_bg.jpg);
+    background-color: #f1f2f4;
+    background-image:-moz-linear-gradient(top, rgba(241,242,244,1) 0%, rgba(175,178,185,1) 100%);
+    background-image: -webkit-gradient( linear, left bottom, left top, color-stop(0, rgb(175,178,185)), color-stop(1, rgb(241,242,244)) );
+    background-image: linear-gradient(to bottom, rgba(241,242,244,1) 0%, rgba(175,178,185,1) 100%);
     background-repeat: repeat-x;
 }
 .top-bg-gray{
@@ -184,7 +186,9 @@ a#lang-switcher{
     width:100%;
     bottom:0;
     background: #45474d;
+    background-image: -moz-linear-gradient(top, rgba(123,125,130,1) 0%, rgba(59,61,67,1) 100%);
     background-image: -webkit-gradient( linear, left bottom, left top, color-stop(0, rgb(59,61,67)), color-stop(1, rgb(123,125,130)) );
+    background-image: linear-gradient(to bottom, rgba(123,125,130,1) 0%, rgba(59,61,67,1) 100%);
 }
 .top-bg-white{
     position: absolute;
