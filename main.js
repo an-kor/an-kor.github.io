@@ -92,7 +92,7 @@ App = {
                 if (top >= window.innerHeight*0.75 && top < window.innerHeight + window.innerHeight*0.75) {
                     App.scroll_demo()
                 }
-                if (top >= window.innerHeight + window.innerHeight*0.75) {
+                if (top >= document.body.scrollHeight - 1800) {
                     App.scroll_screens();
                 }
             }
