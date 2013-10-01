@@ -147,7 +147,7 @@ App = {
         T.byId("demo-frame").style.left = T.byId("tablet").offsetLeft + 70*k + 'px';
         T.byId("demo-frame").style.height = 862*k + 'px';
         T.byId("demo-frame").style.width = 561*k + 'px';
-        T.byId("demo-frame").src="http://100.taxi.taxamobile.ru:5902";
+        T.byId("demo-frame").src="http://101.taxi.taxamobile.ru:5902";
     }
 };
 T.bindReady(App.init);
