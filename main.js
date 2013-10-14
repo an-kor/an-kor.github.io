@@ -1,4 +1,4 @@
-
+var lang = 0;
 Style={
     navHeight: 80
 };
@@ -8,6 +8,39 @@ T = {
     },
     bindReady: function(handler){
         window.onload = handler;
+        if (navigator.language.indexOf('ru')  == -1 || location.hash =='#en') {
+            document.addEventListener('DOMContentLoaded', function() {
+                lang = 1;
+                T.byId('msg-about').innerHTML = '<span>Info</span>';
+                T.byId('msg-demo').innerHTML = '<span>Demo</span>';
+                T.byId('msg-screens').innerHTML = '<span>Screens</span>';
+                T.byId('msg-blog').innerHTML = '<span>Blog</span>';
+                T.byId('block1-header').innerHTML = 'Taxi Driver App';
+                T.byId('block1-msg').innerHTML =
+                '1. GPS tracking <br/>' +
+                '2. See orders on a city map <br/>' +
+                '3. Built-in navigation with route planning <br/>' +
+                '4. Live voice chat <br/>' +
+                '5. Payment using Visa/Master Card <br/>' +
+                '6. Offline mode <br/>' +
+                '7. Photoreport';
+                T.byId('block1-link').innerHTML = 'Scroll to live demo';
+
+                T.byId('block2-header').innerHTML = 'Try live demo &rarr;';
+                T.byId('block2-msg').innerHTML =
+                        'Our application works on Android, iOS, Windows Phone platforms and in any modern browser. You can see this straight on this page. Just click on Sign in button to explore most of the features ' +
+                        '(but only mobile application will give you the full experience, with features like a walkie-talkie or support for Visa/MasterCard card readers)';
+                T.byId('block2-link').innerHTML = 'Scroll to screenshots';
+
+                T.byId('footer-links').innerHTML =
+                    ' <a href="#about">About app</a> ·'+
+                    ' <a href="#demo">Live Demo</a> ·'+
+                    ' <a href="#screens">Screens</a> ·'+
+                    ' <a href="#blog">Blog</a> ·'+
+                    ' <a href="#contacts">Contacts</a>'+
+                    ' <a href="#ru" onclick="location.hash = \'\'; location.reload(); return false;" id="lang-switcher">In Russian</a>';
+        })
+        }
     },
     isAnimate: 0,
     animateScroll: function (y) {
@@ -65,6 +98,18 @@ App = {
     },
     init: function(){
         FastClick.attach(document.body);
+        if (!lang) {
+            T.byId('hover-div').style.width = '125px';
+            setTimeout(function(){
+                T.byId('hover-div').style.transition = 'left 0.75s, width 0.75s';
+            }, 100)
+        } else {
+
+            T.byId('hover-div').style.width = T.byId('msg-about').offsetWidth - 35 + 'px';
+            setTimeout(function(){
+                T.byId('hover-div').style.transition = 'left 0.75s, width 0.75s';
+            }, 100)
+        }
         var checkCredits = function(top){
             var k = 1, tK = top / document.body.scrollHeight;
             if (top > window.innerHeight - 100) {

@@ -121,13 +121,10 @@ nav #hover-div{
     left: 35px;
     height: 20px;
     top: 20px;
-    width:125px;
     background: #c50000;
     color: #fff;
     padding: 10px 15px;
     opacity: 0.85;
-    transition: left 0.75s, width 0.75s;
-    -webkit-transition: left 0.75s, width 0.75s;
 }
 nav p {
 

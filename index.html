@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Taxa - Android / iOS / Web app</title>
+    <title>Taxa - Android / iOS / Web app for taxi driver</title>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta name="viewport" id="vp" content="user-scalable=yes,maximum-scale=1,width=1248, target-densitydpi=device-dpi">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -32,8 +32,8 @@
             <div class="inner group">
                 <div class="blurb">
                     <span class="bar"><i class="progress"></i></span>
-                    <h1 style="max-width: 380px; color: #45474d;">Приложение для водителя такси</h1>
-                    <p>
+                    <h1 style="max-width: 380px; color: #45474d;" id="block1-header">Приложение для водителя такси</h1>
+                    <p id="block1-msg">
                         1. GPS таксометр <br/>
                         2. Встроенная рация <br/>
                         3. Заказы на карте города <br/>
@@ -42,7 +42,7 @@
                         6. Проговаривание стоимости <br/>
                         7. Фотоотчет
                     </p>
-                    <a href="javascript:void(0)" onclick="T.byId('msg-demo').onclick()" class="btn next">Перейти к демо-версии</a>
+                    <a href="javascript:void(0)" onclick="T.byId('msg-demo').onclick()" class="btn next" id="block1-link">Перейти к демо-версии</a>
                 </div>
 
                 <div class="blurb right">
@@ -58,14 +58,14 @@
             <div class="inner group">
                 <div class="blurb">
                     <span class="bar"><i class="progress"></i></span>
-                    <h1>Попробуйте демо-версию &rarr;</h1>
-                    <p style="color: #aaa">
+                    <h1 id="block2-header">Попробуйте демо-версию &rarr;</h1>
+                    <p style="color: #aaa" id="block2-msg">
                         Наше приложение работает на платформах Android, iOS, Windows Phone,
                         а также во всех современных браузерах, в чем вы можете убедиться прямо на этой странице.
                         Используйте демо-доступ для изучения возможностей (но только мобильные приложения дадут вам
                         полный функционал, например, рацию или поддержку считывателей карт Visa/MasterCard)
                     </p>
-                    <a href="javascript:void(0)" onclick="T.byId('msg-screens').onclick()" class="btn next">Снимки экранов приложения</a>
+                    <a href="javascript:void(0)" onclick="T.byId('msg-screens').onclick()" class="btn next" id="block2-link">Снимки экранов приложения</a>
                 </div>
 
                 <div class="blurb right top">
@@ -98,14 +98,14 @@
         <div class="inner">
             <p class="copy">© 2013 Andrey Korolkov </p>
             <div class="links">
-                <div class="list">
+                <div class="list" id ="footer-links">
                     <a href="#about">О приложении</a> ·
                     <a href="#demo">Демо-версия</a> ·
                     <a href="#screens">Скриншоты</a> ·
-                    <a href="/blog">Блог</a> ·
+                    <a href="#blog">Блог</a> ·
                     <a href="#contacts">Контакты</a>
 
-                    <a href="#" id="lang-switcher">In English</a>
+                    <a href="/#en" onclick="location.hash = 'en'; location.reload(); return false;" id="lang-switcher">In English</a>
                 </div>
             </div>
         </div>
