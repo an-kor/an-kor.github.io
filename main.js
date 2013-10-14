@@ -8,8 +8,8 @@ T = {
     },
     bindReady: function(handler){
         window.onload = handler;
-        if (navigator.language.indexOf('ru')  == -1 || location.hash =='#en') {
-            document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function() {
+            if (navigator.language.indexOf('ru')  == -1 || location.hash =='#en') {
                 lang = 1;
                 T.byId('msg-about').innerHTML = '<span>Info</span>';
                 T.byId('msg-demo').innerHTML = '<span>Demo</span>';
@@ -39,8 +39,20 @@ T = {
                     ' <a href="#blog">Blog</a> ·'+
                     ' <a href="#contacts">Contacts</a>'+
                     ' <a href="#ru" onclick="location.hash = \'\'; location.reload(); return false;" id="lang-switcher">In Russian</a>';
+            }
+
+            if (!lang) {
+                T.byId('hover-div').style.width = '125px';
+                setTimeout(function(){
+                    T.byId('hover-div').style.transition = 'left 0.75s, width 0.75s';
+                }, 100)
+            } else {
+                T.byId('hover-div').style.width = T.byId('msg-about').offsetWidth - 35 + 'px';
+                setTimeout(function(){
+                    T.byId('hover-div').style.transition = 'left 0.75s, width 0.75s';
+                }, 100)
+            }
         })
-        }
     },
     isAnimate: 0,
     animateScroll: function (y) {
@@ -98,18 +110,6 @@ App = {
     },
     init: function(){
         FastClick.attach(document.body);
-        if (!lang) {
-            T.byId('hover-div').style.width = '125px';
-            setTimeout(function(){
-                T.byId('hover-div').style.transition = 'left 0.75s, width 0.75s';
-            }, 100)
-        } else {
-
-            T.byId('hover-div').style.width = T.byId('msg-about').offsetWidth - 35 + 'px';
-            setTimeout(function(){
-                T.byId('hover-div').style.transition = 'left 0.75s, width 0.75s';
-            }, 100)
-        }
         var checkCredits = function(top){
             var k = 1, tK = top / document.body.scrollHeight;
             if (top > window.innerHeight - 100) {
