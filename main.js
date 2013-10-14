@@ -26,7 +26,7 @@ T = {
                 '7. Photoreport';
                 T.byId('block1-link').innerHTML = 'Scroll to live demo';
 
-                T.byId('block2-header').innerHTML = 'Try live demo &rarr;';
+                T.byId('block2-header').innerHTML = 'Try the demo &rarr;';
                 T.byId('block2-msg').innerHTML =
                         'Our application works on Android, iOS, Windows Phone platforms and in any modern browser. You can see this straight on this page. Just click on Sign in button to explore most of the features ' +
                         '(but only mobile application will give you the full experience, with features like a walkie-talkie or support for Visa/MasterCard card readers)';
