@@ -1,4 +1,3 @@
-var lang = 0;
 Style={
     navHeight: 80
 };
@@ -9,6 +8,7 @@ T = {
     bindReady: function(handler){
         window.onload = handler;
         document.addEventListener('DOMContentLoaded', function() {
+            var lang = 0;
             if (navigator.language.indexOf('ru')  == -1 || location.hash =='#en') {
                 lang = 1;
                 T.byId('msg-about').innerHTML = '<span>Info</span>';
