@@ -28,7 +28,7 @@ T = {
 
                 T.byId('block2-header').innerHTML = 'Try the demo &rarr;';
                 T.byId('block2-msg').innerHTML =
-                        'Our application works on Android, iOS, Windows Phone platforms and in any modern browser. You can see this straight on this page. Just click on Sign in button to explore most of the features ' +
+                        'The application works on Android, iOS, Windows Phone platforms and in any modern browser. You can check it on this page. Just click Sign&nbsp;in button to explore most of the features ' +
                         '(but only mobile application will give you the full experience, with features like a walkie-talkie or support for Visa/MasterCard card readers)';
                 T.byId('block2-link').innerHTML = 'Scroll to screenshots';
 
