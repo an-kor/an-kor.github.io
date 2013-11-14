@@ -1,0 +1,426 @@
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    outline: none !important;
+    -ms-touch-action: none;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+}
+input, select {
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+    -webkit-focus-ring-color:  rgba(0, 0, 0, 0);
+    backround: rgba(0,0,0,0);
+    border-radius: 0;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+input[type="tel"]::-webkit-outer-spin-button { display: none; }
+input[type="tel"]::-webkit-inner-spin-button { display: none; }
+input[disabled]{ color:black }
+select[disabled]{ color:black }
+body {
+    overflow: hidden;
+    font-family:sans-serif;
+    -webkit-user-select: none;
+    -webkit-backface-visibility: hidden;
+}
+html {
+    -ms-touch-action: none;
+}
+
+html,
+button,
+input,
+select,
+textarea {
+    color: #222;
+}
+
+body {
+    font-size: 1em;
+    line-height: 1.4;
+}
+
+a {
+    color: #00e;
+}
+
+a:visited {
+    color: #551a8b;
+}
+
+a:hover {
+    color: #06e;
+}
+
+img {
+    vertical-align: middle;
+}
+
+fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+textarea {
+    resize: vertical;
+}
+ul,li{
+    list-style: none;
+    margin: 0;
+    padding:0;
+}
+a {
+    text-decoration: none;
+}
+/* ==========================================================================
+Let's Deal CSS
+   ========================================================================== */
+
+#container {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+}
+
+#pages-wrapper {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #ddd;
+    overflow: hidden;
+}
+
+#pages-scroller {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    bottom:0;
+    left: 0;
+    width: 100%;
+}
+.scroller {
+    position: absolute;
+    z-index: 1;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    -webkit-transform: translateZ(0);
+    -moz-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    -o-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-text-size-adjust: none;
+    -moz-text-size-adjust: none;
+    -ms-text-size-adjust: none;
+    -o-text-size-adjust: none;
+    text-size-adjust: none;
+}
+
+#footer{
+    position:absolute;
+    overflow: hidden;
+    bottom:0;
+    width:100%;
+}
+#footer-tabs{
+    width:100%;
+    height: 100%;
+    list-style: none;
+    margin: 0;
+    padding:0;
+    background: gray;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flexbox;
+    display: flex;
+}
+#footer-tabs li {
+    display: block;
+    width: 25%;
+    text-align: center;
+}
+#footer-tabs a {
+    display: block;
+    color:white;
+    width: 100%;
+}
+#footer-tabs a:hover {
+    color: black;
+}
+
+
+#top-menu-wrapper {
+    position: absolute;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    overflow: hidden;
+}
+#top-menu-wrapper ul{
+    text-align: center;
+}
+#top-menu-wrapper li{
+    display: block;
+    float: left;
+    overflow: hidden;
+}
+
+#top-menu-wrapper li a {
+    padding:0;
+    display: block;
+    color:black;
+    width: 100%;
+}
+#top-menu-wrapper a:hover {
+    font-weight: bold;
+}
+
+#main-page-wrapper {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+}
+
+#main-page-scroller {
+    position: absolute;
+    z-index: 1;
+    bottom: 0;
+}
+
+#main-page-scroller-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+#main-page-scroller-list > li {
+    display: block;
+    float: left;
+    height:100%;
+    border-right: 1px solid #ccc;
+    background-color: #fafafa;
+    position: relative;
+}
+
+
+.main-v-wrapper {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #ccc;
+    overflow: hidden;
+}
+.main-v-scroller {
+    width: 100%;
+}
+.main-v-scroller > ul {
+    list-style: none;
+    width: 100%;
+    text-align: left;
+}
+
+.main-v-scroller > ul > li {
+    padding: 0 10px;
+    width: 100%;
+    line-height: 40px;
+    border-bottom: 1px solid #ccc;
+    border-top: 1px solid #fff;
+    background-color: #fafafa;
+}
+#pages-scroller {
+
+    display: -webkit-box;
+    display: -webkit-flexbox;
+    display: flex;
+    -webkit-box-pack:center;
+    -webkit-box-align:center;
+    -webkit-flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+#pages-scroller > div {
+    width:50%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+#another-page {
+    width: 100%;
+    height: 100%;
+    background: black;
+    color: white;
+    z-index: 1000;
+    position: absolute;
+    display: -webkit-box;
+    display: -webkit-flexbox;
+    display: flex;
+    -webkit-box-pack:center;
+    -webkit-box-align:center;
+    -webkit-flex-flow: row wrap;
+    justify-content: center;
+    align-items: center;
+}
+#another-page a{
+    color: white;
+    padding:40px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ==========================================================================
+   Helper classes
+   ========================================================================== */
+
+/* Prevent callout */
+
+.nocallout {
+    -webkit-touch-callout: none;
+}
+
+.pressed {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+/* A hack for HTML5 contenteditable attribute on mobile */
+
+textarea[contenteditable] {
+    -webkit-appearance: none;
+}
+
+/* A workaround for S60 3.x and 5.0 devices which do not animated gif images if
+   they have been set as display: none */
+
+.gifhidden {
+    position: absolute;
+    left: -100%;
+}
+
+/*
+ * Image replacement
+ */
+
+.ir {
+    background-color: transparent;
+    background-repeat: no-repeat;
+    border: 0;
+    direction: ltr;
+    display: block;
+    overflow: hidden;
+    text-align: left;
+    text-indent: -999em;
+}
+
+.ir br {
+    display: none;
+}
+
+/*
+ * Hide from both screenreaders and browsers: h5bp.com/u
+ */
+
+.hidden {
+    display: none !important;
+    visibility: hidden;
+}
+
+/*
+ * Hide only visually, but have it available for screenreaders: h5bp.com/v
+ */
+
+.visuallyhidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+/*
+ * Extends the .visuallyhidden class to allow the element to be focusable
+ * when navigated to via the keyboard: h5bp.com/p
+ */
+
+.visuallyhidden.focusable:active,
+.visuallyhidden.focusable:focus {
+    clip: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    position: static;
+    width: auto;
+}
+
+/*
+ * Hide visually and from screenreaders, but maintain layout
+ */
+
+.invisible {
+    visibility: hidden;
+}
+
+/**
+ * Clearfix helper
+ * Used to contain floats: h5bp.com/q
+ */
+
+.clearfix:before,
+.clearfix:after {
+    content: "";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+/*
+ * For IE 6/7 only
+ * Include this rule to trigger hasLayout and contain floats.
+ */
+
+.clearfix {
+    *zoom: 1;
+}
