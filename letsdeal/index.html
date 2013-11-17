@@ -29,6 +29,7 @@
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/main.css">
     <script type="text/javascript" src="js/helper.js"></script>
+    <script type="text/javascript" src="js/deals.js"></script>
     <script type="text/javascript" src="js/vendor/fastclick.js"></script>
     <script type="text/javascript" src="js/vendor/iscroll.js"></script>
 </head>
@@ -44,121 +45,25 @@
                         <ul id="main-page-scroller-list">
                             <li>
                                 <div class="main-v-wrapper" id="wrapper1">
-                                    <div class="main-v-scroller scroller">
-
-                                        <ul>
-                                            <li>Item 1</li>
-                                            <li>Item 2</li>
-                                            <li>Item 3</li>
-                                            <li>Item 4</li>
-                                            <li>Item 5</li>
-                                            <li>Item 6</li>
-                                            <li>Item 7</li>
-                                            <li>Item 8</li>
-                                            <li>Item 9</li>
-                                            <li>Item 10</li>
-                                            <li>Item 11</li>
-                                            <li>Item 12</li>
-                                            <li>Item 13</li>
-                                            <li>Item 14</li>
-                                            <li>Item 15</li>
-                                            <li>Item 16</li>
-                                            <li>Item 17</li>
-                                            <li>Item 18</li>
-                                            <li>Item 19</li>
-                                            <li>Item 20</li>
-                                            <li>Item 21</li>
-                                            <li>Item 22</li>
-                                            <li>Item 23</li>
-                                            <li>Item 24</li>
-                                            <li>Item 25</li>
-                                            <li>Item 26</li>
-                                            <li>Item 27</li>
-                                            <li>Item 28</li>
-                                            <li>Item 29</li>
-                                            <li>Item 30</li>
+                                    <div class="deallist scroller">
+                                        <ul id="deallist1">
                                         </ul>
-
                                     </div>
                                 </div>
                             </li>
                             <li>
                                 <div class="main-v-wrapper" id="wrapper2">
-                                    <div class="main-v-scroller scroller">
-
-                                        <ul>
-                                            <li>Item 1</li>
-                                            <li>Item 2</li>
-                                            <li>Item 3</li>
-                                            <li>Item 4</li>
-                                            <li>Item 5</li>
-                                            <li>Item 6</li>
-                                            <li>Item 7</li>
-                                            <li>Item 8</li>
-                                            <li>Item 9</li>
-                                            <li>Item 10</li>
-                                            <li>Item 11</li>
-                                            <li>Item 12</li>
-                                            <li>Item 13</li>
-                                            <li>Item 14</li>
-                                            <li>Item 15</li>
-                                            <li>Item 16</li>
-                                            <li>Item 17</li>
-                                            <li>Item 18</li>
-                                            <li>Item 19</li>
-                                            <li>Item 20</li>
-                                            <li>Item 21</li>
-                                            <li>Item 22</li>
-                                            <li>Item 23</li>
-                                            <li>Item 24</li>
-                                            <li>Item 25</li>
-                                            <li>Item 26</li>
-                                            <li>Item 27</li>
-                                            <li>Item 28</li>
-                                            <li>Item 29</li>
-                                            <li>Item 30</li>
+                                    <div class="deallist scroller">
+                                        <ul id="deallist2">
                                         </ul>
-
                                     </div>
                                 </div>
                             </li>
                             <li>
                                 <div class="main-v-wrapper" id="wrapper3">
-                                    <div class="main-v-scroller scroller">
-
-                                        <ul>
-                                            <li>Item 1</li>
-                                            <li>Item 2</li>
-                                            <li>Item 3</li>
-                                            <li>Item 4</li>
-                                            <li>Item 5</li>
-                                            <li>Item 6</li>
-                                            <li>Item 7</li>
-                                            <li>Item 8</li>
-                                            <li>Item 9</li>
-                                            <li>Item 10</li>
-                                            <li>Item 11</li>
-                                            <li>Item 12</li>
-                                            <li>Item 13</li>
-                                            <li>Item 14</li>
-                                            <li>Item 15</li>
-                                            <li>Item 16</li>
-                                            <li>Item 17</li>
-                                            <li>Item 18</li>
-                                            <li>Item 19</li>
-                                            <li>Item 20</li>
-                                            <li>Item 21</li>
-                                            <li>Item 22</li>
-                                            <li>Item 23</li>
-                                            <li>Item 24</li>
-                                            <li>Item 25</li>
-                                            <li>Item 26</li>
-                                            <li>Item 27</li>
-                                            <li>Item 28</li>
-                                            <li>Item 29</li>
-                                            <li>Item 30</li>
+                                    <div class="deallist scroller">
+                                        <ul id="deallist3">
                                         </ul>
-
                                     </div>
                                 </div>
                             </li>
@@ -167,9 +72,9 @@
 
                     <div id="top-menu-wrapper">
                         <ul id="top-menu-tabs">
-                            <li><a href="javascript:App.mainPageHScroll.scrollToElement(document.querySelector('#main-page-scroller-list > li:nth-child(1)'), 700, null, null, IScroll.ease.bounce)">Section&nbsp;One</a></li>
-                            <li><a href="javascript:App.mainPageHScroll.scrollToElement(document.querySelector('#main-page-scroller-list > li:nth-child(2)'), 700, null, null, IScroll.ease.bounce)">Another&nbsp;section</a></li>
-                            <li><a href="javascript:App.mainPageHScroll.scrollToElement(document.querySelector('#main-page-scroller-list > li:nth-child(3)'), 700, null, null, IScroll.ease.bounce)">And&nbsp;one&nbsp;more</a></li>
+                            <li><a href="javascript:App.mainPageHScroll.scrollToElement(document.querySelector('#main-page-scroller-list > li:nth-child(1)'), 700, null, null, IScroll.ease.quadratic2);">Shopping</a></li>
+                            <li><a href="javascript:App.mainPageHScroll.scrollToElement(document.querySelector('#main-page-scroller-list > li:nth-child(2)'), 700, null, null, IScroll.ease.quadratic2);">Stockholm</a></li>
+                            <li><a href="javascript:App.mainPageHScroll.scrollToElement(document.querySelector('#main-page-scroller-list > li:nth-child(3)'), 700, null, null, IScroll.ease.quadratic2);">Resort</a></li>
                         </ul>
                     </div>
                 </div>

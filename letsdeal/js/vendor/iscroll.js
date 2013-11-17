@@ -177,6 +177,13 @@ var utils = (function () {
 				return ( k = k - 1 ) * k * ( ( b + 1 ) * k + b ) + 1;
 			}
 		},
+
+        quadratic2: {
+            style: '',
+            fn: function (k) {
+                return k * ( 2 - k );
+            }
+        },
 		bounce: {
 			style: '',
 			fn: function (k) {
@@ -513,6 +520,7 @@ IScroll.prototype = {
 			e.preventDefault();
 		}
 
+        this._execEvent('touchEnd');
 		var point = e.changedTouches ? e.changedTouches[0] : e,
 			momentumX,
 			momentumY,
@@ -794,7 +802,6 @@ IScroll.prototype = {
 		if ( this.options.useTransform ) {
 
 /* REPLACE START: _translate */
-
 			this.scrollerStyle[utils.style.transform] = 'translate(' + x + 'px,' + y + 'px)' + this.translateZ;
 
 /* REPLACE END: _translate */
@@ -808,6 +815,7 @@ IScroll.prototype = {
 
 		this.x = x;
 		this.y = y;
+        this._execEvent('translate');
 
 
 	if ( this.indicators ) {
