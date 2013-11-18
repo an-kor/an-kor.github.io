@@ -47,22 +47,27 @@ var utils = (function () {
 		el.removeEventListener(type, fn, !!capture);
 	};
 
-	me.momentum = function (current, start, time, lowerMargin, wrapperSize) {
+	me.momentum = function (current, start, time, lowerMargin, wrapperSize, options) {
 		var distance = current - start,
-			speed = Math.abs(distance) / time,
+			speed = Math.abs(distance) / time*options.speedRatio,
 			destination,
 			duration,
-			deceleration = 0.0006;
-
+			deceleration = options.deceleration;
 		destination = current + ( speed * speed ) / ( 2 * deceleration ) * ( distance < 0 ? -1 : 1 );
 		duration = speed / deceleration;
+        if (options.maxMomentumDistance) {
+            if (Math.abs(current - destination) > options.maxMomentumDistance) {
+                destination = current + ((start - current)<0?1:-1)*options.maxMomentumDistance
+                duration = options.maxMomentumDuration / speed;
+            }
+        }
 
 		if ( destination < lowerMargin ) {
-			destination = wrapperSize ? lowerMargin - ( wrapperSize / 2.5 * ( speed / 8 ) ) : lowerMargin;
+			destination = wrapperSize ? lowerMargin - ( wrapperSize / 2.5 * ( speed / 16 ) ) : lowerMargin;
 			distance = Math.abs(destination - current);
 			duration = distance / speed;
 		} else if ( destination > 0 ) {
-			destination = wrapperSize ? wrapperSize / 2.5 * ( speed / 8 ) : 0;
+			destination = wrapperSize ? wrapperSize / 2.5 * ( speed / 16 ) : 0;
 			distance = Math.abs(current) + destination;
 			duration = distance / speed;
 		}
@@ -269,7 +274,12 @@ function IScroll (el, options) {
 
 		HWCompositing: true,
 		useTransition: true,
-		useTransform: true
+		useTransform: true,
+
+        deceleration: 0.0006,
+        speedRatio: 1,
+        maxMomentumDistance: 0,
+        maxMomentumDuration: 0
 	};
 
 	for ( var i in options ) {
@@ -476,7 +486,7 @@ IScroll.prototype = {
 
 		deltaX = this.hasHorizontalScroll ? deltaX : 0;
 		deltaY = this.hasVerticalScroll ? deltaY : 0;
-
+        //deltaY = deltaY * 0.3;
 		newX = this.x + deltaX;
 		newY = this.y + deltaY;
 
@@ -563,8 +573,8 @@ IScroll.prototype = {
 
 		// start momentum animation if needed
 		if ( this.options.momentum && duration < 300 ) {
-			momentumX = this.hasHorizontalScroll ? utils.momentum(this.x, this.startX, duration, this.maxScrollX, this.options.bounce ? this.wrapperWidth : 0) : { destination: newX, duration: 0 };
-			momentumY = this.hasVerticalScroll ? utils.momentum(this.y, this.startY, duration, this.maxScrollY, this.options.bounce ? this.wrapperHeight : 0) : { destination: newY, duration: 0 };
+			momentumX = this.hasHorizontalScroll ? utils.momentum(this.x, this.startX, duration, this.maxScrollX, this.options.bounce ? this.wrapperWidth : 0, this.options) : { destination: newX, duration: 0 };
+			momentumY = this.hasVerticalScroll ? utils.momentum(this.y, this.startY, duration, this.maxScrollY, this.options.bounce ? this.wrapperHeight : 0, this.options) : { destination: newY, duration: 0 };
 			newX = momentumX.destination;
 			newY = momentumY.destination;
 			time = Math.max(momentumX.duration, momentumY.duration);
@@ -595,7 +605,6 @@ IScroll.prototype = {
 			if ( newX > 0 || newX < this.maxScrollX || newY > 0 || newY < this.maxScrollY ) {
 				easing = utils.ease.quadratic;
 			}
-
 			this.scrollTo(newX, newY, time, easing);
 			return;
 		}
@@ -1498,7 +1507,7 @@ function createDefaultScrollbar (direction, interactive, type) {
 
 	if ( type === true ) {
 		scrollbar.style.cssText = 'position:absolute;z-index:9999';
-		indicator.style.cssText = '-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;position:absolute;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.9);border-radius:3px';
+		indicator.style.cssText = '-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;position:absolute;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.9);border-radius:'+ T.p(5)+'px';
 	}
 
 	indicator.className = 'iScrollIndicator';
@@ -1511,7 +1520,7 @@ function createDefaultScrollbar (direction, interactive, type) {
 		scrollbar.className = 'iScrollHorizontalScrollbar';
 	} else {
 		if ( type === true ) {
-			scrollbar.style.cssText += ';width:7px;bottom:2px;top:2px;right:1px';
+			scrollbar.style.cssText += ';width:'+ T.p(10)+'px;bottom:'+ T.p(2)+'px;top:'+ T.p(2)+'px;right:'+ T.p(2)+'px';
 			indicator.style.width = '100%';
 		}
 		scrollbar.className = 'iScrollVerticalScrollbar';

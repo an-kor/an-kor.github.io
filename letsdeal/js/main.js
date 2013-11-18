@@ -22,7 +22,10 @@ T = {
             return window.innerHeight;
         }
     },
-    p: function(v){
+    p: function(v, abs){
+        if (abs) {
+            return Math.abs(this.scale*v);
+        }
         return this.scale*v;
     },
     setW: function (el, v){
@@ -70,13 +73,13 @@ App = {
     isDealsLoading: 0,
     getDeal: function(imgSrc){
         var dealTitles = ['83% på 4 nr av Sköna Hem inkl. produkter', '52% på töjbara halkskydd med rejäla ståldubbar', '70% på 6 showbiljetter till Julgalan 2013 i Västerås', '50% på biljett till Christer Sjögren Julkonsert 2013', '55% på klassisk korksandal med skön passform']
-        return '<li><div class="deallist-item" style="background-image: url('+imgSrc+');">' +
+        return '<li><div class="deallist-item" style="background-image: url('+imgSrc+');"><div>' +
             '<div class="deallist-item-header">'+dealTitles[Math.floor(Math.random()*5)]+'</div>' +
                 '<div class="deallist-item-footer">' +
                 '<div class="deallist-item-footer-bought">108 köpta</div>' +
                 '<div class="deallist-item-footer-price"><div class="deallist-item-footer-price-old">499 kr</div><div class="deallist-item-footer-price-new">229 kr</div></div>' +
                 '</div>' +
-            '</div></li>';
+            '</div></div></li>';
     },
     init: function(){
         FastClick.attach(document.body);
@@ -130,40 +133,44 @@ App = {
             color: Styles.topMenu.color
         });
 
-        T.updateStyle('.deallist > ul > li', {
+      /*  T.updateStyle('.deallist > ul li', {
             height: T.p(400) + 'px'
-        });
+        });*/
 
         var k = T.p(350) / 290, wk = k;
 
         if ((T.w() > 600 && !T.isAndroid) || (Math.abs(window.orientation) == 90)) {
-                k = (T.w()/2 - T.p(34)) / 510;
+                k = (T.w()/2 - T.p(22, 1)) / 510;
                 if (wk < k) {
                     wk = k;
                 }
         } else {
-            if (k < ((T.w() - T.p(30)) / 510)) {
+            if (k * 510 < (T.w() - T.p(30))) {
                 k = (T.w() - T.p(30)) / 510;
                 wk = k;
+            } else {
+                k = (T.w() - T.p(30)) / 510;
             }
         }
+        console.log(k, k * 510, T.w())
         T.updateStyle('.deallist-item', {
-            margin: T.p(10) + 'px ' + T.p(15) + 'px',
+            margin: T.p(10) + 'px 0 0 ' + T.p(15, 1) + 'px',
             height: T.p(400) + 'px',
             width: (k * 510) + 'px',
-            borderRadius: (!T.isAndroid2)? '3px':'',
             border: '1px solid #cccac5',
+            borderRadius: (!T.isAndroid2)? T.p(6)+'px':'',
             backgroundSize: (wk * 510 - T.p(2)) + 'px ' + wk * 290 + 'px',
             backgroundPosition: T.p(1) + 'px ' + (T.p(340) - wk * 290) + 'px'
         });
+
         T.updateStyle('.deallist-item-header', {
             background: 'rgba(0,0,0,0.4)',
             height: T.p(50)+'px',
             paddingLeft: T.p(10)+'px',
             lineHeight: T.p(50)+'px',
             color: 'white',
-            fontSize: T.p(26)+'px',
-            textShadow: (!T.isAndroid2)?'0px 1px 2px rgba(0, 0, 0, 0.5)':''
+            fontSize: T.p(26)+'px'
+            //,textShadow: (!T.isAndroid2)?'0px 1px 2px rgba(0, 0, 0, 0.5)':''
         });
         T.updateStyle('.deallist-item-footer', {
             marginTop: T.p(290)+'px',
@@ -171,14 +178,11 @@ App = {
             height: T.p(60)+'px'
         });
         T.updateStyle('.deallist-item-footer-bought', {
-            margin: '0',
-            padding: '0',
             width: T.p(130) + 'px',
             background: '#edebe6',
-            height: T.p(60)+'px',
             color: '#545351',
             textAlign: 'center',
-            fontSize: T.p(24)+'px',
+            fontSize: T.p(22)+'px',
             lineHeight: T.p(60)+'px'
         });
         T.updateStyle('.deallist-item-footer-price', {
@@ -194,10 +198,16 @@ App = {
         });
         T.updateStyle('.deallist-item-footer-price-old', {
             color: '#8f8f8f',
-            fontSize: T.p(24)+'px',
+            fontSize: T.p(22)+'px',
             textDecoration: 'line-through'
         });
-
+        T.updateStyle('.deallist > ul', {
+            paddingBottom: T.p(100)+'px'
+        });
+        T.updateStyle('.loading-icon', {
+            height: T.p(100)+'px',
+            backgroundSize: T.p(48) + 'px ' + T.p(48) + 'px'
+        });
 
         T.byId('pages-wrapper').style.bottom = T.p(Styles.footer.height) + 'px';
         T.setW('pages-scroller', T.w()*2);
@@ -223,20 +233,36 @@ App = {
         while (i<4) {
             var el = T.byId('deallist'+i);
             var dealsText = '';
-            for (var i2 = 0; i2<(i>1?5:25); i2++) {
+            for (var i2 = 0; i2<(i>1?6:24); i2++) {
                 dealsText += App.getDeal(Deals[Math.ceil(Math.random()*1000)])
             }
-            el.innerHTML = dealsText;
+
+            var dealsElement = document.createElement("div");
+            dealsElement.innerHTML = dealsText;
+            el.appendChild(dealsElement);
             // el.innerHTML = el.innerHTML.replace(/new_url/g, 'url');
-            scrollers[i] = new IScroll(T.byId('wrapper'+i), {
+            var scrollerOptions = {
                 index: i,
                 startX: 0,
                 startY: 0,
                 scrollX: false,
                 scrollY: true,
+                scrollbars: true,
                 lockDirection: true
-                //,useTransition: (T.isAndroid && !T.isChrome)?0:1
-            });
+            };
+            if (T.isAndroid && !T.isChrome) {
+                scrollerOptions.deceleration = 0.001;
+                scrollerOptions.speedRatio = 0.4;
+                scrollerOptions.maxMomentumDistance = T.h()*1.5;
+                scrollerOptions.maxMomentumDuration = T.h()*4;
+            }
+            if (T.isAndroid && T.isChrome) {
+                scrollerOptions.deceleration = 0.0006;
+                scrollerOptions.speedRatio = 0.8;
+                scrollerOptions.maxMomentumDistance = T.h()*3;
+                scrollerOptions.maxMomentumDuration = T.h()*6;
+            }
+            scrollers[i] = new IScroll(T.byId('wrapper'+i), scrollerOptions);
             /*scrollers[i].on('scrollEnd', function(e){
                 var self = this;
                     var el = T.byId('deallist'+self.options.index), cnt = 0;
@@ -257,17 +283,28 @@ App = {
                         }, 2000);
                     }
             });*/
-            scrollers[i].on('scrollEnd', function(){
-
-                if(Math.abs(this.y) > Math.abs(this.maxScrollY) - T.h()) {
+            scrollers[i].on('translate', function(){
+                MBP.hideUrlBar();
+                if(!App.isDealsLoading && Math.abs(this.y) > Math.abs(this.maxScrollY)) {
                     var self = this;
                     var el = T.byId('deallist'+this.options.index);
+                    App.isDealsLoading = 1;
+
+                    var loadingElement = document.createElement("div");
+                    loadingElement.className = 'loading-icon';
+                    el.appendChild(loadingElement);
                     dealsText = '';
                     for (var i2 = 0; i2<20; i2++) {
                         dealsText += App.getDeal(Deals[Math.floor(Math.random()*1000)])
                     }
-                    el.innerHTML += dealsText;
-                    self.refresh();
+                    var dealsElement = document.createElement("div");
+                    dealsElement.innerHTML = dealsText;
+                    setTimeout(function(){
+                        el.removeChild(loadingElement);
+                        el.appendChild(dealsElement);
+                        self.refresh();
+                        App.isDealsLoading = 0
+                    }, 1500)
                 }
             });
             i++;
