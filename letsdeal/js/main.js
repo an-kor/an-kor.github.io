@@ -152,7 +152,6 @@ App = {
                 k = (T.w() - T.p(30)) / 510;
             }
         }
-        console.log(k, k * 510, T.w())
         T.updateStyle('.deallist-item', {
             margin: T.p(10) + 'px 0 0 ' + T.p(15, 1) + 'px',
             height: T.p(400) + 'px',
