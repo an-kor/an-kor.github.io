@@ -4,6 +4,7 @@ T = {
     isWebkit: /WebKit/.test(navigator.userAgent),
     isChrome: /Chrome/.test(navigator.userAgent),
     isAndroid: /Android/.test(navigator.userAgent),
+    isAndroid2: /Android 2/.test(navigator.userAgent),
     scale: 1,
     byId: function (id){
         return document.getElementById(id);
