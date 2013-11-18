@@ -137,7 +137,7 @@ App = {
         var k = T.p(350) / 290, wk = k;
 
         if ((T.w() > 600 && !T.isAndroid) || (Math.abs(window.orientation) == 90)) {
-                k = (T.w()/2 - T.p(32)) / 510;
+                k = (T.w()/2 - T.p(34)) / 510;
                 if (wk < k) {
                     wk = k;
                 }
@@ -151,7 +151,7 @@ App = {
             margin: T.p(10) + 'px ' + T.p(15) + 'px',
             height: T.p(400) + 'px',
             width: (k * 510) + 'px',
-            borderRadius: (!T.isAndroid2)? T.p(3)+'px':'',
+            borderRadius: (!T.isAndroid2)? '3px':'',
             border: '1px solid #cccac5',
             backgroundSize: (wk * 510 - T.p(2)) + 'px ' + wk * 290 + 'px',
             backgroundPosition: T.p(1) + 'px ' + (T.p(340) - wk * 290) + 'px'
