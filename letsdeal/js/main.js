@@ -58,7 +58,7 @@ Styles = {
         bgColor: '#3eacc8',
         borderBottom: '2px solid #d5d3cf',
         height: 85,
-        fontSize: 35,
+        fontSize: 40,
         fontWeight: 'bold',
         color: 'white'
     },
@@ -152,8 +152,8 @@ App = {
             width: (k * 510) + 'px',
             borderRadius: (!T.isAndroid2)? T.p(3)+'px':'',
             border: '1px solid #cccac5',
-            backgroundSize: (wk * 510)-3 + 'px ' + wk * 290 + 'px',
-            backgroundPosition: 1 + 'px ' + (T.p(340) - wk * 290) + 'px'
+            backgroundSize: (wk * 510 - T.p(2)) + 'px ' + wk * 290 + 'px',
+            backgroundPosition: T.p(1) + 'px ' + (T.p(340) - wk * 290) + 'px'
         });
         T.updateStyle('.deallist-item-header', {
             background: 'rgba(0,0,0,0.4)',
@@ -172,7 +172,6 @@ App = {
         T.updateStyle('.deallist-item-footer-bought', {
             margin: '0',
             padding: '0',
-            borderLeft: '1px solid white',
             width: T.p(130) + 'px',
             background: '#edebe6',
             height: T.p(60)+'px',
