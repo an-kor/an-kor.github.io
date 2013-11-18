@@ -79,12 +79,12 @@ App = {
     },
     init: function(){
         FastClick.attach(document.body);
-        document.body.style['font-size'] = T.p(Styles.defaultFontSize) + 'px';
         if (!window.orientation || window.orientation == 180) {
             T.scale = T.h() / 1136;
         } else {
             T.scale = T.h() / 640;
         }
+        document.body.style['font-size'] = T.p(Styles.defaultFontSize) + 'px';
         T.setH('footer', T.p(Styles.footer.height));
 
         T.updateStyle('#footer-tabs', {
@@ -133,21 +133,32 @@ App = {
             height: T.p(400) + 'px'
         });
 
-        var k = T.p(350) / 290;
-        if (k < ((T.w() - T.p(30)) / 510)) {
-            k = (T.w() - T.p(30)) / 510;
+        var k = T.p(350) / 290, wk = k;
+
+        if ((T.w() > 600 && !T.isAndroid) || (Math.abs(window.orientation) == 90)) {
+                k = (T.w()/2 - T.p(32)) / 510;
+                if (wk < k) {
+                    wk = k;
+                }
+        } else {
+            if (k < ((T.w() - T.p(30)) / 510)) {
+                k = (T.w() - T.p(30)) / 510;
+                wk = k;
+            }
         }
         T.updateStyle('.deallist-item', {
-            margin: T.p(20) + 'px ' + T.p(15) + 'px',
+            margin: T.p(10) + 'px ' + T.p(15) + 'px',
             height: T.p(400) + 'px',
-            borderRadius: (!T.isAndroid2)?'3px':'',
+            width: (k * 510) + 'px',
+            borderRadius: (!T.isAndroid2)? T.p(3)+'px':'',
             border: '1px solid #cccac5',
-            backgroundSize: (k * 510)-4 + 'px ' + k * 290 + 'px',
-            backgroundPosition: 1 + 'px ' + (T.p(340) - k * 290) + 'px'
+            backgroundSize: (wk * 510)-3 + 'px ' + wk * 290 + 'px',
+            backgroundPosition: 1 + 'px ' + (T.p(340) - wk * 290) + 'px'
         });
         T.updateStyle('.deallist-item-header', {
             background: 'rgba(0,0,0,0.4)',
             height: T.p(50)+'px',
+            paddingLeft: T.p(10)+'px',
             lineHeight: T.p(50)+'px',
             color: 'white',
             fontSize: T.p(26)+'px',
@@ -171,7 +182,7 @@ App = {
             lineHeight: T.p(60)+'px'
         });
         T.updateStyle('.deallist-item-footer-price', {
-            width: T.w()-T.p(170) + 'px',
+            width: (k * 510) - T.p(140) + 'px',
             lineHeight: T.p(60)+'px'
         });
         T.updateStyle('.deallist-item-footer-price-new', {
