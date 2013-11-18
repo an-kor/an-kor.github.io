@@ -235,7 +235,7 @@ App = {
                 scrollX: false,
                 scrollY: true,
                 lockDirection: true
-                ,useTransition: (T.isAndroid && !T.isChrome)?0:1
+                //,useTransition: (T.isAndroid && !T.isChrome)?0:1
             });
             /*scrollers[i].on('scrollEnd', function(e){
                 var self = this;
@@ -257,10 +257,9 @@ App = {
                         }, 2000);
                     }
             });*/
-            scrollers[i].on('translate', function(){
+            scrollers[i].on('scrollEnd', function(){
 
-                if(!App.isDealsLoading && (Math.abs(this.y) > Math.abs(this.maxScrollY) - T.h()*2)) {
-                    App.isDealsLoading = 1;
+                if(Math.abs(this.y) > Math.abs(this.maxScrollY) - T.h()) {
                     var self = this;
                     var el = T.byId('deallist'+this.options.index);
                     dealsText = '';
@@ -269,7 +268,6 @@ App = {
                     }
                     el.innerHTML += dealsText;
                     self.refresh();
-                    App.isDealsLoading = 0;
                 }
             });
             i++;
