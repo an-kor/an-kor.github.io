@@ -520,7 +520,6 @@ IScroll.prototype = {
 /* REPLACE END: _move */
 
 	},
-
 	_end: function (e) {
 		if ( !this.enabled || utils.eventType[e.type] !== this.initiated ) {
 			return;
@@ -549,7 +548,7 @@ IScroll.prototype = {
 		this.endTime = utils.getTime();
 
 		// reset if we are outside of the boundaries
-		if ( this.resetPosition(this.options.bounceTime) ) {
+		if (this.resetPosition(this.options.bounceTime)) {
 			return;
 		}
 
@@ -580,7 +579,6 @@ IScroll.prototype = {
 			time = Math.max(momentumX.duration, momentumY.duration);
 			this.isInTransition = 1;
 		}
-
 
 		if ( this.options.snap ) {
 			var snap = this._nearestSnap(newX, newY);

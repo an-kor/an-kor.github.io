@@ -157,7 +157,7 @@ App = {
             height: T.p(400) + 'px',
             width: (k * 510) + 'px',
             border: '1px solid #cccac5',
-            borderRadius: (!T.isAndroid2)? T.p(6)+'px':'',
+            borderRadius: (!T.isAndroid2)? 4+'px':'',
             webkitBackgroundSize: (wk * 510 - T.p(2)) + 'px ' + wk * 290 + 'px',
             backgroundSize: (wk * 510 - T.p(2)) + 'px ' + wk * 290 + 'px',
             backgroundPosition: T.p(1) + 'px ' + (T.p(340) - wk * 290) + 'px'
@@ -173,17 +173,17 @@ App = {
             //,textShadow: (!T.isAndroid2)?'0px 1px 2px rgba(0, 0, 0, 0.5)':''
         });
         T.updateStyle('.deallist-item-footer', {
-            marginTop: T.p(290)+'px',
-            borderTop: '1px solid #cccac5',
-            height: T.p(60)+'px'
+            marginTop: T.p(290) - 2 +'px',
+            borderTop: 1+'px solid #cccac5',
+            height: T.p(60) - 2 +'px'
         });
         T.updateStyle('.deallist-item-footer-bought', {
             width: T.p(130) + 'px',
             background: '#edebe6',
             color: '#545351',
             textAlign: 'center',
-            fontSize: T.p(22)+'px',
-            lineHeight: T.p(60)+'px'
+            fontSize: T.p(22)+'px'
+            ,lineHeight: T.p(60)+'px'
         });
         T.updateStyle('.deallist-item-footer-price', {
             width: (k * 510) - T.p(140) + 'px',
@@ -193,8 +193,8 @@ App = {
             color: '#d72e1e',
             fontWeight: 'bold',
             margin: '0 ' + T.p(10)+'px',
-            fontSize: T.p(30)+'px',
-            lineHeight: T.p(60)+'px'
+            fontSize: T.p(30)+'px'
+            ,lineHeight: T.p(60)+'px'
         });
         T.updateStyle('.deallist-item-footer-price-old', {
             color: '#8f8f8f',
@@ -203,6 +203,10 @@ App = {
         });
         T.updateStyle('.deallist > ul', {
             paddingBottom: T.p(100)+'px'
+        });
+        T.updateStyle('.deallist-item > div', {
+            borderWidth: 1+'px',
+            borderRadius: (!T.isAndroid2)? 3+'px':''
         });
         T.updateStyle('.loading-icon', {
             height: T.p(100)+'px',
@@ -250,7 +254,7 @@ App = {
                 scrollY: true,
                 scrollbars: true,
                 lockDirection: true
-                //,useTransition: (T.isAndroid2?0:1)
+                //,useTransition: (T.isAndroid2?0:0)
             };
             if (!T.isAndroid2 && T.isAndroid && !T.isChrome) {
                 scrollerOptions.deceleration = 0.001;

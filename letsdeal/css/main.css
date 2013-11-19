@@ -244,7 +244,6 @@ Let's Deal CSS
 }
 
 #main-page-scroller-list {
-    background: #edebe6;
     list-style: none;
     padding: 0;
     margin: 0;
@@ -256,8 +255,7 @@ Let's Deal CSS
     display: block;
     float: left;
     height:100%;
-    border-right: 1px solid #ccc;
-    background-color: #fafafa;
+    background-color: #edebe6;
     position: relative;
 }
 
@@ -267,7 +265,6 @@ Let's Deal CSS
     bottom: 0;
     left: 0;
     width: 100%;
-    background: #edebe6;
     overflow: hidden;
 }
 .deallist {
@@ -283,10 +280,12 @@ Let's Deal CSS
 .deallist-item {
     background-repeat: no-repeat;
     overflow:hidden;
+    background-color: #fafafa;
 }
 
 .deallist-item > div{
     border: 1px solid white;
+    overflow:hidden;
 }
 .deallist-item-header{
     width: 100%;
@@ -300,7 +299,7 @@ Let's Deal CSS
     text-align: left;
 }
 .deallist-item-footer > div {
-    display: inline-block;
+    display: inline-table;
 }
 .deallist-item-footer-bought {
 }
@@ -308,7 +307,6 @@ Let's Deal CSS
     text-align: right;
     vertical-align: top;
 }
-
 .deallist-item-footer-price > div {
     display: inline-block;
     vertical-align:top;
