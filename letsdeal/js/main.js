@@ -36,14 +36,14 @@ T = {
         T.byId(el).style.height = v + 'px';
     },
     updateStyle: function(selector, obj, value){
-        var css = document.styleSheets[1];
-        for (var i in css.rules) {
-            if (css.rules[i].selectorText && css.rules[i].selectorText == selector){
+        var css = document.styleSheets[1], rules = css.cssRules;
+        for (var i in rules) {
+            if (rules[i].selectorText && rules[i].selectorText == selector){
                 if (typeof(value) != 'undefined') {
-                    css.rules[i].style[obj] = value;
+                    rules[i].style[obj] = value;
                 } else {
                     for (var key in obj) {
-                        css.rules[i].style[key] = obj[key];
+                        rules[i].style[key] = obj[key];
                     }
                 }
                 break;
