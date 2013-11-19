@@ -2,6 +2,7 @@
 T = {
     isIOS: /iP(ad|hone|od)/.test(navigator.userAgent),
     isWebkit: /WebKit/.test(navigator.userAgent),
+    isDesktop: !("ontouchstart" in document.documentElement),
     isChrome: /Chrome/.test(navigator.userAgent),
     isAndroid: /Android/.test(navigator.userAgent),
     isAndroid2: /Android 2/.test(navigator.userAgent),
@@ -16,11 +17,11 @@ T = {
         return window.innerWidth;
     },
     h: function (){
-        //if (T.isAndroid) {
-        //    return window.outerHeight;
-        //} else {
+        if (T.isAndroid) {
+            return window.outerHeight;
+        } else {
             return window.innerHeight;
-        //}
+        }
     },
     p: function(v, abs){
         if (abs) {
@@ -55,7 +56,7 @@ Styles = {
     footer: {
         bgColor: '#3eacc8',
         borderTop: '1px solid #55bfda',
-        fontSize: 22,
+        fontSize: 20,
         height: 105
     },
     topMenu: {
@@ -66,7 +67,7 @@ Styles = {
         fontWeight: 'bold',
         color: 'white'
     },
-    numberOfPages: 3
+    numberOfPages: 6
 };
 
 App = {
@@ -81,6 +82,11 @@ App = {
                 '</div>' +
             '</div></div></li>';
     },
+    goToPage: function(i){
+        setTimeout(function(){
+            App.mainPageHScroll.goToPage(i, 0, 700, IScroll.ease.quadratic2);
+        },100)
+    },
     init: function(){
         FastClick.attach(document.body);
         if (!window.orientation || window.orientation == 180) {
@@ -89,7 +95,7 @@ App = {
             T.scale = T.h() / 640;
         }
         document.body.style['font-size'] = T.p(Styles.defaultFontSize) + 'px';
-        T.setH('footer', T.p(Styles.footer.height));
+        T.setH('footer', T.p(Styles.footer.height, 1));
 
         T.updateStyle('#footer-tabs', {
             background: Styles.footer.bgColor,
@@ -103,13 +109,20 @@ App = {
 
         T.setH('top-menu-wrapper', T.p(Styles.topMenu.height));
 
-        T.setH('main-page-wrapper', T.h() - T.p(Styles.footer.height));
+        T.setH('main-page-wrapper', T.h() - T.p(Styles.footer.height, 1)+1);
         T.updateStyle('#main-page-scroller', {
             top: T.p(Styles.topMenu.height) + 'px',
             width: T.w()*Styles.numberOfPages + 'px'
         });
+        T.updateStyle('#main-page-scroller-list', {
+            backgroundSize: '1px ' + T.p(64) + 'px'
+        });
         T.updateStyle('#main-page-scroller-list > li', 'width', T.w() + 'px');
 
+        T.updateStyle('#top-menu-background', {
+            height: T.p(Styles.topMenu.height) + 'px',
+            background: Styles.topMenu.bgColor
+        });
         T.updateStyle('#top-menu-wrapper', {
             width: T.w() + 'px',
             borderBottom: Styles.topMenu.borderBottom
@@ -123,7 +136,7 @@ App = {
         T.updateStyle('#top-menu-wrapper li', {
             width: T.w()/2.5 + 'px',
             height: T.p(Styles.topMenu.height) + 'px',
-            background: Styles.footer.bgColor,
+            background: Styles.topMenu.bgColor,
             fontSize: T.p(Styles.topMenu.fontSize) + 'px',
             fontWeight: Styles.topMenu.fontWeight
         });
@@ -137,52 +150,56 @@ App = {
             height: T.p(400) + 'px'
         });*/
 
-        var k = T.p(350) / 290, wk = k;
-
+        var k = T.p(350) / 290, wk = k, itemWidth = 510, scrollWidth = 0;
+        if (T.isDesktop) {
+            scrollWidth = 8
+        }
         if ((T.w() > 600 && !T.isAndroid) || (Math.abs(window.orientation) == 90)) {
-                k = (T.w()/2 - T.p(22, 1)) / 510;
+                k = (T.w()/2 - T.p(22, 1)) / itemWidth;
                 if (wk < k) {
                     wk = k;
                 }
         } else {
-            if (k * 510 < (T.w() - T.p(30))) {
-                k = (T.w() - T.p(30)) / 510;
+            if (k * itemWidth < (T.w() - T.p(30))) {
+                k = (T.w() - T.p(30)) / itemWidth;
                 wk = k;
             } else {
-                k = (T.w() - T.p(30)) / 510;
+                k = (T.w() - T.p(30)) / itemWidth;
             }
         }
         T.updateStyle('.deallist-item', {
             margin: T.p(10) + 'px 0 0 ' + T.p(15, 1) + 'px',
             height: T.p(400) + 'px',
-            width: (k * 510) + 'px',
-            border: '1px solid #cccac5',
-            borderRadius: (!T.isAndroid2)? 4+'px':'',
-            webkitBackgroundSize: (wk * 510 - T.p(2)) + 'px ' + wk * 290 + 'px',
-            backgroundSize: (wk * 510 - T.p(2)) + 'px ' + wk * 290 + 'px',
-            backgroundPosition: T.p(1) + 'px ' + (T.p(340) - wk * 290) + 'px'
+            width: (k * itemWidth) - scrollWidth + 'px',
+            border: '1px solid white',
+            boxShadow: '0px 0px 0px 1px rgba(204,202,197,1)',
+            borderRadius: (!T.isAndroid2)? T.p(4)+'px':'',
+            webkitBackgroundSize: (wk * itemWidth) + 'px ' + wk * 290 + 'px',
+            backgroundSize: (wk * itemWidth) + 'px ' + wk * 290 + 'px',
+            backgroundPosition: '0px ' + (T.p(340) - wk * 290) + 'px'
         });
 
         T.updateStyle('.deallist-item-header', {
             background: 'rgba(0,0,0,0.4)',
             height: T.p(50)+'px',
-            paddingLeft: T.p(10)+'px',
+            paddingLeft: T.p(15)+'px',
             lineHeight: T.p(50)+'px',
             color: 'white',
-            fontSize: T.p(26)+'px'
+            fontSize: T.p(24)+'px'
             //,textShadow: (!T.isAndroid2)?'0px 1px 2px rgba(0, 0, 0, 0.5)':''
         });
         T.updateStyle('.deallist-item-footer', {
-            marginTop: T.p(290) - 2 +'px',
+            marginTop: T.p(290) +'px',
             borderTop: 1+'px solid #cccac5',
             height: T.p(60) - 2 +'px'
         });
         T.updateStyle('.deallist-item-footer-bought', {
             width: T.p(130) + 'px',
             background: '#edebe6',
+            fontWeight: 'bold',
             color: '#545351',
             textAlign: 'center',
-            fontSize: T.p(22)+'px'
+            fontSize: T.p(21)+'px'
             ,lineHeight: T.p(60)+'px'
         });
         T.updateStyle('.deallist-item-footer-price', {
@@ -193,23 +210,19 @@ App = {
             color: '#d72e1e',
             fontWeight: 'bold',
             margin: '0 ' + T.p(10)+'px',
-            fontSize: T.p(30)+'px'
+            fontSize: T.p(38)+'px'
             ,lineHeight: T.p(60)+'px'
         });
         T.updateStyle('.deallist-item-footer-price-old', {
             color: '#8f8f8f',
-            fontSize: T.p(22)+'px',
+            fontSize: T.p(24)+'px',
             textDecoration: 'line-through'
         });
         T.updateStyle('.deallist > ul', {
-            paddingBottom: T.p(100)+'px'
-        });
-        T.updateStyle('.deallist-item > div', {
-            borderWidth: 1+'px',
-            borderRadius: (!T.isAndroid2)? 3+'px':''
+            paddingBottom: T.p(80)+'px'
         });
         T.updateStyle('.loading-icon', {
-            height: T.p(100)+'px',
+            height: T.p(80)+'px',
             webkitBackgroundSize: T.p(48) + 'px ' + T.p(48) + 'px',
             backgroundSize: T.p(48) + 'px ' + T.p(48) + 'px'
         });
@@ -226,6 +239,7 @@ App = {
             lockDirection: true,
             directionLockThreshold: 20,
             eventPassthrough: 'vertical',
+            preventDefault: true,
             indicators: [{
                 el: T.byId('top-menu-wrapper'),
                 resize: 0,
@@ -234,43 +248,58 @@ App = {
                 listenY: false
             }]
         });
+
+        App.mainPageHScroll.on('translate', function(){
+            document.querySelector('#top-menu-wrapper li.active').className = '';
+            document.querySelector('#top-menu-wrapper li:nth-child('+(this.currentPage.pageX+1)+')').className = 'active';
+        });
         var i = 1, scrollers = [];
-        while (i<4) {
+        while (i<Styles.numberOfPages+1) {
             var el = T.byId('deallist'+i);
             var dealsText = '';
-            for (var i2 = 0; i2<(i>1?6:24); i2++) {
+            for (var i2 = 0; i2<(i>1?8:24); i2++) {
                 dealsText += App.getDeal(Deals[Math.ceil(Math.random()*1000)])
             }
 
             var dealsElement = document.createElement("div");
             dealsElement.innerHTML = dealsText;
             el.appendChild(dealsElement);
-            // el.innerHTML = el.innerHTML.replace(/new_url/g, 'url');
-            var scrollerOptions = {
-                index: i,
-                startX: 0,
-                startY: 0,
-                scrollX: false,
-                scrollY: true,
-                scrollbars: true,
-                lockDirection: true
-                //,useTransition: (T.isAndroid2?0:0)
-            };
-            if (!T.isAndroid2 && T.isAndroid && !T.isChrome) {
-                scrollerOptions.deceleration = 0.001;
-                scrollerOptions.speedRatio = 0.4;
-                scrollerOptions.maxMomentumDistance = T.h()*1.5;
-                scrollerOptions.maxMomentumDuration = T.h()*4;
-            }
-            if (T.isAndroid && T.isChrome) {
-                scrollerOptions.deceleration = 0.0006;
-                scrollerOptions.speedRatio = 0.8;
-                scrollerOptions.maxMomentumDistance = T.h()*3;
-                scrollerOptions.maxMomentumDuration = T.h()*6;
-            }
-            scrollers[i] = new IScroll(T.byId('wrapper'+i), scrollerOptions);
-            /*scrollers[i].on('scrollEnd', function(e){
-                var self = this;
+
+            if (T.isAndroid2) {
+                var scrollerOptions = {
+                    index: i,
+                    startX: 0,
+                    startY: 0,
+                    scrollX: false,
+                    scrollY: true,
+                    scrollbars: true,
+                    lockDirection: true
+                };
+                /* var scrollerOptions = {
+                 index: i,
+                 startX: 0,
+                 startY: 0,
+                 scrollX: false,
+                 scrollY: true,
+                 scrollbars: true,
+                 lockDirection: true
+                 //,useTransition: (T.isAndroid2?0:0)
+                 };
+                 if (!T.isAndroid2 && T.isAndroid && !T.isChrome) {
+                 scrollerOptions.deceleration = 0.001;
+                 scrollerOptions.speedRatio = 0.4;
+                 scrollerOptions.maxMomentumDistance = T.h()*1.5;
+                 scrollerOptions.maxMomentumDuration = T.h()*4;
+                 }
+                 if (T.isAndroid && T.isChrome) {
+                 scrollerOptions.deceleration = 0.0006;
+                 scrollerOptions.speedRatio = 0.8;
+                 scrollerOptions.maxMomentumDistance = T.h()*3;
+                 scrollerOptions.maxMomentumDuration = T.h()*6;
+                 }*/
+                scrollers[i] = new IScroll(T.byId('wrapper'+i), scrollerOptions);
+                scrollers[i].on('scrollEnd', function(e){
+                    var self = this;
                     var el = T.byId('deallist'+self.options.index), cnt = 0;
                     if (!App.checkLoadInterval) {
                         App.checkLoadInterval = setInterval(function(){
@@ -288,13 +317,40 @@ App = {
                             }
                         }, 2000);
                     }
-            });*/
-            scrollers[i].on('translate', function(){
-                try{
-                    if(!App.isDealsLoading && Math.abs(this.y) > Math.abs(this.maxScrollY)) {
-                       // MBP.hideUrlBar();
+                });
+                scrollers[i].on('translate', function(){
+                    try{
+                        if(!App.isDealsLoading && Math.abs(this.y) > Math.abs(this.maxScrollY)) {
+                            // MBP.hideUrlBar();
+                            var self = this;
+                            var el = T.byId('deallist'+this.options.index);
+                            App.isDealsLoading = 1;
+
+                            var loadingElement = document.createElement("div");
+                            loadingElement.className = 'loading-icon';
+                            el.appendChild(loadingElement);
+                            dealsText = '';
+                            for (var i2 = 0; i2<10; i2++) {
+                                dealsText += App.getDeal(Deals[Math.floor(Math.random()*1000)])
+                            }
+                            var dealsElement = document.createElement("div");
+                            dealsElement.innerHTML = dealsText;
+                            setTimeout(function(){
+                                el.removeChild(loadingElement);
+                                el.appendChild(dealsElement);
+                                self.refresh();
+                                App.isDealsLoading = 0
+                            }, 1500)
+                        }
+                    } catch(e){}
+                });
+            } else {
+                T.byId('wrapper'+i).index = i;
+                T.byId('wrapper'+i).addEventListener("scroll",function(e){
+                    if(!App.isDealsLoading && (e.target.scrollTop > e.target.scrollHeight - T.h()*1.3)) {
+                        // MBP.hideUrlBar();
                         var self = this;
-                        var el = T.byId('deallist'+this.options.index);
+                        var el = T.byId('deallist'+e.target.index);
                         App.isDealsLoading = 1;
 
                         var loadingElement = document.createElement("div");
@@ -309,12 +365,11 @@ App = {
                         setTimeout(function(){
                             el.removeChild(loadingElement);
                             el.appendChild(dealsElement);
-                            self.refresh();
                             App.isDealsLoading = 0
                         }, 1500)
                     }
-                } catch(e){}
-            });
+                }, 1);
+            }
             i++;
         }
         App.pagesScroll = new IScroll(T.byId('pages-wrapper'), {
@@ -334,4 +389,4 @@ window.addEventListener("orientationchange", function() {
         location.reload();
     }, 100)
 }, false);
-document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+//document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);

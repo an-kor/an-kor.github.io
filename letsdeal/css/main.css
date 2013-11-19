@@ -146,7 +146,6 @@ Let's Deal CSS
     top: 0;
     left: 0;
     width: 100%;
-    background: #3eacc8;
     overflow: hidden;
 }
 
@@ -206,7 +205,9 @@ Let's Deal CSS
     width: 100%;
 }
 
-
+#top-menu-background {
+    width: 100%;
+}
 #top-menu-wrapper {
     position: absolute;
     top: 0;
@@ -221,7 +222,9 @@ Let's Deal CSS
     float: left;
     overflow: hidden;
 }
-
+#top-menu-wrapper li.active{
+    background: #3aa2bc;
+}
 #top-menu-wrapper li a {
     padding:0;
     display: block;
@@ -249,13 +252,16 @@ Let's Deal CSS
     margin: 0;
     width: 100%;
     height: 100%;
+    background-color: #edebe6;
+    background-image: url(../img/bg-gradient.png);
+    background-repeat: repeat-x;
+    background-position: left bottom;
 }
 
 #main-page-scroller-list > li {
     display: block;
     float: left;
     height:100%;
-    background-color: #edebe6;
     position: relative;
 }
 
@@ -265,7 +271,8 @@ Let's Deal CSS
     bottom: 0;
     left: 0;
     width: 100%;
-    overflow: hidden;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
 }
 .deallist {
     width: 100%;
@@ -275,17 +282,12 @@ Let's Deal CSS
     width: 100%;
 }
 .deallist > ul li {
-    display:inline-table;
+    display:inline-block;
 }
 .deallist-item {
     background-repeat: no-repeat;
     overflow:hidden;
     background-color: #fafafa;
-}
-
-.deallist-item > div{
-    border: 1px solid white;
-    overflow:hidden;
 }
 .deallist-item-header{
     width: 100%;
@@ -321,7 +323,7 @@ Let's Deal CSS
 .loading-icon {
     width:100%;
     height:100px;
-    background-image: url(../img/loadinfo.gif);
+    background-image: url(../img/loadinfo2.gif);
     background-position: 50% 50%;
     background-repeat: no-repeat;
 }

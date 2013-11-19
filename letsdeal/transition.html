@@ -35,8 +35,6 @@
 </head>
 <body>
 
-<div id="top-menu-background">
-</div>
 <div id="container">
 
     <div id="pages-wrapper">
@@ -47,7 +45,7 @@
                         <ul id="main-page-scroller-list">
                             <li>
                                 <div class="main-v-wrapper" id="wrapper1">
-                                    <div class="deallist">
+                                    <div class="deallist scroller">
                                         <ul id="deallist1">
                                         </ul>
                                     </div>
@@ -55,7 +53,7 @@
                             </li>
                             <li>
                                 <div class="main-v-wrapper" id="wrapper2">
-                                    <div class="deallist">
+                                    <div class="deallist scroller">
                                         <ul id="deallist2">
                                         </ul>
                                     </div>
@@ -63,46 +61,20 @@
                             </li>
                             <li>
                                 <div class="main-v-wrapper" id="wrapper3">
-                                    <div class="deallist">
+                                    <div class="deallist scroller">
                                         <ul id="deallist3">
-                                        </ul>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="main-v-wrapper" id="wrapper4">
-                                    <div class="deallist">
-                                        <ul id="deallist4">
-                                        </ul>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="main-v-wrapper" id="wrapper5">
-                                    <div class="deallist">
-                                        <ul id="deallist5">
-                                        </ul>
-                                    </div>
-                                </div>
-                            </li>
-                            <li>
-                                <div class="main-v-wrapper" id="wrapper6">
-                                    <div class="deallist">
-                                        <ul id="deallist6">
                                         </ul>
                                     </div>
                                 </div>
                             </li>
                         </ul>
                     </div>
+
                     <div id="top-menu-wrapper">
                         <ul id="top-menu-tabs">
-                            <li class="active"><a href="javascript:App.goToPage(0);">Shopping</a></li>
-                            <li><a href="javascript:App.goToPage(1)">Stockholm</a></li>
-                            <li><a href="javascript:App.goToPage(2);">Resort</a></li>
-                            <li><a href="javascript:App.goToPage(3);">Shopping</a></li>
-                            <li><a href="javascript:App.goToPage(4)">Stockholm</a></li>
-                            <li><a href="javascript:App.goToPage(5);">Resort</a></li>
+                            <li><a href="javascript:App.mainPageHScroll.scrollToElement(document.querySelector('#main-page-scroller-list > li:nth-child(1)'), 700, null, null, IScroll.ease.quadratic2);">Shopping</a></li>
+                            <li><a href="javascript:App.mainPageHScroll.scrollToElement(document.querySelector('#main-page-scroller-list > li:nth-child(2)'), 700, null, null, IScroll.ease.quadratic2);">Stockholm</a></li>
+                            <li><a href="javascript:App.mainPageHScroll.scrollToElement(document.querySelector('#main-page-scroller-list > li:nth-child(3)'), 700, null, null, IScroll.ease.quadratic2);">Resort</a></li>
                         </ul>
                     </div>
                 </div>
@@ -125,6 +97,6 @@
     </div>
 
 </div>
-<script type="text/javascript" src="js/main.js"></script>
-</body>
+    <script type="text/javascript" src="js/main.js"></script>
+    </body>
 </html>
