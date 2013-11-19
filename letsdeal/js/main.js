@@ -16,11 +16,11 @@ T = {
         return window.innerWidth;
     },
     h: function (){
-        if (T.isAndroid) {
-            return window.outerHeight;
-        } else {
+        //if (T.isAndroid) {
+        //    return window.outerHeight;
+        //} else {
             return window.innerHeight;
-        }
+        //}
     },
     p: function(v, abs){
         if (abs) {
@@ -158,6 +158,7 @@ App = {
             width: (k * 510) + 'px',
             border: '1px solid #cccac5',
             borderRadius: (!T.isAndroid2)? T.p(6)+'px':'',
+            webkitBackgroundSize: (wk * 510 - T.p(2)) + 'px ' + wk * 290 + 'px',
             backgroundSize: (wk * 510 - T.p(2)) + 'px ' + wk * 290 + 'px',
             backgroundPosition: T.p(1) + 'px ' + (T.p(340) - wk * 290) + 'px'
         });
@@ -205,6 +206,7 @@ App = {
         });
         T.updateStyle('.loading-icon', {
             height: T.p(100)+'px',
+            webkitBackgroundSize: T.p(48) + 'px ' + T.p(48) + 'px',
             backgroundSize: T.p(48) + 'px ' + T.p(48) + 'px'
         });
 
@@ -248,8 +250,9 @@ App = {
                 scrollY: true,
                 scrollbars: true,
                 lockDirection: true
+                //,useTransition: (T.isAndroid2?0:1)
             };
-            if (T.isAndroid && !T.isChrome) {
+            if (!T.isAndroid2 && T.isAndroid && !T.isChrome) {
                 scrollerOptions.deceleration = 0.001;
                 scrollerOptions.speedRatio = 0.4;
                 scrollerOptions.maxMomentumDistance = T.h()*1.5;
@@ -283,28 +286,30 @@ App = {
                     }
             });*/
             scrollers[i].on('translate', function(){
-                MBP.hideUrlBar();
-                if(!App.isDealsLoading && Math.abs(this.y) > Math.abs(this.maxScrollY)) {
-                    var self = this;
-                    var el = T.byId('deallist'+this.options.index);
-                    App.isDealsLoading = 1;
+                try{
+                    if(!App.isDealsLoading && Math.abs(this.y) > Math.abs(this.maxScrollY)) {
+                       // MBP.hideUrlBar();
+                        var self = this;
+                        var el = T.byId('deallist'+this.options.index);
+                        App.isDealsLoading = 1;
 
-                    var loadingElement = document.createElement("div");
-                    loadingElement.className = 'loading-icon';
-                    el.appendChild(loadingElement);
-                    dealsText = '';
-                    for (var i2 = 0; i2<20; i2++) {
-                        dealsText += App.getDeal(Deals[Math.floor(Math.random()*1000)])
+                        var loadingElement = document.createElement("div");
+                        loadingElement.className = 'loading-icon';
+                        el.appendChild(loadingElement);
+                        dealsText = '';
+                        for (var i2 = 0; i2<20; i2++) {
+                            dealsText += App.getDeal(Deals[Math.floor(Math.random()*1000)])
+                        }
+                        var dealsElement = document.createElement("div");
+                        dealsElement.innerHTML = dealsText;
+                        setTimeout(function(){
+                            el.removeChild(loadingElement);
+                            el.appendChild(dealsElement);
+                            self.refresh();
+                            App.isDealsLoading = 0
+                        }, 1500)
                     }
-                    var dealsElement = document.createElement("div");
-                    dealsElement.innerHTML = dealsText;
-                    setTimeout(function(){
-                        el.removeChild(loadingElement);
-                        el.appendChild(dealsElement);
-                        self.refresh();
-                        App.isDealsLoading = 0
-                    }, 1500)
-                }
+                } catch(e){}
             });
             i++;
         }
@@ -316,7 +321,7 @@ App = {
     }
 };
 T.setH('container', T.h());
-MBP.hideUrlBarOnLoad();
+//MBP.hideUrlBarOnLoad();
 window.addEventListener('load', function() {
     App.init();
 });
