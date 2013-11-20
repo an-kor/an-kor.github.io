@@ -389,4 +389,10 @@ window.addEventListener("orientationchange", function() {
         location.reload();
     }, 100)
 }, false);
-//document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+document.addEventListener('touchmove', function (e) {
+    if (e.changedTouches.length) {
+        if (e.changedTouches[0].screenY < T.p(Styles.topMenu.height) || e.changedTouches[0].screenY > T.h() - T.p(Styles.footer.height)) {
+            e.preventDefault();
+        }
+    }
+}, false);
