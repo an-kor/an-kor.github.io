@@ -277,7 +277,7 @@ App = {
         while (i<Styles.numberOfPages+1) {
             var el = T.byId('deallist'+i);
             var dealsText = '';
-            for (var i2 = 0; i2<(i>1?8:12); i2++) {
+            for (var i2 = 0; i2<(i>1?16:16); i2++) {
                 dealsText += App.getDeal(Deals[Math.ceil(Math.random()*1000)])
             }
 
@@ -350,7 +350,7 @@ App = {
                             loadingElement.className = 'loading-icon';
                             el.appendChild(loadingElement);
                             dealsText = '';
-                            for (var i2 = 0; i2<10; i2++) {
+                            for (var i2 = 0; i2<16; i2++) {
                                 dealsText += App.getDeal(Deals[Math.floor(Math.random()*1000)])
                             }
                             var dealsElement = document.createElement("div");
