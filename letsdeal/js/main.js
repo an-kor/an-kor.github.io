@@ -18,7 +18,15 @@ T = {
     },
     h: function (){
         if (T.isAndroid) {
-            return (window.innerHeight>(screen.availHeight*0.6)?window.innerHeight:screen.availHeight-window.screenTop);
+            var height = screen.availHeight;
+            if (Math.abs(window.orientation) == 90) {
+                height = screen.availWidth;
+            }
+            if (window.innerHeight>(height*0.6)) {
+                return window.innerHeight
+            } else {
+                return height-window.screenTop
+            }
         } else {
             return window.innerHeight;
         }
