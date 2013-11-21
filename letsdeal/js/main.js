@@ -18,7 +18,7 @@ T = {
     },
     h: function (){
         if (T.isAndroid) {
-            return window.outerHeight;
+            return (window.innerHeight>(screen.availHeight*0.6)?window.innerHeight:screen.availHeight-window.screenTop);
         } else {
             return window.innerHeight;
         }
