@@ -17,7 +17,7 @@ T = {
         return window.innerWidth;
     },
     h: function (){
-        if (T.isAndroid) {
+        if (T.isAndroid && !T.isChrome) {
             var height = screen.availHeight;
             if (Math.abs(window.orientation) == 90) {
                 height = screen.availWidth;
