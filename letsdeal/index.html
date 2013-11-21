@@ -37,6 +37,8 @@
 
 <div id="top-menu-background">
 </div>
+<div id="top-menu-triangle">
+</div>
 <div id="container">
 
     <div id="pages-wrapper">
@@ -97,8 +99,8 @@
                     </div>
                     <div id="top-menu-wrapper">
                         <ul id="top-menu-tabs">
-                            <li class="active"><a href="javascript:App.goToPage(0);">Shopping</a></li>
-                            <li><a href="javascript:App.goToPage(1)">Stockholm</a></li>
+                            <li class="top-menu-tabs-active"><a href="javascript:App.goToPage(0);">Shopping <span class="top-menu-tabs-counter">(54321)</span></a></li>
+                            <li><a href="javascript:App.goToPage(1)">Stockholm <span class="top-menu-tabs-counter">(123)</span></a></li>
                             <li><a href="javascript:App.goToPage(2);">Resort</a></li>
                             <li><a href="javascript:App.goToPage(3);">Shopping</a></li>
                             <li><a href="javascript:App.goToPage(4)">Stockholm</a></li>
@@ -117,10 +119,10 @@
 
     <div id="footer">
         <ul id="footer-tabs">
-            <li><a href="javascript:App.pagesScroll.scrollToElement(document.querySelector('#pages-wrapper'), 300)">First</a></li>
-            <li><a href="javascript:App.pagesScroll.scrollToElement(document.querySelector('#another-page'))">Second</a></li>
-            <li><a href="javascript:App.pagesScroll.scrollToElement(document.querySelector('#another-page'))">Third</a></li>
-            <li><a href="javascript:App.pagesScroll.scrollToElement(document.querySelector('#another-page'))">Fourth</a></li>
+            <li><a href="javascript:App.pagesScroll.scrollToElement(document.querySelector('#pages-wrapper'), 300)" class="footer-tabs-search">Sök deal</a></li>
+            <li><a href="javascript:App.pagesScroll.scrollToElement(document.querySelector('#another-page'))" class="footer-tabs-mydeals">Mina deals</a></li>
+            <li><a href="javascript:App.pagesScroll.scrollToElement(document.querySelector('#another-page'))" class="footer-tabs-city">Ändra stad</a></li>
+            <li><a href="javascript:App.pagesScroll.scrollToElement(document.querySelector('#another-page'))" class="footer-tabs-settings">Inställningar</a></li>
         </ul>
     </div>
 

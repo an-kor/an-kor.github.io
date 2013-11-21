@@ -134,6 +134,9 @@ Let's Deal CSS
     font-family: 'avenir';
 }
 
+body {
+    background: #edebe6;
+}
 #container {
     position:absolute;
     top:0;
@@ -203,16 +206,40 @@ Let's Deal CSS
     display: block;
     color:white;
     width: 100%;
+    background-repeat: no-repeat;
+}
+.footer-tabs-search {
+    background-image: url(../img/search.png);
+}
+.footer-tabs-mydeals {
+    background-image: url(../img/face.png);
+}
+.footer-tabs-city {
+    background-image: url(../img/city.png);
+}
+.footer-tabs-settings {
+    background-image: url(../img/gear.png);
 }
 
 #top-menu-background {
     width: 100%;
+}
+#top-menu-triangle {
+    position: absolute;
+    left:0;
+    z-index: 10;
+    width:100%;
+    background-image: url('../img/triangle.png');
+    background-size: contain;
+    background-position: 50% 100%;
+    background-repeat: no-repeat;
 }
 #top-menu-wrapper {
     position: absolute;
     top: 0;
     left: 0;
     overflow: hidden;
+    -webkit-backface-visibility: hidden;
 }
 #top-menu-wrapper ul{
     text-align: center;
@@ -222,7 +249,7 @@ Let's Deal CSS
     float: left;
     overflow: hidden;
 }
-#top-menu-wrapper li.active{
+#top-menu-wrapper li.top-menu-tabs-active{
     background: #3aa2bc;
 }
 #top-menu-wrapper li a {
@@ -230,6 +257,9 @@ Let's Deal CSS
     display: block;
     color:black;
     width: 100%;
+}
+#top-menu-wrapper li a .top-menu-tabs-counter{
+    font-weight: normal;
 }
 
 #main-page-wrapper {
@@ -323,7 +353,7 @@ Let's Deal CSS
 .loading-icon {
     width:100%;
     height:100px;
-    background-image: url(../img/loadinfo2.gif);
+    background-image: url(../img/loadinfo.gif);
     background-position: 50% 50%;
     background-repeat: no-repeat;
 }

@@ -61,7 +61,7 @@ Styles = {
     },
     topMenu: {
         bgColor: '#3eacc8',
-        borderBottom: '2px solid #d5d3cf',
+        borderBottom: '2px solid #e1e1e1',
         height: 85,
         fontSize: 40,
         fontWeight: 'bold',
@@ -96,6 +96,10 @@ App = {
         }
         document.body.style['font-size'] = T.p(Styles.defaultFontSize) + 'px';
         T.setH('footer', T.p(Styles.footer.height, 1));
+        if (T.p(Styles.topMenu.fontSize)>T.w()/17) {
+            Styles.topMenu.fontSize = T.w()/T.p(17.5);
+            Styles.topMenu.height = Styles.topMenu.fontSize*2;
+        }
 
         T.updateStyle('#footer-tabs', {
             background: Styles.footer.bgColor,
@@ -104,7 +108,9 @@ App = {
 
         T.updateStyle('#footer-tabs a', {
             paddingTop: T.p(Styles.footer.height - 2*Styles.footer.fontSize) + 'px',
-            fontSize: T.p(Styles.footer.fontSize) + 'px'
+            fontSize: T.p(Styles.footer.fontSize) + 'px',
+            backgroundSize: T.p(48)+'px '+ T.p(48) +'px',
+            backgroundPosition: '50% '+ T.p(12) +'px'
         });
 
         T.setH('top-menu-wrapper', T.p(Styles.topMenu.height));
@@ -121,21 +127,27 @@ App = {
 
         T.updateStyle('#top-menu-background', {
             height: T.p(Styles.topMenu.height) + 'px',
-            background: Styles.topMenu.bgColor
-        });
-        T.updateStyle('#top-menu-wrapper', {
-            width: T.w() + 'px',
+            background: Styles.topMenu.bgColor,
             borderBottom: Styles.topMenu.borderBottom
+        });
+        var trHeight = Math.ceil(T.p(Styles.topMenu.height)/5.66)
+        T.updateStyle('#top-menu-triangle', {
+            height: trHeight + 'px',
+            top: T.p(Styles.topMenu.height) - trHeight + 'px'
+        });
+
+        T.updateStyle('#top-menu-wrapper', {
+            width: T.w() + 'px'
         });
 
         T.updateStyle('#top-menu-wrapper ul', {
             width: T.w()*Styles.numberOfPages + 'px',
-            paddingLeft: (T.w() - (T.w()/2.5))/2 + 'px'
+            paddingLeft: (T.w() - (T.w()/2))/2 + 'px'
         });
 
         T.updateStyle('#top-menu-wrapper li', {
-            width: T.w()/2.5 + 'px',
-            height: T.p(Styles.topMenu.height) + 'px',
+            width: T.w()/2 + 'px',
+            height: T.p(Styles.topMenu.height)-2 + 'px',
             background: Styles.topMenu.bgColor,
             fontSize: T.p(Styles.topMenu.fontSize) + 'px',
             fontWeight: Styles.topMenu.fontWeight
@@ -155,7 +167,7 @@ App = {
             scrollWidth = 8
         }
         if ((T.w() > 600 && !T.isAndroid) || (Math.abs(window.orientation) == 90)) {
-                k = (T.w()/2 - T.p(22, 1)) / itemWidth;
+                k = (T.w()/2 - T.p(21.5)) / itemWidth;
                 if (wk < k) {
                     wk = k;
                 }
@@ -180,7 +192,7 @@ App = {
         });
 
         T.updateStyle('.deallist-item-header', {
-            background: 'rgba(0,0,0,0.4)',
+            background: 'rgba(0,0,0,0.6)',
             height: T.p(50)+'px',
             paddingLeft: T.p(15)+'px',
             lineHeight: T.p(50)+'px',
@@ -244,14 +256,14 @@ App = {
                 el: T.byId('top-menu-wrapper'),
                 resize: 0,
                 ignoreBoundaries: true,
-                speedRatioX: 0.4,
+                speedRatioX: 0.5,
                 listenY: false
             }]
         });
 
         App.mainPageHScroll.on('translate', function(){
-            document.querySelector('#top-menu-wrapper li.active').className = '';
-            document.querySelector('#top-menu-wrapper li:nth-child('+(this.currentPage.pageX+1)+')').className = 'active';
+            document.querySelector('#top-menu-wrapper li.top-menu-tabs-active').className = '';
+            document.querySelector('#top-menu-wrapper li:nth-child('+(this.currentPage.pageX+1)+')').className = 'top-menu-tabs-active';
         });
         var i = 1, scrollers = [];
         while (i<Styles.numberOfPages+1) {
@@ -345,8 +357,23 @@ App = {
                     } catch(e){}
                 });
             } else {
-                T.byId('wrapper'+i).index = i;
-                T.byId('wrapper'+i).addEventListener("scroll",function(e){
+
+                var wrapper = T.byId('wrapper'+i);
+                wrapper.index = i;
+
+                if (T.isIOS) {
+                    wrapper.scrollTop = 1
+                }
+                wrapper.addEventListener("scroll",function(e){
+
+                    if (T.isIOS) {
+                        if (e.target.scrollTop == 0) {
+                            e.target.scrollTop = 1
+                        }
+                    }
+                    //for (var i2 = 1; i2<7; i2++) {
+                    //    document.querySelector('#deallist1 li:nth-child('+(Math.floor(e.target.scrollTop/T.h()*0.5)*6+i2)+')').style.opacity = 1;
+                    //}
                     if(!App.isDealsLoading && (e.target.scrollTop > e.target.scrollHeight - T.h()*1.3)) {
                         // MBP.hideUrlBar();
                         var self = this;
@@ -355,6 +382,11 @@ App = {
 
                         var loadingElement = document.createElement("div");
                         loadingElement.className = 'loading-icon';
+
+                       // loadingElement.style.transition = 'opacity 0.5s';
+                      //  loadingElement.style.webkitTransition = 'opacity 0.5s';
+                      //  loadingElement.style.opacity = 1;
+
                         el.appendChild(loadingElement);
                         dealsText = '';
                         for (var i2 = 0; i2<20; i2++) {
@@ -362,10 +394,23 @@ App = {
                         }
                         var dealsElement = document.createElement("div");
                         dealsElement.innerHTML = dealsText;
+                        var transitionTime = 0.4;
+                        if (T.isIOS) {
+                            transitionTime = 0.8;
+                        }
+                        dealsElement.style.transition = 'opacity '+transitionTime+'s';
+                        dealsElement.style.webkitTransition = 'opacity '+transitionTime+'s';
+                        dealsElement.style.opacity = 0;
+                        dealsElement.style.webkitBackfaceVisibility = 'hidden';
+
                         setTimeout(function(){
+                        //    loadingElement.style.opacity = 0;
                             el.removeChild(loadingElement);
                             el.appendChild(dealsElement);
-                            App.isDealsLoading = 0
+                            setTimeout(function(){
+                                dealsElement.style.opacity = 1;
+                                App.isDealsLoading = 0;
+                            }, 200)
                         }, 1500)
                     }
                 }, 1);
