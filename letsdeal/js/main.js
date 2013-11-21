@@ -277,7 +277,7 @@ App = {
         while (i<Styles.numberOfPages+1) {
             var el = T.byId('deallist'+i);
             var dealsText = '';
-            for (var i2 = 0; i2<(i>1?8:24); i2++) {
+            for (var i2 = 0; i2<(i>1?8:12); i2++) {
                 dealsText += App.getDeal(Deals[Math.ceil(Math.random()*1000)])
             }
 
@@ -397,7 +397,7 @@ App = {
 
                         el.appendChild(loadingElement);
                         dealsText = '';
-                        for (var i2 = 0; i2<20; i2++) {
+                        for (var i2 = 0; i2<6; i2++) {
                             dealsText += App.getDeal(Deals[Math.floor(Math.random()*1000)])
                         }
                         var dealsElement = document.createElement("div");
@@ -419,7 +419,7 @@ App = {
                                 dealsElement.style.opacity = 1;
                                 App.isDealsLoading = 0;
                             }, 200)
-                        }, 1500)
+                        }, 1000)
                     }
                 }, 1);
             }
