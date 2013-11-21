@@ -243,11 +243,13 @@ body {
 }
 #top-menu-wrapper ul{
     text-align: center;
+    -webkit-backface-visibility: hidden;
 }
 #top-menu-wrapper li{
     display: block;
     float: left;
     overflow: hidden;
+    -webkit-backface-visibility: hidden;
 }
 #top-menu-wrapper li.top-menu-tabs-active{
     background: #3aa2bc;

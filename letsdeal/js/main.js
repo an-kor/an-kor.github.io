@@ -402,7 +402,7 @@ App = {
                         }
                         var dealsElement = document.createElement("div");
                         dealsElement.innerHTML = dealsText;
-                        var transitionTime = 0.4;
+                        var transitionTime = 0.25;
                         if (T.isIOS) {
                             transitionTime = 0.8;
                         }
@@ -419,7 +419,7 @@ App = {
                                 dealsElement.style.opacity = 1;
                                 App.isDealsLoading = 0;
                             }, 200)
-                        }, 1000)
+                        }, 300)
                     }
                 }, 1);
             }
