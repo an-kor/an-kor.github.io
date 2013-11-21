@@ -121,8 +121,6 @@ App = {
             backgroundPosition: '50% '+ T.p(12) +'px'
         });
 
-        T.setH('top-menu-wrapper', T.p(Styles.topMenu.height));
-
         T.setH('main-page-wrapper', T.h() - T.p(Styles.footer.height, 1)+1);
         T.updateStyle('#main-page-scroller', {
             top: T.p(Styles.topMenu.height) + 'px',
@@ -143,6 +141,8 @@ App = {
             height: trHeight + 'px',
             top: T.p(Styles.topMenu.height) - trHeight + 'px'
         });
+
+        T.setH('top-menu-wrapper', T.p(Styles.topMenu.height));
 
         T.updateStyle('#top-menu-wrapper', {
             width: T.w() + 'px'

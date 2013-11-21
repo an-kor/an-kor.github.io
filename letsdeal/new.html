@@ -1,0 +1,115 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en">
+<!--[if IEMobile 7 ]>    <html class="no-js iem7"> <![endif]-->
+<!--[if (gt IEMobile 7)|!(IEMobile)]><!--> <html class="no-js"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <title>Lets Deal App Prototype</title>
+    <meta name="description" content="">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0, target-densitydpi=device-dpi">
+    <meta http-equiv="cleartype" content="on">
+
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/touch/apple-touch-icon-144x144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/touch/apple-touch-icon-114x114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/touch/apple-touch-icon-72x72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="img/touch/apple-touch-icon-57x57-precomposed.png">
+    <link rel="shortcut icon" href="img/touch/apple-touch-icon.png">
+
+    <!-- Tile icon for Win8 (144x144 + tile color) -->
+    <meta name="msapplication-TileImage" content="img/touch/apple-touch-icon-144x144-precomposed.png">
+    <meta name="msapplication-TileColor" content="#222222">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="">
+
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script type="text/javascript" src="js/helper.js"></script>
+    <script type="text/javascript" src="js/deals.js"></script>
+    <script type="text/javascript" src="js/vendor/fastclick.js"></script>
+    <script type="text/javascript" src="js/vendor/hammer.js"></script>
+</head>
+<style>
+    .main-v-wrapper2 {
+        box-sizing: border-box;
+        float: left;
+        width:33.3%;
+        height: 100%;
+        -webkit-transform: translateX(0px);
+        -webkit-overflow-scrolling: touch;
+        -webkit-transition: -webkit-transform 0.5s;
+    }
+    #container {
+        width:100%;
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+    #container2 {
+        width:300%;
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+    #footer{
+        position: fixed;
+        bottom:0;
+        left:0;
+    }
+    #top-menu-wrapper{
+        position: fixed;
+        z-index: 10;
+        top:0;
+        left:0;
+    }
+    #top-menu-tabs{
+        -webkit-transition: -webkit-transform 0.5s;
+    }
+    .deallist {
+        -webkit-backface-visibility: hidden;
+    }
+</style>
+<body>
+
+<div id="top-menu-wrapper">
+    <ul id="top-menu-tabs">
+        <li class="top-menu-tabs-active"><a href="javascript:App.goToPage(0)">Shopping <span class="top-menu-tabs-counter">(4321)</span></a></li>
+        <li><a href="javascript:App.goToPage(1)">Stockholm <span class="top-menu-tabs-counter">(123)</span></a></li>
+        <li><a href="javascript:App.goToPage(2);">Resort <span class="top-menu-tabs-counter">(123)</span></a></li>
+    </ul>
+</div>
+<div id="container">
+    <div id="container2">
+        <div class="main-v-wrapper2" id="wrapper1">
+            <div class="deallist">
+                <ul id="deallist1">
+                </ul>
+            </div>
+        </div>
+        <div class="main-v-wrapper2" id="wrapper2">
+            <div class="deallist">
+                <ul id="deallist2">
+                </ul>
+            </div>
+        </div>
+        <div class="main-v-wrapper2" id="wrapper3">
+            <div class="deallist">
+                <ul id="deallist3">
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="footer">
+    <ul id="footer-tabs">
+        <li><a href="#" class="footer-tabs-search">Sök deal</a></li>
+        <li><a href="#" class="footer-tabs-mydeals">Mina deals</a></li>
+        <li><a href="#" class="footer-tabs-city">Ändra stad</a></li>
+        <li><a href="#" class="footer-tabs-settings">Inställningar</a></li>
+    </ul>
+</div>
+<script type="text/javascript" src="js/main_new.js"></script>
+</body>
+</html>
