@@ -405,18 +405,20 @@ App = {
                         var transitionTime = 0.25;
                         if (T.isIOS) {
                             transitionTime = 0.8;
+                            dealsElement.style.transition = 'opacity '+transitionTime+'s';
+                            dealsElement.style.webkitTransition = 'opacity '+transitionTime+'s';
+                            dealsElement.style.opacity = 0;
+                            dealsElement.style.webkitBackfaceVisibility = 'hidden';
                         }
-                        dealsElement.style.transition = 'opacity '+transitionTime+'s';
-                        dealsElement.style.webkitTransition = 'opacity '+transitionTime+'s';
-                        dealsElement.style.opacity = 0;
-                        dealsElement.style.webkitBackfaceVisibility = 'hidden';
 
                         setTimeout(function(){
                         //    loadingElement.style.opacity = 0;
                             el.removeChild(loadingElement);
                             el.appendChild(dealsElement);
                             setTimeout(function(){
-                                dealsElement.style.opacity = 1;
+                                if (T.isIOS) {
+                                    dealsElement.style.opacity = 1;
+                                }
                                 App.isDealsLoading = 0;
                             }, 200)
                         }, 300)
