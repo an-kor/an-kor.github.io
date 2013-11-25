@@ -454,15 +454,14 @@ App = {
                         }
 
                         setTimeout(function(){
-                        //    loadingElement.style.opacity = 0;
                             el.removeChild(loadingElement);
-                            T.each(T.query('#'+el.id+' .deallist-item'), function(image){
+                            /*T.each(T.query('#'+el.id+' .deallist-item'), function(image){
                                 image.style.backgroundImage = '';
-                            });
+                            });*/
                             el.appendChild(dealsElement);
-                            T.each(T.query('#'+el.id+' >div:nth-last-child(-n+4) .deallist-item'), function(image){
+                            /*T.each(T.query('#'+el.id+' >div:nth-last-child(-n+4) .deallist-item'), function(image){
                                 image.style.backgroundImage = 'url('+image.dataset.src+')';
-                            });
+                            });*/
                             setTimeout(function(){
                                 if (T.isIOS) {
                                     dealsElement.style.opacity = 1;
