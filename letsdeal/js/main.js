@@ -99,9 +99,9 @@ Styles = {
 
 App = {
     isDealsLoading: 0,
-    getDeal: function(imgSrc, withBackground){
+    getDeal: function(imgSrc){
         var dealTitles = ['83% på 4 nr av Sköna Hem inkl. produkter', '52% på töjbara halkskydd med rejäla ståldubbar', '70% på 6 showbiljetter till Julgalan 2013 i Västerås', '50% på biljett till Christer Sjögren Julkonsert 2013', '55% på klassisk korksandal med skön passform']
-        return '<li><div class="deallist-item" data-src="'+imgSrc+'" '+(withBackground?'style="background-image:url('+imgSrc+')"':"")+' ><div>' +
+        return '<li><div class="deallist-item" style="background-image: url('+imgSrc+');"><div>' +
             '<div class="deallist-item-header">'+dealTitles[Math.floor(Math.random()*5)]+'</div>' +
                 '<div class="deallist-item-footer">' +
                 '<div class="deallist-item-footer-bought">108 köpta</div>' +
@@ -140,6 +140,8 @@ App = {
             backgroundPosition: '50% '+ T.p(12) +'px'
         });
 
+        T.setH('top-menu-wrapper', T.p(Styles.topMenu.height));
+
         T.setH('main-page-wrapper', T.h() - T.p(Styles.footer.height, 1)+1);
         T.updateStyle('#main-page-scroller', {
             top: T.p(Styles.topMenu.height) + 'px',
@@ -149,6 +151,9 @@ App = {
             backgroundSize: '1px ' + T.p(64) + 'px',
             height: T.p(64) + 'px',
             top: T.h() - T.p(Styles.footer.height+146) + 'px'
+        });
+        T.updateStyle('#main-page-scroller-list', {
+            backgroundSize: '1px ' + T.p(64) + 'px'
         });
         T.updateStyle('#main-page-scroller-list > li', 'width', T.w() + 'px');
 
@@ -162,8 +167,6 @@ App = {
             height: trHeight + 'px',
             top: T.p(Styles.topMenu.height) - trHeight + 'px'
         });
-
-        T.setH('top-menu-wrapper', T.p(Styles.topMenu.height));
 
         T.updateStyle('#top-menu-wrapper', {
             width: T.w() + 'px'
@@ -232,7 +235,7 @@ App = {
         T.updateStyle('.deallist-item-footer', {
             marginTop: T.p(290) +'px',
             borderTop: 1+'px solid #cccac5',
-            height: T.p(60) +'px'
+            height: T.p(60) - 2 +'px'
         });
         T.updateStyle('.deallist-item-footer-bought', {
             width: T.p(130) + 'px',
@@ -291,32 +294,20 @@ App = {
         });
 
         App.mainPageHScroll.on('translate', function(){
-            document.querySelector('#top-menu-wrapper li.top-menu-tabs-active').className = '';
-            document.querySelector('#top-menu-wrapper li:nth-child('+(this.currentPage.pageX+1)+')').className = 'top-menu-tabs-active';
-        });
-        App.mainPageHScroll.on('scrollStart', function(){
-            if (this.currentPage.pageX<Styles.numberOfPages-1) {
-                var images = T.query('#wrapper'+(this.currentPage.pageX+2)+' .deallist-item');
-                T.each(images, function(image){
-                    image.style.backgroundImage = 'url('+image.dataset.src+')';
-                });
-            }
+            T.query('#top-menu-wrapper li.top-menu-tabs-active').className = '';
+            T.query('#top-menu-wrapper li:nth-child('+(this.currentPage.pageX+1)+')').className = 'top-menu-tabs-active';
         });
         var i = 1, scrollers = [];
         while (i<Styles.numberOfPages+1) {
             var el = T.byId('deallist'+i);
             var dealsText = '';
-            for (var i2 = 0; i2<Styles.numberOfImages; i2++) {
-                dealsText += App.getDeal(Deals[Math.ceil(Math.random()*1000)], 0 )
+            for (var i2 = 0; i2<(i>1?8:12); i2++) {
+                dealsText += App.getDeal(Deals[Math.ceil(Math.random()*1000)])
             }
 
             var dealsElement = document.createElement("div");
-            dealsElement.className = 'images';
             dealsElement.innerHTML = dealsText;
             el.appendChild(dealsElement);
-            T.each(T.query('#wrapper1 .deallist-item'), function(image){
-                image.style.backgroundImage = 'url('+image.dataset.src+')';
-            });
 
             if (T.isAndroid2) {
                 var scrollerOptions = {
@@ -351,7 +342,7 @@ App = {
                  scrollerOptions.maxMomentumDuration = T.h()*6;
                  }*/
                 scrollers[i] = new IScroll(T.byId('wrapper'+i), scrollerOptions);
-                /*scrollers[i].on('scrollEnd', function(e){
+                scrollers[i].on('scrollEnd', function(e){
                     var self = this;
                     var el = T.byId('deallist'+self.options.index), cnt = 0;
                     if (!App.checkLoadInterval) {
@@ -370,7 +361,7 @@ App = {
                             }
                         }, 2000);
                     }
-                });*/
+                });
                 scrollers[i].on('translate', function(){
                     try{
                         if(!App.isDealsLoading && Math.abs(this.y) > Math.abs(this.maxScrollY)) {
@@ -383,8 +374,8 @@ App = {
                             loadingElement.className = 'loading-icon';
                             el.appendChild(loadingElement);
                             dealsText = '';
-                            for (var i2 = 0; i2<16; i2++) {
-                                dealsText += App.getDeal(Deals[Math.floor(Math.random()*1000)], 1)
+                            for (var i2 = 0; i2<10; i2++) {
+                                dealsText += App.getDeal(Deals[Math.floor(Math.random()*1000)])
                             }
                             var dealsElement = document.createElement("div");
                             dealsElement.innerHTML = dealsText;
@@ -406,23 +397,15 @@ App = {
                     wrapper.scrollTop = 1
                 }
                 wrapper.addEventListener("scroll",function(e){
+
                     if (T.isIOS) {
                         if (e.target.scrollTop == 0) {
                             e.target.scrollTop = 1
                         }
                     }
-                    /*var divs = T.query('#deallist1 > div'), h = 0;
-                    for (var i=0; i<divs.length; i++) {
-                        if (h + divs[i].offsetHeight > e.target.scrollTop) {
-                            T.each(T.query('#deallist1 div.images:nth-child('+(i+1)+') .deallist-item, #deallist1 div.images:nth-child('+(i+2)+') .deallist-item'), function(image){
-                                image.style.backgroundImage = 'url('+image.dataset.src+')';
-                            });
-                            break;
-                        } else {
-                            h += divs[i].offsetHeight;
-                        }
-                    }*/
-
+                    //for (var i2 = 1; i2<7; i2++) {
+                    //    document.querySelector('#deallist1 li:nth-child('+(Math.floor(e.target.scrollTop/T.h()*0.5)*6+i2)+')').style.opacity = 1;
+                    //}
                     if(!App.isDealsLoading && (e.target.scrollTop > e.target.scrollHeight - T.h()*1.3)) {
                         // MBP.hideUrlBar();
                         var self = this;
@@ -438,37 +421,29 @@ App = {
 
                         el.appendChild(loadingElement);
                         dealsText = '';
-                        for (var i2 = 0; i2<Styles.numberOfImages; i2++) {
-                            dealsText += App.getDeal(Deals[Math.floor(Math.random()*1000)], 1)
+                        for (var i2 = 0; i2<6; i2++) {
+                            dealsText += App.getDeal(Deals[Math.floor(Math.random()*1000)])
                         }
                         var dealsElement = document.createElement("div");
                         dealsElement.innerHTML = dealsText;
-                        dealsElement.className = 'images';
-                        var transitionTime = 0.25;
+                        var transitionTime = 0.4;
                         if (T.isIOS) {
                             transitionTime = 0.8;
-                            dealsElement.style.transition = 'opacity '+transitionTime+'s';
-                            dealsElement.style.webkitTransition = 'opacity '+transitionTime+'s';
-                            dealsElement.style.opacity = 0;
-                            dealsElement.style.webkitBackfaceVisibility = 'hidden';
                         }
+                        dealsElement.style.transition = 'opacity '+transitionTime+'s';
+                        dealsElement.style.webkitTransition = 'opacity '+transitionTime+'s';
+                        dealsElement.style.opacity = 0;
+                        dealsElement.style.webkitBackfaceVisibility = 'hidden';
 
                         setTimeout(function(){
+                        //    loadingElement.style.opacity = 0;
                             el.removeChild(loadingElement);
-                            /*T.each(T.query('#'+el.id+' .deallist-item'), function(image){
-                                image.style.backgroundImage = '';
-                            });*/
                             el.appendChild(dealsElement);
-                            /*T.each(T.query('#'+el.id+' >div:nth-last-child(-n+2) .deallist-item'), function(image){
-                                image.style.backgroundImage = 'url('+image.dataset.src+')';
-                            });*/
                             setTimeout(function(){
-                                if (T.isIOS) {
-                                    dealsElement.style.opacity = 1;
-                                }
+                                dealsElement.style.opacity = 1;
                                 App.isDealsLoading = 0;
                             }, 200)
-                        }, 300)
+                        }, 1000)
                     }
                 }, 1);
             }

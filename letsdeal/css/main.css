@@ -243,13 +243,11 @@ body {
 }
 #top-menu-wrapper ul{
     text-align: center;
-    -webkit-backface-visibility: hidden;
 }
 #top-menu-wrapper li{
     display: block;
     float: left;
     overflow: hidden;
-    -webkit-backface-visibility: hidden;
 }
 #top-menu-wrapper li.top-menu-tabs-active{
     background: #3aa2bc;
@@ -278,6 +276,14 @@ body {
     bottom: 0;
 }
 
+#main-page-scroller-background{
+    position: absolute;
+    width: 100%;
+    background-image: url(../img/bg-gradient.png);
+    background-repeat: repeat-x;
+    background-position: left bottom;
+}
+
 #main-page-scroller-list {
     list-style: none;
     padding: 0;
@@ -285,13 +291,6 @@ body {
     width: 100%;
     height: 100%;
     background-color: #edebe6;
-}
-#main-page-scroller-background{
-    position: absolute;
-    width: 100%;
-    background-image: url(../img/bg-gradient.png);
-    background-repeat: repeat-x;
-    background-position: left bottom;
 }
 
 #main-page-scroller-list > li {
@@ -323,7 +322,7 @@ body {
 .deallist-item {
     background-repeat: no-repeat;
     overflow:hidden;
-    background-color: #4c4c4c;
+    background-color: #fafafa;
 }
 .deallist-item-header{
     width: 100%;
