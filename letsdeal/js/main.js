@@ -101,7 +101,7 @@ App = {
     isDealsLoading: 0,
     getDeal: function(imgSrc){
         var dealTitles = ['83% på 4 nr av Sköna Hem inkl. produkter', '52% på töjbara halkskydd med rejäla ståldubbar', '70% på 6 showbiljetter till Julgalan 2013 i Västerås', '50% på biljett till Christer Sjögren Julkonsert 2013', '55% på klassisk korksandal med skön passform']
-        return '<li><div class="deallist-item" data-src="'+imgSrc+'"><div>' +
+        return '<li><div class="deallist-item" data-src="'+imgSrc+'" style="background-image:url('+imgSrc+')"><div>' +
             '<div class="deallist-item-header">'+dealTitles[Math.floor(Math.random()*5)]+'</div>' +
                 '<div class="deallist-item-footer">' +
                 '<div class="deallist-item-footer-bought">108 köpta</div>' +
@@ -294,14 +294,14 @@ App = {
             document.querySelector('#top-menu-wrapper li.top-menu-tabs-active').className = '';
             document.querySelector('#top-menu-wrapper li:nth-child('+(this.currentPage.pageX+1)+')').className = 'top-menu-tabs-active';
         });
-        App.mainPageHScroll.on('scrollStart', function(){
+        /*App.mainPageHScroll.on('scrollStart', function(){
             if (this.currentPage.pageX<Styles.numberOfPages-1) {
                 var images = T.query('#wrapper'+(this.currentPage.pageX+2)+' .deallist-item, #wrapper'+(this.currentPage.pageX+3)+' .deallist-item');
                 T.each(images, function(image){
                     image.style.backgroundImage = 'url('+image.dataset.src+')';
                 });
             }
-        });
+        });*/
         var i = 1, scrollers = [];
         while (i<Styles.numberOfPages+1) {
             var el = T.byId('deallist'+i);
@@ -314,9 +314,9 @@ App = {
             dealsElement.className = 'images';
             dealsElement.innerHTML = dealsText;
             el.appendChild(dealsElement);
-            T.each(T.query('#wrapper1 .deallist-item'), function(image){
+            /*T.each(T.query('#wrapper1 .deallist-item'), function(image){
                 image.style.backgroundImage = 'url('+image.dataset.src+')';
-            });
+            });*/
 
             if (T.isAndroid2) {
                 var scrollerOptions = {
@@ -459,7 +459,7 @@ App = {
                                 image.style.backgroundImage = '';
                             });*/
                             el.appendChild(dealsElement);
-                            /*T.each(T.query('#'+el.id+' >div:nth-last-child(-n+4) .deallist-item'), function(image){
+                            /*T.each(T.query('#'+el.id+' >div:nth-last-child(-n+2) .deallist-item'), function(image){
                                 image.style.backgroundImage = 'url('+image.dataset.src+')';
                             });*/
                             setTimeout(function(){
