@@ -76,7 +76,7 @@ Styles = {
         color: 'white'
     },
     numberOfPages: 3,
-    numberOfImages: 24
+    numberOfImages: 16
 };
 
 App = {

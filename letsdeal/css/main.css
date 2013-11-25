@@ -285,6 +285,10 @@ body {
     width: 100%;
     height: 100%;
     background-color: #edebe6;
+}
+#main-page-scroller-background{
+    position: absolute;
+    width: 100%;
     background-image: url(../img/bg-gradient.png);
     background-repeat: repeat-x;
     background-position: left bottom;
@@ -319,7 +323,7 @@ body {
 .deallist-item {
     background-repeat: no-repeat;
     overflow:hidden;
-    background-color: #fafafa;
+    background-color: #4c4c4c;
 }
 .deallist-item-header{
     width: 100%;

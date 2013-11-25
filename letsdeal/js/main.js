@@ -11,7 +11,25 @@ T = {
         return document.getElementById(id);
     },
     query: function (query){
-        return document.querySelector(query);
+        var result = document.querySelectorAll(query);
+        return result
+        if (result.length== 1) {
+            return result[0]
+        } else {
+            return result
+        }
+    },
+    each: function(el, callback){
+        var i = 0;
+        if (el!=null) {
+            if (!el.length) {
+                return callback(el);
+            }
+            while (i < el.length) {
+                callback(el[i]);
+                i++;
+            }
+        }
     },
     w: function (){
         return window.innerWidth;
@@ -75,14 +93,15 @@ Styles = {
         fontWeight: 'bold',
         color: 'white'
     },
-    numberOfPages: 6
+    numberOfPages: 6,
+    numberOfImages: 12
 };
 
 App = {
     isDealsLoading: 0,
     getDeal: function(imgSrc){
         var dealTitles = ['83% på 4 nr av Sköna Hem inkl. produkter', '52% på töjbara halkskydd med rejäla ståldubbar', '70% på 6 showbiljetter till Julgalan 2013 i Västerås', '50% på biljett till Christer Sjögren Julkonsert 2013', '55% på klassisk korksandal med skön passform']
-        return '<li><div class="deallist-item" style="background-image: url('+imgSrc+');"><div>' +
+        return '<li><div class="deallist-item" data-src="'+imgSrc+'"><div>' +
             '<div class="deallist-item-header">'+dealTitles[Math.floor(Math.random()*5)]+'</div>' +
                 '<div class="deallist-item-footer">' +
                 '<div class="deallist-item-footer-bought">108 köpta</div>' +
@@ -126,8 +145,10 @@ App = {
             top: T.p(Styles.topMenu.height) + 'px',
             width: T.w()*Styles.numberOfPages + 'px'
         });
-        T.updateStyle('#main-page-scroller-list', {
-            backgroundSize: '1px ' + T.p(64) + 'px'
+        T.updateStyle('#main-page-scroller-background', {
+            backgroundSize: '1px ' + T.p(64) + 'px',
+            height: T.p(64) + 'px',
+            top: T.h() - T.p(Styles.footer.height+146) + 'px'
         });
         T.updateStyle('#main-page-scroller-list > li', 'width', T.w() + 'px');
 
@@ -211,7 +232,7 @@ App = {
         T.updateStyle('.deallist-item-footer', {
             marginTop: T.p(290) +'px',
             borderTop: 1+'px solid #cccac5',
-            height: T.p(60) - 2 +'px'
+            height: T.p(60) +'px'
         });
         T.updateStyle('.deallist-item-footer-bought', {
             width: T.p(130) + 'px',
@@ -273,17 +294,29 @@ App = {
             document.querySelector('#top-menu-wrapper li.top-menu-tabs-active').className = '';
             document.querySelector('#top-menu-wrapper li:nth-child('+(this.currentPage.pageX+1)+')').className = 'top-menu-tabs-active';
         });
+        App.mainPageHScroll.on('scrollStart', function(){
+            if (this.currentPage.pageX<Styles.numberOfPages-1) {
+                var images = T.query('#wrapper'+(this.currentPage.pageX+2)+' .deallist-item, #wrapper'+(this.currentPage.pageX+3)+' .deallist-item');
+                T.each(images, function(image){
+                    image.style.backgroundImage = 'url('+image.dataset.src+')';
+                });
+            }
+        });
         var i = 1, scrollers = [];
         while (i<Styles.numberOfPages+1) {
             var el = T.byId('deallist'+i);
             var dealsText = '';
-            for (var i2 = 0; i2<(i>1?16:16); i2++) {
+            for (var i2 = 0; i2<Styles.numberOfImages; i2++) {
                 dealsText += App.getDeal(Deals[Math.ceil(Math.random()*1000)])
             }
 
             var dealsElement = document.createElement("div");
+            dealsElement.className = 'images';
             dealsElement.innerHTML = dealsText;
             el.appendChild(dealsElement);
+            T.each(T.query('#wrapper1 .deallist-item'), function(image){
+                image.style.backgroundImage = 'url('+image.dataset.src+')';
+            });
 
             if (T.isAndroid2) {
                 var scrollerOptions = {
@@ -318,7 +351,7 @@ App = {
                  scrollerOptions.maxMomentumDuration = T.h()*6;
                  }*/
                 scrollers[i] = new IScroll(T.byId('wrapper'+i), scrollerOptions);
-                scrollers[i].on('scrollEnd', function(e){
+                /*scrollers[i].on('scrollEnd', function(e){
                     var self = this;
                     var el = T.byId('deallist'+self.options.index), cnt = 0;
                     if (!App.checkLoadInterval) {
@@ -337,7 +370,7 @@ App = {
                             }
                         }, 2000);
                     }
-                });
+                });*/
                 scrollers[i].on('translate', function(){
                     try{
                         if(!App.isDealsLoading && Math.abs(this.y) > Math.abs(this.maxScrollY)) {
@@ -373,15 +406,23 @@ App = {
                     wrapper.scrollTop = 1
                 }
                 wrapper.addEventListener("scroll",function(e){
-
                     if (T.isIOS) {
                         if (e.target.scrollTop == 0) {
                             e.target.scrollTop = 1
                         }
                     }
-                    //for (var i2 = 1; i2<7; i2++) {
-                    //    document.querySelector('#deallist1 li:nth-child('+(Math.floor(e.target.scrollTop/T.h()*0.5)*6+i2)+')').style.opacity = 1;
-                    //}
+                    /*var divs = T.query('#deallist1 > div'), h = 0;
+                    for (var i=0; i<divs.length; i++) {
+                        if (h + divs[i].offsetHeight > e.target.scrollTop) {
+                            T.each(T.query('#deallist1 div.images:nth-child('+(i+1)+') .deallist-item, #deallist1 div.images:nth-child('+(i+2)+') .deallist-item'), function(image){
+                                image.style.backgroundImage = 'url('+image.dataset.src+')';
+                            });
+                            break;
+                        } else {
+                            h += divs[i].offsetHeight;
+                        }
+                    }*/
+
                     if(!App.isDealsLoading && (e.target.scrollTop > e.target.scrollHeight - T.h()*1.3)) {
                         // MBP.hideUrlBar();
                         var self = this;
@@ -397,11 +438,12 @@ App = {
 
                         el.appendChild(loadingElement);
                         dealsText = '';
-                        for (var i2 = 0; i2<6; i2++) {
+                        for (var i2 = 0; i2<Styles.numberOfImages; i2++) {
                             dealsText += App.getDeal(Deals[Math.floor(Math.random()*1000)])
                         }
                         var dealsElement = document.createElement("div");
                         dealsElement.innerHTML = dealsText;
+                        dealsElement.className = 'images';
                         var transitionTime = 0.25;
                         if (T.isIOS) {
                             transitionTime = 0.8;
@@ -414,7 +456,13 @@ App = {
                         setTimeout(function(){
                         //    loadingElement.style.opacity = 0;
                             el.removeChild(loadingElement);
+                            T.each(T.query('#'+el.id+' .deallist-item'), function(image){
+                                image.style.backgroundImage = '';
+                            });
                             el.appendChild(dealsElement);
+                            T.each(T.query('#'+el.id+' >div:nth-last-child(-n+4) .deallist-item'), function(image){
+                                image.style.backgroundImage = 'url('+image.dataset.src+')';
+                            });
                             setTimeout(function(){
                                 if (T.isIOS) {
                                     dealsElement.style.opacity = 1;
