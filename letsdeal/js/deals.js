@@ -1,4 +1,4 @@
-Deals = [
+DealImages = [
     "http://letsdeal-splashes.s3.amazonaws.com/6730259.jpg",
     "http://letsdeal-splashes.s3.amazonaws.com/6730646.jpg",
     "http://letsdeal-splashes.s3.amazonaws.com/6733627.jpg",

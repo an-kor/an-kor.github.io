@@ -1,5 +1,4 @@
-
-T = {
+var T = {
     isIOS: /iP(ad|hone|od)/.test(navigator.userAgent),
     isWebkit: /WebKit/.test(navigator.userAgent),
     isDesktop: !("ontouchstart" in document.documentElement),
@@ -12,14 +11,13 @@ T = {
     },
     query: function (query){
         var result = document.querySelectorAll(query);
-        return result
-        if (result.length== 1) {
+        if (result.length == 1) {
             return result[0]
         } else {
             return result
         }
     },
-    each: function(el, callback){
+    each: function (el, callback){
         var i = 0;
         if (el!=null) {
             if (!el.length) {
@@ -29,6 +27,7 @@ T = {
                 callback(el[i]);
                 i++;
             }
+            return true;
         }
     },
     w: function (){
@@ -53,7 +52,7 @@ T = {
         if (abs) {
             return Math.abs(this.scale*v);
         }
-        return this.scale*v;
+        return parseFloat((this.scale*v).toFixed(3));
     },
     setW: function (el, v){
         T.byId(el).style.width = v + 'px';
@@ -77,7 +76,7 @@ T = {
         }
     }
 };
-Styles = {
+var Styles = {
     defaultFontSize: 24,
     footer: {
         bgColor: '#3eacc8',
@@ -93,76 +92,93 @@ Styles = {
         fontWeight: 'bold',
         color: 'white'
     },
-    numberOfPages: 6,
+    numberOfPages: 0,
     numberOfImages: 12
 };
-
-App = {
-    isDealsLoading: 0,
-    getDeal: function(imgSrc){
+var Deals = {
+    addNewList: function(type, typeId, callback, index){
+        Styles.numberOfPages++;
+        if (typeof(index)=='undefined'){
+            index = Styles.numberOfPages;
+        }
+        var pageTpl = Templates.dealsPage(index);
+        T.byId('main-page-scroller-list').innerHTML += pageTpl;
+        var headerTpl = Templates.dealsPageHeader({
+            index: index,
+            header: 'Stockholm',
+            number: 1234
+        });
+        T.byId('top-menu-tabs').innerHTML += headerTpl;
+        T.byId('deallist'+index).appendChild(this.loadDeals(index,0,0,0,10));
+        callback();
+    },
+    loadDeals: function(pageIndex, type, typeId, limit, size){
+        var dealsText = '';
+        for (var i = 0; i<size; i++) {
+            dealsText += Templates.dealsItem({
+                soldNumber: 108,
+                listPrice: 1599,
+                newPrice: 1399,
+                src: DealImages[Math.ceil(Math.random()*1000)]
+            });
+        }
+        var dealsElement = document.createElement("div");
+        dealsElement.innerHTML = dealsText;
+        return dealsElement;
+    }
+}
+var Templates = {
+    dealsPage: function(pageId){
+        return '<li>'+
+            '<div class="main-v-wrapper" id="wrapper'+pageId+'">'+
+                '<div class="deallist">'+
+                    '<ul id="deallist'+pageId+'">'+
+                    '</ul>'+
+                '</div>'+
+            '</div>'+
+        '</li>';
+    },
+    dealsItem: function(data){
         var dealTitles = ['83% på 4 nr av Sköna Hem inkl. produkter', '52% på töjbara halkskydd med rejäla ståldubbar', '70% på 6 showbiljetter till Julgalan 2013 i Västerås', '50% på biljett till Christer Sjögren Julkonsert 2013', '55% på klassisk korksandal med skön passform']
-        return '<li><div class="deallist-item" style="background-image: url('+imgSrc+');"><div>' +
+        return '<li><div class="deallist-item" style="background-image: url('+data.src+');"><div>' +
             '<div class="deallist-item-header">'+dealTitles[Math.floor(Math.random()*5)]+'</div>' +
                 '<div class="deallist-item-footer">' +
-                '<div class="deallist-item-footer-bought">108 köpta</div>' +
-                '<div class="deallist-item-footer-price"><div class="deallist-item-footer-price-old">499 kr</div><div class="deallist-item-footer-price-new">229 kr</div></div>' +
+                '<div class="deallist-item-footer-bought">'+data.soldNumber+' köpta</div>' +
+                '<div class="deallist-item-footer-price"><div class="deallist-item-footer-price-old">'+data.listPrice+' kr</div><div class="deallist-item-footer-price-new">'+data.newPrice+' kr</div></div>' +
                 '</div>' +
             '</div></div></li>';
     },
-    goToPage: function(i){
-        setTimeout(function(){
-            App.mainPageHScroll.goToPage(i, 0, 700, IScroll.ease.quadratic2);
-        },100)
+    dealsPageHeader: function(data){
+        return '<li><a href="javascript:App.goToPage('+data.index+')">'+data.header+' <span class="top-menu-tabs-counter">('+data.number+')</span></a></li>';
     },
-    init: function(){
-        FastClick.attach(document.body);
-        if (!window.orientation || window.orientation == 180) {
-            T.scale = T.h() / 1136;
-        } else {
-            T.scale = T.h() / 640;
-        }
-        document.body.style['font-size'] = T.p(Styles.defaultFontSize) + 'px';
+    prepareFooter: function(){
         T.setH('footer', T.p(Styles.footer.height, 1));
-        if (T.p(Styles.topMenu.fontSize)>T.w()/17) {
-            Styles.topMenu.fontSize = T.w()/T.p(17.5);
-            Styles.topMenu.height = Styles.topMenu.fontSize*2;
-        }
-
         T.updateStyle('#footer-tabs', {
             background: Styles.footer.bgColor,
             borderTop: Styles.footer.borderTop
         });
-
         T.updateStyle('#footer-tabs a', {
             paddingTop: T.p(Styles.footer.height - 2*Styles.footer.fontSize) + 'px',
             fontSize: T.p(Styles.footer.fontSize) + 'px',
             backgroundSize: T.p(48)+'px '+ T.p(48) +'px',
             backgroundPosition: '50% '+ T.p(12) +'px'
         });
+    },
+    prepareHeader: function(){
+        if (T.p(Styles.topMenu.fontSize)>T.w()/17) {
+            Styles.topMenu.fontSize = T.w()/T.p(17.5);
+            Styles.topMenu.height = Styles.topMenu.fontSize*2;
+        }
 
         T.setH('top-menu-wrapper', T.p(Styles.topMenu.height));
-
-        T.setH('main-page-wrapper', T.h() - T.p(Styles.footer.height, 1)+1);
-        T.updateStyle('#main-page-scroller', {
-            top: T.p(Styles.topMenu.height) + 'px',
-            width: T.w()*Styles.numberOfPages + 'px'
-        });
-        T.updateStyle('#main-page-scroller-background', {
-            backgroundSize: '1px ' + T.p(64) + 'px',
-            height: T.p(64) + 'px',
-            top: T.h() - T.p(Styles.footer.height+146) + 'px'
-        });
-        T.updateStyle('#main-page-scroller-list', {
-            backgroundSize: '1px ' + T.p(64) + 'px'
-        });
-        T.updateStyle('#main-page-scroller-list > li', 'width', T.w() + 'px');
 
         T.updateStyle('#top-menu-background', {
             height: T.p(Styles.topMenu.height) + 'px',
             background: Styles.topMenu.bgColor,
             borderBottom: Styles.topMenu.borderBottom
         });
-        var trHeight = Math.ceil(T.p(Styles.topMenu.height)/5.66)
+
+        var trHeight = Math.ceil(T.p(Styles.topMenu.height)/5.66);
         T.updateStyle('#top-menu-triangle', {
             height: trHeight + 'px',
             top: T.p(Styles.topMenu.height) - trHeight + 'px'
@@ -189,20 +205,58 @@ App = {
             lineHeight: T.p(Styles.topMenu.height) + 'px',
             color: Styles.topMenu.color
         });
+    },
+    prepareMainPage: function(){
+        T.setH('main-page-wrapper', T.h() - T.p(Styles.footer.height, 1)+1);
+        T.updateStyle('#main-page-scroller', {
+            top: T.p(Styles.topMenu.height) + 'px',
+            width: T.w()*Styles.numberOfPages + 'px'
+        });
+        T.updateStyle('#main-page-scroller-background', {
+            backgroundSize: '1px ' + T.p(65) + 'px',
+            height: T.p(64) + 'px',
+            top: T.h() - T.p(Styles.footer.height+146) + 'px'
+        });
+        T.updateStyle('#main-page-scroller-list', {
+            backgroundSize: '1px ' + T.p(64) + 'px'
+        });
+        T.updateStyle('#main-page-scroller-list > li', 'width', T.w() + 'px');
 
-      /*  T.updateStyle('.deallist > ul li', {
-            height: T.p(400) + 'px'
-        });*/
+        App.mainPageHScroll = new IScroll(T.byId('main-page-wrapper'), {
+            scrollX: true,
+            scrollY: 0,
+            snap: true,
+            momentum: false,
+            bounce: false,
+            snapThreshold: 0.1,
+            lockDirection: true,
+            directionLockThreshold: 20,
+            eventPassthrough: 'vertical',
+            preventDefault: true,
+            indicators: [{
+                el: T.byId('top-menu-wrapper'),
+                resize: 0,
+                ignoreBoundaries: true,
+                speedRatioX: 0.5,
+                listenY: false
+            }]
+        });
 
+        App.mainPageHScroll.on('translate', function(){
+            T.query('#top-menu-wrapper li.top-menu-tabs-active').className = '';
+            T.query('#top-menu-wrapper li:nth-child('+(this.currentPage.pageX+1)+')').className = 'top-menu-tabs-active';
+        });
+    },
+    prepareDeals: function(){
         var k = T.p(350) / 290, wk = k, itemWidth = 510, scrollWidth = 0;
         if (T.isDesktop) {
             scrollWidth = 8
         }
         if ((T.w() > 600 && !T.isAndroid) || (Math.abs(window.orientation) == 90)) {
-                k = (T.w()/2 - T.p(21.5)) / itemWidth;
-                if (wk < k) {
-                    wk = k;
-                }
+            k = (T.w()/2 - T.p(21.5)) / itemWidth;
+            if (wk < k) {
+                wk = k;
+            }
         } else {
             if (k * itemWidth < (T.w() - T.p(30))) {
                 k = (T.w() - T.p(30)) / itemWidth;
@@ -230,7 +284,7 @@ App = {
             lineHeight: T.p(50)+'px',
             color: 'white',
             fontSize: T.p(24)+'px'
-            //,textShadow: (!T.isAndroid2)?'0px 1px 2px rgba(0, 0, 0, 0.5)':''
+            ,textShadow: (!T.isAndroid2)?'0px 1px 2px rgba(0, 0, 0, 0.5)':''
         });
         T.updateStyle('.deallist-item-footer', {
             marginTop: T.p(290) +'px',
@@ -270,33 +324,37 @@ App = {
             webkitBackgroundSize: T.p(48) + 'px ' + T.p(48) + 'px',
             backgroundSize: T.p(48) + 'px ' + T.p(48) + 'px'
         });
+    }
+};
+var App = {
+    isDealsLoading: 0,
+    goToPage: function(i){
+        setTimeout(function(){
+            App.mainPageHScroll.goToPage(i-1, 0, 700, IScroll.ease.quadratic2);
+        },100)
+    },
+    init: function(){
+        FastClick.attach(document.body);
+        if (!window.orientation || window.orientation == 180) {
+            T.scale = T.h() / 1136;
+        } else {
+            T.scale = T.h() / 640;
+        }
+        document.body.style['font-size'] = T.p(Styles.defaultFontSize) + 'px';
 
         T.byId('pages-wrapper').style.bottom = T.p(Styles.footer.height) + 'px';
         T.setW('pages-scroller', T.w()*2);
-
-        App.mainPageHScroll = new IScroll(T.byId('main-page-wrapper'), {
-            scrollX: true,
-            scrollY: 0,
-            snap: true,
-            momentum: false,
-            snapThreshold: 0.1,
-            lockDirection: true,
-            directionLockThreshold: 20,
-            eventPassthrough: 'vertical',
-            preventDefault: true,
-            indicators: [{
-                el: T.byId('top-menu-wrapper'),
-                resize: 0,
-                ignoreBoundaries: true,
-                speedRatioX: 0.5,
-                listenY: false
-            }]
+        Deals.addNewList('category', 0, function(){
+            Deals.addNewList('city', 0, function(){
+                Deals.addNewList('resort', 0, function(){
+                    Templates.prepareHeader();
+                    Templates.prepareMainPage();
+                    Templates.prepareDeals();
+                    Templates.prepareFooter();
+                });
+            });
         });
-
-        App.mainPageHScroll.on('translate', function(){
-            T.query('#top-menu-wrapper li.top-menu-tabs-active').className = '';
-            T.query('#top-menu-wrapper li:nth-child('+(this.currentPage.pageX+1)+')').className = 'top-menu-tabs-active';
-        });
+        return 0;
         var i = 1, scrollers = [];
         while (i<Styles.numberOfPages+1) {
             var el = T.byId('deallist'+i);
@@ -341,7 +399,7 @@ App = {
                  scrollerOptions.maxMomentumDistance = T.h()*3;
                  scrollerOptions.maxMomentumDuration = T.h()*6;
                  }*/
-                scrollers[i] = new IScroll(T.byId('wrapper'+i), scrollerOptions);
+                /*
                 scrollers[i].on('scrollEnd', function(e){
                     var self = this;
                     var el = T.byId('deallist'+self.options.index), cnt = 0;
@@ -362,6 +420,8 @@ App = {
                         }, 2000);
                     }
                 });
+                */
+                scrollers[i] = new IScroll(T.byId('wrapper'+i), scrollerOptions);
                 scrollers[i].on('translate', function(){
                     try{
                         if(!App.isDealsLoading && Math.abs(this.y) > Math.abs(this.maxScrollY)) {
@@ -389,10 +449,8 @@ App = {
                     } catch(e){}
                 });
             } else {
-
                 var wrapper = T.byId('wrapper'+i);
                 wrapper.index = i;
-
                 if (T.isIOS) {
                     wrapper.scrollTop = 1
                 }
@@ -415,9 +473,9 @@ App = {
                         var loadingElement = document.createElement("div");
                         loadingElement.className = 'loading-icon';
 
-                       // loadingElement.style.transition = 'opacity 0.5s';
-                      //  loadingElement.style.webkitTransition = 'opacity 0.5s';
-                      //  loadingElement.style.opacity = 1;
+                        // loadingElement.style.transition = 'opacity 0.5s';
+                        // loadingElement.style.webkitTransition = 'opacity 0.5s';
+                        // loadingElement.style.opacity = 1;
 
                         el.appendChild(loadingElement);
                         dealsText = '';
@@ -436,13 +494,13 @@ App = {
                         dealsElement.style.webkitBackfaceVisibility = 'hidden';
 
                         setTimeout(function(){
-                        //    loadingElement.style.opacity = 0;
+                            // loadingElement.style.opacity = 0;
                             el.removeChild(loadingElement);
                             el.appendChild(dealsElement);
                             setTimeout(function(){
                                 dealsElement.style.opacity = 1;
                                 App.isDealsLoading = 0;
-                            }, 200)
+                            }, 200);
                         }, 1000)
                     }
                 }, 1);
