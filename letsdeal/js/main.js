@@ -207,7 +207,7 @@ var Templates = {
         });
     },
     prepareMainPage: function(){
-        T.setH('main-page-wrapper', T.h() - T.p(Styles.footer.height, 1)+1);
+        T.setH('main-page-wrapper', T.h() - T.p(Style.footer.height, 1)+1);
         T.updateStyle('#main-page-scroller', {
             top: T.p(Styles.topMenu.height) + 'px',
             width: T.w()*Styles.numberOfPages + 'px'
@@ -221,7 +221,6 @@ var Templates = {
             backgroundSize: '1px ' + T.p(64) + 'px'
         });
         T.updateStyle('#main-page-scroller-list > li', 'width', T.w() + 'px');
-
         App.mainPageHScroll = new IScroll(T.byId('main-page-wrapper'), {
             scrollX: true,
             scrollY: 0,
@@ -241,7 +240,6 @@ var Templates = {
                 listenY: false
             }]
         });
-
         App.mainPageHScroll.on('translate', function(){
             T.query('#top-menu-wrapper li.top-menu-tabs-active').className = '';
             T.query('#top-menu-wrapper li:nth-child('+(this.currentPage.pageX+1)+')').className = 'top-menu-tabs-active';
