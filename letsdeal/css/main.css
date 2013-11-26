@@ -315,14 +315,17 @@ body {
 .deallist > ul {
     list-style: none;
     width: 100%;
+    -webkit-backface-visibility: hidden;
 }
 .deallist > ul li {
     display:inline-block;
+    -webkit-backface-visibility: hidden;
 }
 .deallist-item {
     background-repeat: no-repeat;
     overflow:hidden;
     background-color: #fafafa;
+    -webkit-backface-visibility: hidden;
 }
 .deallist-item-header{
     width: 100%;

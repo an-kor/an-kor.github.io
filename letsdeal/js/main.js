@@ -74,8 +74,123 @@ var T = {
                 break;
             }
         }
+    },
+    request: function(action, callback, params, errorCallback, timeout) {
+        var url = './controller.php';
+        if (!timeout) {
+            timeout = 8000;
+        }
+        if (!params) {
+            params = {action: action}
+        } else {
+            params.action = action;
+        }
+        T.xhrReq({
+            url: url,
+            dataType: 'text',
+            type: 'GET',
+            timeout: timeout,
+            data: params,
+            success: function(data){
+                //try {
+                    callback(JSON.parse(data));
+               // } catch(e) {
+               //     console.log('error on parsing data', data)
+               // }
+            },
+            error: function(data){
+                errorCallback(data);
+            }
+        })
     }
 };
+
+(function($) {
+    var win=window, xhrs = [
+            function () { return new XMLHttpRequest(); },
+            function () { return new ActiveXObject("Microsoft.XMLHTTP"); },
+            function () { return new ActiveXObject("MSXML2.XMLHTTP.3.0"); },
+            function () { return new ActiveXObject("MSXML2.XMLHTTP"); }
+        ],
+        _xhrf = null;
+    var hasOwnProperty = Object.prototype.hasOwnProperty,
+        nativeForEach = Array.prototype.forEach;
+
+    $.xhr = function () {
+        if (_xhrf != null) return _xhrf();
+        for (var i = 0, l = xhrs.length; i < l; i++) {
+            try {
+                var f = xhrs[i], req = f();
+                if (req != null) {
+                    _xhrf = f;
+                    return req;
+                }
+            } catch (e) {
+                continue;
+            }
+        }
+        return function () { };
+    };
+    $._xhrResp = function (xhr) {
+        if (xhr.getResponseHeader("Content-Type")) {
+            switch (xhr.getResponseHeader("Content-Type").split(";")[0]) {
+                case "text/xml":
+                    return xhr.responseXML;
+                case "text/json":
+                case "application/json":
+                case "text/javascript":
+                case "application/javascript":
+                case "application/x-javascript":
+                    return win.JSON ? JSON.parse(xhr.responseText) : eval(xhr.responseText);
+                default:
+                    return xhr.responseText;
+            }
+        } else {
+            return '';
+        }
+    };
+    $._formData = function (o) {
+        var kvps = [], regEx = /%20/g;
+        for (var k in o) kvps.push(encodeURIComponent(k).replace(regEx, "+") + "=" + encodeURIComponent(o[k].toString()).replace(regEx, "+"));
+        return kvps.join('&');
+    };
+    $.xhrReq = function (o) {
+        var xhr = $.xhr(), timer, n = 0;
+        o.userAgent = "XMLHttpRequest";
+        o.lang = "en";
+        o.type = "POST";
+        o.dataType = "application/x-www-form-urlencoded";
+        if (o.timeout) timer = setTimeout(function () { xhr.abort(); if (o.timeoutFn) o.timeoutFn(o.url); }, o.timeout);
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4) {
+                if (timer) clearTimeout(timer);
+                if (xhr.status < 300) {
+                    if (o.success) o.success($._xhrResp(xhr));
+                }
+                else if (o.error) o.error(xhr, xhr.status, xhr.statusText);
+                if (o.complete) o.complete(xhr, xhr.statusText);
+            }
+            else if (o.progress) o.progress(++n);
+        };
+        var url = o.url, data = null;
+        var nocache = new Date().getTime();
+        var isPost = o.type == "POST" || o.type == "PUT";
+        if (!isPost && o.data)  {
+            url += "?" + $._formData(o.data);
+        } else {
+            url += "?ts=" + nocache;
+        }
+        xhr.open(o.type, url);
+
+        if (isPost) {
+            var isJson = o.dataType.indexOf("json") >= 0;
+            data = isJson ? JSON.stringify(o.data) : $._formData(o.data);
+            xhr.setRequestHeader("Content-Type", isJson ? "application/json" : "application/x-www-form-urlencoded");
+        }
+        xhr.send(data);
+    };
+})(window.T);
+
 var Styles = {
     defaultFontSize: 24,
     footer: {
@@ -96,60 +211,121 @@ var Styles = {
     numberOfImages: 12
 };
 var Deals = {
-    addNewList: function(type, typeId, callback, index){
-        Styles.numberOfPages++;
+    addNewList: function(data, index){
         if (typeof(index)=='undefined'){
             index = Styles.numberOfPages;
         }
-        var pageTpl = Templates.dealsPage(index);
-        T.byId('main-page-scroller-list').innerHTML += pageTpl;
-        var headerTpl = Templates.dealsPageHeader({
-            index: index,
-            header: 'Stockholm',
-            number: 1234
-        });
-        T.byId('top-menu-tabs').innerHTML += headerTpl;
-        T.byId('deallist'+index).appendChild(this.loadDeals(index,0,0,0,10));
-        callback();
-    },
-    loadDeals: function(pageIndex, type, typeId, limit, size){
-        var dealsText = '';
-        for (var i = 0; i<size; i++) {
-            dealsText += Templates.dealsItem({
-                soldNumber: 108,
-                listPrice: 1599,
-                newPrice: 1399,
-                src: DealImages[Math.ceil(Math.random()*1000)]
-            });
+        var pageTpl = Templates.dealsPage(data.id);
+        var previousPage = T.query('#main-page-scroller-list > li:nth-child('+(index)+')');
+        var newPage = document.createElement("li");
+        newPage.innerHTML = pageTpl;
+
+        var wrapper = newPage.firstChild;
+        wrapper.index = data.id;
+        if (T.isIOS) {
+            wrapper.scrollTop = 1
         }
-        var dealsElement = document.createElement("div");
-        dealsElement.innerHTML = dealsText;
-        return dealsElement;
+        wrapper.addEventListener("scroll",function(e){
+            if (T.isIOS) {
+                if (e.target.scrollTop == 0) {
+                    e.target.scrollTop = 1
+                }
+            }
+
+            if(!App.isDealsLoading && (e.target.scrollTop > e.target.scrollHeight - T.h()*1.3)) {
+                var self = this;
+                var el = T.byId('deallist_'+e.target.index);
+                App.isDealsLoading = 1;
+
+                var loadingElement = document.createElement("div");
+                loadingElement.className = 'loading-icon';
+
+                el.appendChild(loadingElement);
+                var dealItems = T.query('#deallist_'+e.target.index + ' .deallist-item');
+                Deals.loadDeals(data.id, dealItems.length, 10, function(dealsElement){
+                    if (T.isIOS) {
+                        var transitionTime = 0.8;
+                        dealsElement.style.webkitTransition = 'opacity '+transitionTime+'s';
+                        dealsElement.style.opacity = 0;
+                    }
+
+                    el.removeChild(loadingElement);
+                    el.appendChild(dealsElement);
+                    setTimeout(function(){
+                        if (T.isIOS) {
+                            dealsElement.style.opacity = 1;
+                        }
+                        App.isDealsLoading = 0;
+                    }, 200);
+                });
+            }
+        });
+
+        if (previousPage.length === 0) {
+            T.byId('main-page-scroller-list').appendChild(newPage);
+        } else {
+            previousPage.parentNode.insertBefore(newPage, previousPage.nextSibling);
+        }
+        var headerTpl = Templates.dealsPageHeader(data);
+
+        var previousHeader = T.query('#top-menu-tabs > li:nth-child('+(index)+')');
+        var newHeader = document.createElement("li");
+        newHeader.innerHTML = headerTpl;
+        if (previousHeader.length === 0) {
+            T.byId('top-menu-tabs').appendChild(newHeader);
+        } else {
+            previousHeader.parentNode.insertBefore(newHeader, previousHeader.nextSibling);
+        }
+        newHeader.firstChild.addEventListener('click', function(e){
+            var childs = this.parentNode.parentNode.childNodes;
+            for (var i in childs) {
+                if (childs[i].nodeName == 'LI' && childs[i].firstChild.id == this.id) {
+                    return App.goToPage(i-1);
+                }
+            }
+        });
+
+        Deals.loadDeals(data.id, 0, 10, function(result){
+            T.byId('deallist_'+data.id).appendChild(result)
+        });
+        Styles.numberOfPages++;
+    },
+    loadDeals: function(type, from, limit, callback){
+        var dealsText = '';
+        T.request('deals', function(data){
+            for (var i in data) {
+                dealsText += Templates.dealsItem(data[i]);
+            }
+            var dealsElement = document.createElement("div");
+            dealsElement.innerHTML = dealsText;
+            callback(dealsElement);
+        }, {
+            type: type,
+            from: from,
+            limit: limit
+        });
     }
-}
+};
 var Templates = {
     dealsPage: function(pageId){
-        return '<li>'+
-            '<div class="main-v-wrapper" id="wrapper'+pageId+'">'+
-                '<div class="deallist">'+
-                    '<ul id="deallist'+pageId+'">'+
-                    '</ul>'+
-                '</div>'+
-            '</div>'+
-        '</li>';
+        return '<div class="main-v-wrapper" id="wrapper_'+pageId+'">'+
+                   '<div class="deallist">'+
+                       '<ul id="deallist_'+pageId+'">'+
+                       '</ul>'+
+                   '</div>'+
+               '</div>';
     },
     dealsItem: function(data){
-        var dealTitles = ['83% på 4 nr av Sköna Hem inkl. produkter', '52% på töjbara halkskydd med rejäla ståldubbar', '70% på 6 showbiljetter till Julgalan 2013 i Västerås', '50% på biljett till Christer Sjögren Julkonsert 2013', '55% på klassisk korksandal med skön passform']
-        return '<li><div class="deallist-item" style="background-image: url('+data.src+');"><div>' +
-            '<div class="deallist-item-header">'+dealTitles[Math.floor(Math.random()*5)]+'</div>' +
+        return '<li><div class="deallist-item" style="background-image: url('+data.imageSrc+');"><div>' +
+            '<div class="deallist-item-header">'+data.title+'</div>' +
                 '<div class="deallist-item-footer">' +
-                '<div class="deallist-item-footer-bought">'+data.soldNumber+' köpta</div>' +
-                '<div class="deallist-item-footer-price"><div class="deallist-item-footer-price-old">'+data.listPrice+' kr</div><div class="deallist-item-footer-price-new">'+data.newPrice+' kr</div></div>' +
+                '<div class="deallist-item-footer-bought">'+data.bulk+' köpta</div>' +
+                '<div class="deallist-item-footer-price"><div class="deallist-item-footer-price-old">'+data.origPrice+' kr</div><div class="deallist-item-footer-price-new">'+data.price+' kr</div></div>' +
                 '</div>' +
             '</div></div></li>';
     },
     dealsPageHeader: function(data){
-        return '<li><a href="javascript:App.goToPage('+data.index+')">'+data.header+' <span class="top-menu-tabs-counter">('+data.number+')</span></a></li>';
+        return '<a href="javascript:void(0)" id="header_'+data.id+'">'+data.name+' <span class="top-menu-tabs-counter">('+data.dealsCount+')</span></a>';
     },
     prepareFooter: function(){
         T.setH('footer', T.p(Styles.footer.height, 1));
@@ -205,9 +381,10 @@ var Templates = {
             lineHeight: T.p(Styles.topMenu.height) + 'px',
             color: Styles.topMenu.color
         });
+        T.query('#top-menu-wrapper li:nth-child(1)').className = 'top-menu-tabs-active';
     },
     prepareMainPage: function(){
-        T.setH('main-page-wrapper', T.h() - T.p(Style.footer.height, 1)+1);
+        T.setH('main-page-wrapper', T.h() - T.p(Styles.footer.height, 1)+1);
         T.updateStyle('#main-page-scroller', {
             top: T.p(Styles.topMenu.height) + 'px',
             width: T.w()*Styles.numberOfPages + 'px'
@@ -327,8 +504,11 @@ var Templates = {
 var App = {
     isDealsLoading: 0,
     goToPage: function(i){
+        i=parseInt(i);
         setTimeout(function(){
-            App.mainPageHScroll.goToPage(i-1, 0, 700, IScroll.ease.quadratic2);
+            App.mainPageHScroll.goToPage(i, 0, 700, IScroll.ease.quadratic2);
+            T.query('#top-menu-wrapper li.top-menu-tabs-active').className = '';
+            T.query('#top-menu-wrapper li:nth-child('+(i+1)+')').className = 'top-menu-tabs-active';
         },100)
     },
     init: function(){
@@ -342,15 +522,21 @@ var App = {
 
         T.byId('pages-wrapper').style.bottom = T.p(Styles.footer.height) + 'px';
         T.setW('pages-scroller', T.w()*2);
-        Deals.addNewList('category', 0, function(){
-            Deals.addNewList('city', 0, function(){
-                Deals.addNewList('resort', 0, function(){
-                    Templates.prepareHeader();
-                    Templates.prepareMainPage();
-                    Templates.prepareDeals();
-                    Templates.prepareFooter();
-                });
-            });
+
+        T.request('categories', function(data){
+            var i;
+            for (i in data.categories) {
+                Deals.addNewList(data.categories[i]);
+            }
+            for (i in data.cities) {
+                if (data.cities[i].id == 'stockholm') {
+                    Deals.addNewList(data.cities[i], 1);
+                }
+            }
+            Templates.prepareHeader();
+            Templates.prepareMainPage();
+            Templates.prepareDeals();
+            Templates.prepareFooter();
         });
         return 0;
         var i = 1, scrollers = [];
