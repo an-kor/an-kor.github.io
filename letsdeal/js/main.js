@@ -233,7 +233,6 @@ var Deals = {
             }
 
             if(!App.isDealsLoading && (e.target.scrollTop > e.target.scrollHeight - T.h()*1.3)) {
-                var self = this;
                 var el = T.byId('deallist_'+e.target.index);
                 App.isDealsLoading = 1;
 
@@ -242,21 +241,35 @@ var Deals = {
 
                 el.appendChild(loadingElement);
                 var dealItems = T.query('#deallist_'+e.target.index + ' .deallist-item');
+                var wrapper = e.target;
                 Deals.loadDeals(data.id, dealItems.length, 10, function(dealsElement){
-                    if (T.isIOS) {
-                        var transitionTime = 0.8;
-                        dealsElement.style.webkitTransition = 'opacity '+transitionTime+'s';
-                        dealsElement.style.opacity = 0;
-                    }
-
-                    el.removeChild(loadingElement);
-                    el.appendChild(dealsElement);
-                    setTimeout(function(){
+                    if (dealsElement) {
                         if (T.isIOS) {
-                            dealsElement.style.opacity = 1;
+                            var transitionTime = 0.8;
+                            dealsElement.style.webkitTransition = 'opacity '+transitionTime+'s';
+                            dealsElement.style.opacity = 0;
+                        }
+
+                        el.removeChild(loadingElement);
+                        el.appendChild(dealsElement);
+                        if (T.isIOS) {
+                            setTimeout(function(){
+                                    dealsElement.style.opacity = 1;
+                            }, 200);
                         }
                         App.isDealsLoading = 0;
-                    }, 200);
+                    } else {
+                        el.removeChild(loadingElement);
+                        if (T.isIOS) {
+                            App.isDealsLoading = 1;
+                            wrapper.scrollTop = wrapper.scrollTop - 1;
+                            setTimeout(function(){
+                                App.isDealsLoading = 0;
+                            }, 200);
+                        } else {
+                            App.isDealsLoading = 0;
+                        }
+                    }
                 });
             }
         });
@@ -286,23 +299,31 @@ var Deals = {
         });
 
         Deals.loadDeals(data.id, 0, 10, function(result){
-            T.byId('deallist_'+data.id).appendChild(result)
+            if (result) {
+                T.byId('deallist_'+data.id).appendChild(result)
+            }
         });
         Styles.numberOfPages++;
     },
     loadDeals: function(type, from, limit, callback){
         var dealsText = '';
         T.request('deals', function(data){
-            for (var i in data) {
-                dealsText += Templates.dealsItem(data[i]);
+            if (data.length) {
+                for (var i in data) {
+                    dealsText += Templates.dealsItem(data[i]);
+                }
+                var dealsElement = document.createElement("div");
+                dealsElement.innerHTML = dealsText;
+                callback(dealsElement);
+            } else {
+                callback(false);
             }
-            var dealsElement = document.createElement("div");
-            dealsElement.innerHTML = dealsText;
-            callback(dealsElement);
         }, {
             type: type,
             from: from,
             limit: limit
+        }, function(){
+                callback(false);
         });
     }
 };
@@ -392,7 +413,7 @@ var Templates = {
         T.updateStyle('#main-page-scroller-background', {
             backgroundSize: '1px ' + T.p(65) + 'px',
             height: T.p(64) + 'px',
-            top: T.h() - T.p(Styles.footer.height+146) + 'px'
+            top: T.h() - T.p(Styles.footer.height+130) + 'px'
         });
         T.updateStyle('#main-page-scroller-list', {
             backgroundSize: '1px ' + T.p(64) + 'px'

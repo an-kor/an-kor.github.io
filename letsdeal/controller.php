@@ -1,6 +1,6 @@
 <?php
 class MobileController {
-    const LOG_FILE = 'logs/ajax.log';
+    const LOG_FILE = '/var/log/letsdeal/ajax.log';
     const FEED_URL = 'http://letsdeal.se/mfeed.php';
     const FEED_LIFETIME = 3600;
 
@@ -152,23 +152,26 @@ class MobileController {
 }
 
 $app = new MobileController();
-switch ($_REQUEST['action']) {
-    case 'deals':
-        if (!isset($_REQUEST['from'])) {
-            $_REQUEST['from'] = 0;
-        }
-        if (!isset($_REQUEST['limit'])) {
-            $_REQUEST['limit'] = 20;
-        }
-        if (!isset($_REQUEST['sort'])) {
-            $_REQUEST['sort'] = 'expiration';
-        }
-        if (!isset($_REQUEST['sortOrder'])) {
-            $_REQUEST['sortOrder'] = 1;
-        }
-        echo $app->getDeals($_REQUEST['type'], $_REQUEST['from'], $_REQUEST['limit'], $_REQUEST['sort'], $_REQUEST['sortOrder']);
-        break;
-    case 'categories':
-        echo $app->getCategories();
-        break;
+
+if (isset($_REQUEST['action'])){
+    switch ($_REQUEST['action']) {
+        case 'deals':
+            if (!isset($_REQUEST['from'])) {
+                $_REQUEST['from'] = 0;
+            }
+            if (!isset($_REQUEST['limit'])) {
+                $_REQUEST['limit'] = 20;
+            }
+            if (!isset($_REQUEST['sort'])) {
+                $_REQUEST['sort'] = 'expiration';
+            }
+            if (!isset($_REQUEST['sortOrder'])) {
+                $_REQUEST['sortOrder'] = 1;
+            }
+            echo $app->getDeals($_REQUEST['type'], $_REQUEST['from'], $_REQUEST['limit'], $_REQUEST['sort'], $_REQUEST['sortOrder']);
+            break;
+        case 'categories':
+            echo $app->getCategories();
+            break;
+    }
 }
