@@ -48,9 +48,9 @@ var T = {
             return window.innerHeight;
         }
     },
-    p: function(v, abs){
-        if (abs) {
-            return Math.abs(this.scale*v);
+    p: function(v, ceil){
+        if (ceil) {
+            return Math.ceil(this.scale*v);
         }
         return parseFloat((this.scale*v).toFixed(3));
     },
@@ -92,11 +92,12 @@ var T = {
             timeout: timeout,
             data: params,
             success: function(data){
-                //try {
+               // try {
                     callback(JSON.parse(data));
-               // } catch(e) {
-               //     console.log('error on parsing data', data)
-               // }
+                //} catch(e) {
+               //     console.error('error on parsing data', data)
+               //     console.error(e)
+              //  }
             },
             error: function(data){
                 errorCallback(data);
@@ -208,7 +209,7 @@ var Styles = {
         color: 'white'
     },
     numberOfPages: 0,
-    numberOfImages: 12
+    numberOfImages: 10
 };
 var Deals = {
     addNewList: function(data, index){
@@ -236,13 +237,17 @@ var Deals = {
                 var el = T.byId('deallist_'+e.target.index);
                 App.isDealsLoading = 1;
 
-                var loadingElement = document.createElement("div");
-                loadingElement.className = 'loading-icon';
+                //var loadingElement = document.createElement("div");
+                //loadingElement.className = 'loading-icon';
 
-                el.appendChild(loadingElement);
+                //el.appendChild(loadingElement);
+                if (e.target.scrollTop > e.target.scrollHeight - T.h()) {
+                    T.byId('main-page-scroller-loading').style.display='block';
+                }
+
                 var dealItems = T.query('#deallist_'+e.target.index + ' .deallist-item');
                 var wrapper = e.target;
-                Deals.loadDeals(data.id, dealItems.length, 10, function(dealsElement){
+                Deals.loadDeals(data.id, dealItems.length, Styles.numberOfImages, function(dealsElement){
                     if (dealsElement) {
                         if (T.isIOS) {
                             var transitionTime = 0.8;
@@ -250,7 +255,8 @@ var Deals = {
                             dealsElement.style.opacity = 0;
                         }
 
-                        el.removeChild(loadingElement);
+                       //el.removeChild(loadingElement);
+                        T.byId('main-page-scroller-loading').style.display='none';
                         el.appendChild(dealsElement);
                         if (T.isIOS) {
                             setTimeout(function(){
@@ -259,7 +265,7 @@ var Deals = {
                         }
                         App.isDealsLoading = 0;
                     } else {
-                        el.removeChild(loadingElement);
+                        T.byId('main-page-scroller-loading').style.display='none';
                         if (T.isIOS) {
                             App.isDealsLoading = 1;
                             wrapper.scrollTop = wrapper.scrollTop - 1;
@@ -298,7 +304,13 @@ var Deals = {
             }
         });
 
-        Deals.loadDeals(data.id, 0, 10, function(result){
+        if (data.id=='shopping') {
+            var catDropdown = document.createElement("div");
+            catDropdown.innerHTML = Templates.catDropdown();
+            T.byId('deallist_'+data.id).appendChild(catDropdown);
+        }
+
+        Deals.loadDeals(data.id, 0, Styles.numberOfImages, function(result){
             if (result) {
                 T.byId('deallist_'+data.id).appendChild(result)
             }
@@ -348,6 +360,16 @@ var Templates = {
     dealsPageHeader: function(data){
         return '<a href="javascript:void(0)" id="header_'+data.id+'">'+data.name+' <span class="top-menu-tabs-counter">('+data.dealsCount+')</span></a>';
     },
+    catDropdown: function(pageId){
+        return '<select class="categories-dropdown">' +
+            '<option selected>Visar alla kategorier</option>' +
+            '<option>Test 1 </option>' +
+            '<option>Test 2 </option>' +
+            '<option>Test 3 </option>' +
+            '<option>Test 4 </option>' +
+            '<option>Test 5 </option>' +
+            '</select>';
+    },
     prepareFooter: function(){
         T.setH('footer', T.p(Styles.footer.height, 1));
         T.updateStyle('#footer-tabs', {
@@ -378,7 +400,7 @@ var Templates = {
         var trHeight = Math.ceil(T.p(Styles.topMenu.height)/5.66);
         T.updateStyle('#top-menu-triangle', {
             height: trHeight + 'px',
-            top: T.p(Styles.topMenu.height) - trHeight + 'px'
+            top:  - trHeight + 'px'
         });
 
         T.updateStyle('#top-menu-wrapper', {
@@ -404,6 +426,23 @@ var Templates = {
         });
         T.query('#top-menu-wrapper li:nth-child(1)').className = 'top-menu-tabs-active';
     },
+
+    prepareSplash: function(){
+        T.updateStyle('#splash', {
+            'background-size':  T.p(559)+'px '+ T.p(359)+'px',
+            'background-position':  '50% '+ T.p(150)+'px'
+        });
+        T.updateStyle('#splash-loading', {
+            top:  T.p(640)+'px',
+            height: T.p(60)+'px',
+            'background-size':  T.p(60)+'px'
+        });
+        T.updateStyle('#splash-message', {
+            top:  T.p(720)+'px',
+            'font-size':  T.p(30)+'px'
+        });
+        T.byId('splash').style.display = 'block';
+    },
     prepareMainPage: function(){
         T.setH('main-page-wrapper', T.h() - T.p(Styles.footer.height, 1)+1);
         T.updateStyle('#main-page-scroller', {
@@ -413,12 +452,25 @@ var Templates = {
         T.updateStyle('#main-page-scroller-background', {
             backgroundSize: '1px ' + T.p(65) + 'px',
             height: T.p(64) + 'px',
-            top: T.h() - T.p(Styles.footer.height+130) + 'px'
+            top: T.h() - T.p(Styles.topMenu.height+Styles.footer.height+60) + 'px'
         });
         T.updateStyle('#main-page-scroller-list', {
             backgroundSize: '1px ' + T.p(64) + 'px'
         });
         T.updateStyle('#main-page-scroller-list > li', 'width', T.w() + 'px');
+
+        T.updateStyle('.categories-dropdown', {
+            width: T.w() - T.p(26) + 'px',
+            'font-size': T.p(30)+'px',
+            padding: '0 '+T.p(50)+'px 0 '+T.p(20)+'px',
+            margin: T.p(10)+'px '+T.p(15)+'px 0 '+T.p(15)+'px',
+            'line-height': T.p(70)+'px',
+            color: '#878787',
+            border:  T.p(1,1)+'px solid '+'#d4d2cf',
+            'border-radius':  T.p(3,1)+'px',
+            'background-size':  T.p(40)+'px'
+        });
+
         App.mainPageHScroll = new IScroll(T.byId('main-page-wrapper'), {
             scrollX: true,
             scrollY: 0,
@@ -516,7 +568,8 @@ var Templates = {
             paddingBottom: T.p(80)+'px'
         });
         T.updateStyle('.loading-icon', {
-            height: T.p(80)+'px',
+            bottom: T.p(10)+'px',
+            height: T.p(50)+'px',
             webkitBackgroundSize: T.p(48) + 'px ' + T.p(48) + 'px',
             backgroundSize: T.p(48) + 'px ' + T.p(48) + 'px'
         });
@@ -543,6 +596,7 @@ var App = {
 
         T.byId('pages-wrapper').style.bottom = T.p(Styles.footer.height) + 'px';
         T.setW('pages-scroller', T.w()*2);
+        Templates.prepareSplash();
 
         T.request('categories', function(data){
             var i;
@@ -558,8 +612,24 @@ var App = {
             Templates.prepareMainPage();
             Templates.prepareDeals();
             Templates.prepareFooter();
-            T.byId('container').style.opacity=1;
+            setTimeout(function(){
+                T.byId('container').style.opacity=1;
+                T.byId('splash').style.display = 'none';
+            },200);
         });
+        var intTime = new Date().getTime();
+        var getTime = function() {
+            var intNow = new Date().getTime();
+            if (intNow - intTime > 3000) {
+                T.byId('splash').style.display = 'block';
+                setTimeout(function(){
+                    T.byId('splash').style.display = 'none';
+                },1000)
+            }
+            intTime = intNow;
+            setTimeout(getTime,500);
+        };
+        getTime();
         return 0;
         var i = 1, scrollers = [];
         while (i<Styles.numberOfPages+1) {

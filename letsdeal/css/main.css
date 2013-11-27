@@ -131,13 +131,50 @@ Let's Deal CSS
 }
 
 * {
-    font-family: 'avenir';
+    font-family: 'avenir', sans-serif;
 }
 
 body {
-    background: #edebe6;
+    background: #4abad2;
+}
+#splash{
+    display:none;
+    z-index:100;
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background-color: #4abad2;
+    background-image: url(../img/splash.png);
+    background-repeat: no-repeat;
+    background-position: 50% 20%;
+    background-size: 80%;
+}
+#splash-loading{
+    position:absolute;
+    bottom: 30%;
+    left:0;
+    width:100%;
+    height: 7%;
+    opacity: 0.75;
+    background-image: url(../img/loadinfo-blue.gif);
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    background-size: 7%;
+}
+
+#splash-message{
+    position:absolute;
+    bottom: 25%;
+    left:0;
+    width:100%;
+    text-align: center;
+    color: white;
+    font-size: 1.5em;
 }
 #container {
+    background: #edebe6;
     position:absolute;
     top:0;
     left:0;
@@ -226,7 +263,7 @@ body {
     width: 100%;
 }
 #top-menu-triangle {
-    position: absolute;
+    position: relative;
     left:0;
     z-index: 10;
     width:100%;
@@ -333,6 +370,7 @@ body {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    font-family: source-sans-pro,  'avenir', sans-serif;
 }
 .deallist-item-footer {
     width: 100%;
@@ -360,11 +398,21 @@ body {
 }
 
 .loading-icon {
+    position:absolute;
+    display:none;
+    opacity:0.5;
     width:100%;
-    height:100px;
     background-image: url(../img/loadinfo.gif);
     background-position: 50% 50%;
     background-repeat: no-repeat;
+}
+
+.categories-dropdown {
+    box-sizing: border-box;
+    background-color: white;
+    background-image: url(../img/bg-dropdown.png);
+    background-repeat: no-repeat;
+    background-position: 99% 50%;
 }
 
 #pages-scroller {
