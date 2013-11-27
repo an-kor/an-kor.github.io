@@ -1,37 +1,4 @@
 <?php
-ini_set('display_errors', 1);
-/*
-$cities = $xml->city;
-
-$m = new MongoClient();
-$db = $m->letsdeal;
-$dbDeals= $db->deals;
-$dbCities = $db->cities;
-
-$dbCities->drop();
-$dbDeals->drop();
-foreach ($cities as $key=>$city) {
-    $cityRecord = array(
-        "name" => $city->name,
-        "link" => $city->link,
-        "longitude" => $city->longitude,
-        "latitude" => $city->latitude
-    );
-    $dbCities->insert($cityRecord);
-    foreach ($city->deals->item as $deal) {
-        $deal->type = $city->link;
-        $dbDeals->insert($deal);
-    }
-}
-
-$cursor = $dbDeals->find(array("type" => "shopping"));
-$cursor->sort(array('expiration' => 1));
-
-foreach ($cursor as $document) {
-    print_r($document);
-}
-*/
-
 class MobileController {
     const LOG_FILE = 'logs/ajax.log';
     const FEED_URL = 'http://letsdeal.se/mfeed.php';
