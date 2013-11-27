@@ -537,6 +537,7 @@ var App = {
             Templates.prepareMainPage();
             Templates.prepareDeals();
             Templates.prepareFooter();
+            T.byId('container').style.opacity=1;
         });
         return 0;
         var i = 1, scrollers = [];
@@ -632,62 +633,6 @@ var App = {
                         }
                     } catch(e){}
                 });
-            } else {
-                var wrapper = T.byId('wrapper'+i);
-                wrapper.index = i;
-                if (T.isIOS) {
-                    wrapper.scrollTop = 1
-                }
-                wrapper.addEventListener("scroll",function(e){
-
-                    if (T.isIOS) {
-                        if (e.target.scrollTop == 0) {
-                            e.target.scrollTop = 1
-                        }
-                    }
-                    //for (var i2 = 1; i2<7; i2++) {
-                    //    document.querySelector('#deallist1 li:nth-child('+(Math.floor(e.target.scrollTop/T.h()*0.5)*6+i2)+')').style.opacity = 1;
-                    //}
-                    if(!App.isDealsLoading && (e.target.scrollTop > e.target.scrollHeight - T.h()*1.3)) {
-                        // MBP.hideUrlBar();
-                        var self = this;
-                        var el = T.byId('deallist'+e.target.index);
-                        App.isDealsLoading = 1;
-
-                        var loadingElement = document.createElement("div");
-                        loadingElement.className = 'loading-icon';
-
-                        // loadingElement.style.transition = 'opacity 0.5s';
-                        // loadingElement.style.webkitTransition = 'opacity 0.5s';
-                        // loadingElement.style.opacity = 1;
-
-                        el.appendChild(loadingElement);
-                        dealsText = '';
-                        for (var i2 = 0; i2<6; i2++) {
-                            dealsText += App.getDeal(Deals[Math.floor(Math.random()*1000)])
-                        }
-                        var dealsElement = document.createElement("div");
-                        dealsElement.innerHTML = dealsText;
-                        var transitionTime = 0.4;
-                        if (T.isIOS) {
-                            transitionTime = 0.8;
-                        }
-                        dealsElement.style.transition = 'opacity '+transitionTime+'s';
-                        dealsElement.style.webkitTransition = 'opacity '+transitionTime+'s';
-                        dealsElement.style.opacity = 0;
-                        dealsElement.style.webkitBackfaceVisibility = 'hidden';
-
-                        setTimeout(function(){
-                            // loadingElement.style.opacity = 0;
-                            el.removeChild(loadingElement);
-                            el.appendChild(dealsElement);
-                            setTimeout(function(){
-                                dealsElement.style.opacity = 1;
-                                App.isDealsLoading = 0;
-                            }, 200);
-                        }, 1000)
-                    }
-                }, 1);
             }
             i++;
         }
