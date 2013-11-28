@@ -138,7 +138,7 @@ body {
     background: #4abad2;
 }
 #splash{
-    display:none;
+    display: none;
     z-index:100;
     position:absolute;
     top:0;
@@ -148,8 +148,8 @@ body {
     background-color: #4abad2;
     background-image: url(../img/splash.png);
     background-repeat: no-repeat;
-    background-position: 50% 20%;
-    background-size: 80%;
+    background-position: 50% 19.5%;
+    background-size: 77%;
 }
 #splash-loading{
     position:absolute;

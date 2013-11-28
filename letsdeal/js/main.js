@@ -442,6 +442,21 @@ var Templates = {
             'font-size':  T.p(30)+'px'
         });
         T.byId('splash').style.display = 'block';
+        if (T.isIOS) {
+            var intTime = new Date().getTime();
+            var getTime = function() {
+                var intNow = new Date().getTime();
+                if (intNow - intTime > 3000) {
+                    T.byId('splash').style.display = 'block';
+                    setTimeout(function(){
+                        T.byId('splash').style.display = 'none';
+                    },1000)
+                }
+                intTime = intNow;
+                setTimeout(getTime,500);
+            };
+            getTime();
+        }
     },
     prepareMainPage: function(){
         T.setH('main-page-wrapper', T.h() - T.p(Styles.footer.height, 1)+1);
@@ -460,17 +475,16 @@ var Templates = {
         T.updateStyle('#main-page-scroller-list > li', 'width', T.w() + 'px');
 
         T.updateStyle('.categories-dropdown', {
-            width: T.w() - T.p(26) + 'px',
+            width: T.w() - T.p(26) - (T.isDesktop?16:0) + 'px',
             'font-size': T.p(30)+'px',
-            padding: '0 '+T.p(50)+'px 0 '+T.p(20)+'px',
-            margin: T.p(10)+'px '+T.p(15)+'px 0 '+T.p(15)+'px',
+            padding: '0 '+T.p(40)+'px 0 '+T.p(20)+'px',
+            margin: T.p(10)+'px '+T.p(5)+'px 0 '+T.p(15)+'px',
             'line-height': T.p(70)+'px',
             color: '#878787',
             border:  T.p(1,1)+'px solid '+'#d4d2cf',
-            'border-radius':  T.p(3,1)+'px',
+            'border-radius':  T.p(2*window.devicePixelRatio,1)+'px',
             'background-size':  T.p(40)+'px'
         });
-
         App.mainPageHScroll = new IScroll(T.byId('main-page-wrapper'), {
             scrollX: true,
             scrollY: 0,
@@ -518,8 +532,8 @@ var Templates = {
             height: T.p(400) + 'px',
             width: (k * itemWidth) - scrollWidth + 'px',
             border: '1px solid white',
-            boxShadow: '0px 0px 0px 1px rgba(204,202,197,1)',
-            borderRadius: (!T.isAndroid2)? T.p(4)+'px':'',
+            boxShadow: (!T.isAndroid2)? '0px 1px 1px 1px rgba(204,202,197,1)':'',
+            borderRadius: (!T.isAndroid2)? T.p(2*window.devicePixelRatio,1)+'px':'',
             webkitBackgroundSize: (wk * itemWidth) + 'px ' + wk * 290 + 'px',
             backgroundSize: (wk * itemWidth) + 'px ' + wk * 290 + 'px',
             backgroundPosition: '0px ' + (T.p(340) - wk * 290) + 'px'
@@ -617,19 +631,6 @@ var App = {
                 T.byId('splash').style.display = 'none';
             },200);
         });
-        var intTime = new Date().getTime();
-        var getTime = function() {
-            var intNow = new Date().getTime();
-            if (intNow - intTime > 3000) {
-                T.byId('splash').style.display = 'block';
-                setTimeout(function(){
-                    T.byId('splash').style.display = 'none';
-                },1000)
-            }
-            intTime = intNow;
-            setTimeout(getTime,500);
-        };
-        getTime();
         return 0;
         var i = 1, scrollers = [];
         while (i<Styles.numberOfPages+1) {
