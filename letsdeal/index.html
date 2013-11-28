@@ -28,7 +28,7 @@
 
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/main.css">
-    <script type="text/javascript" src="js/helper.js"></script>
+    <!--script type="text/javascript" src="js/helper.js"></script-->
     <script type="text/javascript" src="js/vendor/fastclick.js"></script>
     <script type="text/javascript" src="js/vendor/iscroll.js"></script>
     <script src="//use.edgefonts.net/source-sans-pro:n6.js"></script>
@@ -41,33 +41,31 @@
 <div id="container">
     <div id="pages-wrapper">
         <div id="pages-scroller" class="scroller">
-            <div>
-                <div id="main-page-wrapper">
-                    <div id="main-page-scroller" class="scroller">
-                        <ul id="main-page-scroller-list">
-                        </ul>
-                        <div id="main-page-scroller-background">
-                        </div>
-                    </div>
-                    <div id="top-menu-wrapper">
-                        <ul id="top-menu-tabs">
-                        </ul>
-                    </div>
-                    <div id="top-menu-background">
-                    </div>
-                    <div id="top-menu-triangle">
-                    </div>
-                    <div id="main-page-scroller-loading" class="loading-icon">
-                    </div>
-                </div>
-            </div>
-            <div>
-                <div id="another-page">
-                    <a href="javascript:App.pagesScroll.scrollToElement(document.querySelector('#main-page-wrapper'))">Nothing to see here. Let's go back</a>
-                </div>
-            </div>
         </div>
     </div>
+
+    <div id="main-page-wrapper">
+        <div id="main-page-scroller" class="scroller">
+            <ul id="main-page-scroller-list">
+            </ul>
+            <div id="main-page-scroller-background">
+            </div>
+        </div>
+        <div id="top-menu-wrapper">
+            <ul id="top-menu-tabs">
+            </ul>
+        </div>
+        <div id="top-menu-background">
+        </div>
+        <div id="top-menu-triangle">
+        </div>
+        <div id="main-page-scroller-loading" class="loading-icon">
+        </div>
+    </div>
+
+    <!--div id="another-page">
+        <a href="javascript:App.pagesScroll.scrollToElement(document.querySelector('#main-page-wrapper'))">Nothing to see here. Let's go back</a>
+    </div-->
 
     <div id="footer">
         <ul id="footer-tabs">
@@ -79,6 +77,10 @@
     </div>
 
 </div>
+<script type="text/javascript" src="js/utils.js"></script>
+<script type="text/javascript" src="js/styles.js"></script>
+<script type="text/javascript" src="js/deals.js"></script>
+<script type="text/javascript" src="js/templates.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
 </body>
 </html>
