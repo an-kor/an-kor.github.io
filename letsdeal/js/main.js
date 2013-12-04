@@ -1,6 +1,7 @@
 var App = {
     pagesNumber: 1,
     isDealsLoading: 0,
+    inTransition: 0,
     changeHScrollerPage: function(i){
         i=parseInt(i);
         setTimeout(function(){
@@ -10,31 +11,37 @@ var App = {
         },100)
     },
     addPage: function(imageSrc){
-        T.byId('pages-wrapper').style.display='block';
-        if (App.pagesNumber>=5) {
-            T.setW('pages-scroller', T.w()*(App.pagesNumber+1));
-            App.pagesScroll.refresh();
+        if (!App.inTransition){
+            App.inTransition = 1;
+            T.byId('pages-wrapper').style.display='block';
+            if (App.pagesNumber>=5) {
+                T.setW('pages-scroller', T.w()*(App.pagesNumber+1));
+                App.pagesScroll.refresh();
+            }
+            var currentEl, newEl;
+            currentEl = T.byId('pages-current');
+            newEl = document.createElement("div");
+            newEl.style.width = T.w()+'px';
+            var template = T.byId('deal-page-template').innerHTML;
+            var contentTemplate = T.byId('dealinfo-content-template').innerHTML;
+            template = template.replace("%CONTENT%", contentTemplate);
+            template = template.replace("%IMAGESRC%", imageSrc);
+            newEl.innerHTML = template;
+            currentEl.parentNode.appendChild(newEl);
+            //var scroller = new IScroll(T.query('.dealinfo-wrapper')[0]);
+            //setTimeout(function(){
+            //    scroller.refresh();
+            // },500);
+            var bottomTemplate = T.byId('dealinfo-bottom-template').innerHTML;
+            var bottomEl = document.createElement("div");
+            bottomEl.innerHTML = bottomTemplate;
+            newEl.appendChild(bottomEl);
+            App.pagesScroll.scrollBy(-T.w(),0,Styles.transitionTime);
+            App.pagesNumber++;
+            setTimeout(function(){
+                App.inTransition = 0;
+            }, Styles.transitionTime);
         }
-        var currentEl, newEl;
-        currentEl = T.byId('pages-current');
-        newEl = document.createElement("div");
-        newEl.style.width = T.w()+'px';
-        var template = T.byId('deal-page-template').innerHTML;
-        var contentTemplate = T.byId('dealinfo-content-template').innerHTML;
-        template = template.replace("%CONTENT%", contentTemplate);
-        template = template.replace("%IMAGESRC%", imageSrc);
-        newEl.innerHTML = template;
-        currentEl.parentNode.appendChild(newEl);
-        //var scroller = new IScroll(T.query('.dealinfo-wrapper')[0]);
-        //setTimeout(function(){
-        //    scroller.refresh();
-        // },500);
-        var bottomTemplate = T.byId('dealinfo-bottom-template').innerHTML;
-        var bottomEl = document.createElement("div");
-        bottomEl.innerHTML = bottomTemplate;
-        newEl.appendChild(bottomEl);
-        App.pagesScroll.scrollBy(-T.w(),0,Styles.transitionTime);
-        App.pagesNumber++;
     },
     goBack: function(){
         App.pagesScroll.scrollBy(T.w(),0,Styles.transitionTime);
