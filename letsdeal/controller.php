@@ -1,8 +1,8 @@
 <?php
 class MobileController {
-    const LOG_FILE = '/var/log/letsdeal/ajax.log';
+    const LOG_FILE = 'logs/ajax.log';//var/log/letsdeal
     const FEED_URL = 'http://letsdeal.se/mfeed.php';
-    const FEED_LIFETIME = 3600;
+    const FEED_LIFETIME = 1800;
 
     private $m;
     private $db;
@@ -99,11 +99,11 @@ class MobileController {
             $this->logException($e);
         }
     }
-    public function getDeals($type, $from = 0 , $limit = 20, $sort = 'expiration', $sortOrder = 1) {
+    public function getDeals($type, $from = 0 , $limit = 20, $sort = 'expiration', $sortDirection = 1) {
 
         $result = array();
         try {
-            $cursor = $this->dbDeals->find(array("type" => $type))->sort(array($sort => $sortOrder))->limit($limit)->skip($from);
+            $cursor = $this->dbDeals->find(array("type" => $type))->sort(array($sort => $sortDirection))->limit($limit)->skip($from);
             foreach ($cursor as $record) {
                 $result[] = array(
                     "id" => $record['id'],
@@ -152,8 +152,10 @@ class MobileController {
 }
 
 $app = new MobileController();
-
 if (isset($_REQUEST['action'])){
+    foreach ($_REQUEST as $key=>$value) {
+        $_REQUEST[$key] = (string) $value;
+    }
     switch ($_REQUEST['action']) {
         case 'deals':
             if (!isset($_REQUEST['from'])) {
@@ -165,10 +167,10 @@ if (isset($_REQUEST['action'])){
             if (!isset($_REQUEST['sort'])) {
                 $_REQUEST['sort'] = 'expiration';
             }
-            if (!isset($_REQUEST['sortOrder'])) {
-                $_REQUEST['sortOrder'] = 1;
+            if (!isset($_REQUEST['sortDirection'])) {
+                $_REQUEST['sortDirection'] = 1;
             }
-            echo $app->getDeals($_REQUEST['type'], $_REQUEST['from'], $_REQUEST['limit'], $_REQUEST['sort'], $_REQUEST['sortOrder']);
+            echo $app->getDeals($_REQUEST['type'], $_REQUEST['from'], $_REQUEST['limit'], $_REQUEST['sort'], $_REQUEST['sortDirection']);
             break;
         case 'categories':
             echo $app->getCategories();

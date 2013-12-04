@@ -40,9 +40,9 @@
     <div id="pages-wrapper">
         <div id="pages-scroller" class="scroller">
             <div>
-                <div id="main-page-wrapper">
-                    <div id="main-page-scroller" class="scroller">
-                        <ul id="main-page-scroller-list">
+                <div id="hscroller-wrapper">
+                    <div id="hscroller-scroller" class="scroller">
+                        <ul id="hscroller-scroller-list">
                             <li>
                                 <div class="main-v-wrapper" id="wrapper1">
                                     <div class="deallist scroller">
@@ -72,16 +72,16 @@
 
                     <div id="top-menu-wrapper">
                         <ul id="top-menu-tabs">
-                            <li><a href="javascript:App.mainPageHScroll.scrollToElement(document.querySelector('#main-page-scroller-list > li:nth-child(1)'), 700, null, null, IScroll.ease.quadratic2);">Shopping</a></li>
-                            <li><a href="javascript:App.mainPageHScroll.scrollToElement(document.querySelector('#main-page-scroller-list > li:nth-child(2)'), 700, null, null, IScroll.ease.quadratic2);">Stockholm</a></li>
-                            <li><a href="javascript:App.mainPageHScroll.scrollToElement(document.querySelector('#main-page-scroller-list > li:nth-child(3)'), 700, null, null, IScroll.ease.quadratic2);">Resort</a></li>
+                            <li><a href="javascript:App.mainPageHScroll.scrollToElement(document.querySelector('#hscroller-scroller-list > li:nth-child(1)'), 700, null, null, IScroll.ease.quadratic2);">Shopping</a></li>
+                            <li><a href="javascript:App.mainPageHScroll.scrollToElement(document.querySelector('#hscroller-scroller-list > li:nth-child(2)'), 700, null, null, IScroll.ease.quadratic2);">Stockholm</a></li>
+                            <li><a href="javascript:App.mainPageHScroll.scrollToElement(document.querySelector('#hscroller-scroller-list > li:nth-child(3)'), 700, null, null, IScroll.ease.quadratic2);">Resort</a></li>
                         </ul>
                     </div>
                 </div>
             </div>
             <div>
                 <div id="another-page">
-                    <a href="javascript:App.pagesScroll.scrollToElement(document.querySelector('#main-page-wrapper'))">Nothing to see here. Let's go back</a>
+                    <a href="javascript:App.pagesScroll.scrollToElement(document.querySelector('#hscroller-wrapper'))">Nothing to see here. Let's go back</a>
                 </div>
             </div>
         </div>

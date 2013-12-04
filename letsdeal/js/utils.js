@@ -9,6 +9,10 @@ var T = {
     byId: function (id){
         return document.getElementById(id);
     },
+    remove: function(id) {
+        var el = T.byId(id);
+        el.parentElement.removeChild(el);
+    },
     query: function (query){
         var result = document.querySelectorAll(query);
         if (result.length == 1) {
@@ -54,6 +58,9 @@ var T = {
         }
         return parseFloat((this.scale*v).toFixed(3));
     },
+    px: function(){
+        return this.p.apply(this, arguments) + 'px';
+    },
     setW: function (el, v){
         T.byId(el).style.width = v + 'px';
     },
@@ -78,7 +85,7 @@ var T = {
     request: function(action, callback, params, errorCallback, timeout) {
         var url = './controller.php';
         if (!timeout) {
-            timeout = 8000;
+            timeout = 3000;
         }
         if (!params) {
             params = {action: action}
@@ -92,12 +99,13 @@ var T = {
             timeout: timeout,
             data: params,
             success: function(data){
-                // try {
-                callback(JSON.parse(data));
-                //} catch(e) {
-                //     console.error('error on parsing data', data)
-                //     console.error(e)
-                //  }
+                try {
+                    callback(JSON.parse(data));
+                } catch(e) {
+                     console.error('error on parsing data', data)
+                     console.error(e)
+                     errorCallback();
+                }
             },
             error: function(data){
                 errorCallback(data);
@@ -165,7 +173,7 @@ var T = {
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4) {
                 if (timer) clearTimeout(timer);
-                if (xhr.status < 300) {
+                if (xhr.status >0 && xhr.status < 300) {
                     if (o.success) o.success($._xhrResp(xhr));
                 }
                 else if (o.error) o.error(xhr, xhr.status, xhr.statusText);
