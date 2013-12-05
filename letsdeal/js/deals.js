@@ -1,15 +1,16 @@
 var Deals = {
+    loadedDeals: {},
     appendDeals: function(wrapper){
         var dealItems = T.query('#deallist_' + wrapper.index + ' .deallist-item');
         App.isDealsLoading = 1;
         Deals.loadDeals(wrapper.index, dealItems.length, Styles.hScroller.numberOfImages, function(dealsElement){
+                T.byId('hscroller-scroller-loading').style.display='none';
                 if (dealsElement) {
                     if (T.isIOS) {
                         var transitionTime = 0.8;
                         dealsElement.style.webkitTransition = 'opacity '+transitionTime+'s';
                         dealsElement.style.opacity = 0;
                     }
-                    T.byId('hscroller-scroller-loading').style.display='none';
                     var el = T.byId('deallist_'+wrapper.index);
                     el.appendChild(dealsElement);
                     if (T.isIOS) {
@@ -17,6 +18,8 @@ var Deals = {
                             dealsElement.style.opacity = 1;
                         }, 200);
                     }
+                    App.isDealsLoading = 0;
+                } else {
                     App.isDealsLoading = 0;
                 }
             }, function(){
@@ -49,16 +52,18 @@ var Deals = {
                 wrapper.scrollTop = 1
             }
             wrapper.addEventListener("scroll",function(e){
+                //var el = T.byId(App.mainPageHScroll.currentPageIndex);
+                var el = e.target;
                 if (T.isIOS) {
-                    if (e.target.scrollTop == 0) {
-                        e.target.scrollTop = 1
+                    if (el.scrollTop == 0) {
+                        el.scrollTop = 1
                     }
                 }
-                if(!App.isDealsLoading && (e.target.scrollTop > e.target.scrollHeight - T.h()*1.3)) {
-                    if (e.target.scrollTop > e.target.scrollHeight - T.h()) {
+                if(!App.isDealsLoading && (el.scrollTop > el.scrollHeight - T.h()*1.3)) {
+                    if (el.scrollTop > el.scrollHeight - T.h()*1.5) {
                         T.byId('hscroller-scroller-loading').style.display='block';
                     }
-                    Deals.appendDeals(e.target);
+                    Deals.appendDeals(T.byId(App.mainPageHScroll.currentPageIndex));
 
                 }
             });
@@ -76,7 +81,7 @@ var Deals = {
             scroller.on('translate', function(){
                 if(!App.isDealsLoading && Math.abs(this.y) > Math.abs(this.maxScrollY)) {
                     T.byId('hscroller-scroller-loading').style.display='block';
-                    var wrapper = T.byId('wrapper_' + this.options.index)
+                    var wrapper = T.byId('wrapper_' + this.options.index);
                     Deals.appendDeals(wrapper);
                 }
             });
@@ -125,6 +130,7 @@ var Deals = {
             try {
                 if (data.length) {
                     for (var i in data) {
+                        Deals.loadedDeals[data[i].id] = data[i];
                         dealsText += Templates.dealsItem(data[i]);
                     }
                     var dealsElement = document.createElement("div");

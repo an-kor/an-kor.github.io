@@ -111,7 +111,8 @@ class MobileController {
                     "price" => round($record['price']),
                     "origPrice" => round($record['origprice']),
                     "bulk" => $record['bulk'],
-                    "imageSrc" => $record['image']['url']
+                    "imageSrc" => $record['image']['url'],
+                    "shortDescription" => $record['title']
                 );
             }
         } catch (Exception $e){

@@ -9,7 +9,7 @@ var Templates = {
             '</div>';
     },
     dealsItem: function(data){
-        return '<li onclick="App.addPage(\''+data.imageSrc+'\')"><div class="deallist-item" style="background-image: url('+data.imageSrc+');"><div>' +
+        return '<li onclick="App.addPage('+data.id+')"><div class="deallist-item" style="background-image: url('+data.imageSrc+');"><div>' +
             '<div class="deallist-item-header">'+data.title+'</div>' +
             '<div class="deallist-item-footer">' +
             '<div class="deallist-item-footer-bought">'+data.bulk+' köpta</div>' +
@@ -193,9 +193,11 @@ var Templates = {
                 listenY: false
             }]
         });
+        App.mainPageHScroll.currentPageIndex = T.query('#hscroller-scroller-list > li:nth-child(1) > div').id;
         App.mainPageHScroll.on('translate', function(){
             T.query('#top-menu-wrapper li.top-menu-tabs-active').className = '';
             T.query('#top-menu-wrapper li:nth-child('+(this.currentPage.pageX+1)+')').className = 'top-menu-tabs-active';
+            App.mainPageHScroll.currentPageIndex = T.query('#hscroller-scroller-list > li:nth-child('+(App.mainPageHScroll.currentPage.pageX+1)+') > div').id;
         });
     },
     prepareDeals: function(){
@@ -253,7 +255,7 @@ var Templates = {
             ,lineHeight: T.px(60)
         });
         T.updateStyle('.deallist-item-footer-price', {
-            width: (k * 510) - T.p(140) + 'px',
+            width: (k * 510) - T.p(140) - (T.isDesktop?16:0) + 'px',
             lineHeight: T.px(60)
         });
         T.updateStyle('.deallist-item-footer-price-new', {
@@ -327,7 +329,6 @@ var Templates = {
             fontWeight: st.newPrice.fontWeight,
             color: st.newPrice.color
         });
-
         T.updateStyle('.dealinfo-bottom-buyBtn', {
             marginTop: T.px((st.firstLineHeight - st.buyBtn.height) /2),
             marginRight: T.px(st.oldPrice.padding),
@@ -343,19 +344,16 @@ var Templates = {
             textTransform: 'uppercase'
             //,marginLeft: 'auto'
         });
-
         T.updateStyle('.dealinfo-bottom-bought', {
             paddingLeft: T.px(st.oldPrice.padding),
             fontSize: T.px(st.bought.fontSize),
             color: st.bought.color
         });
-
         T.updateStyle('.dealinfo-bottom-countdown', {
             paddingRight: T.px(st.newPrice.padding),
             fontSize: T.px(st.countdown.fontSize),
             color: st.countdown.color
         });
-
         T.updateStyle('.dealinfo-bottom-infoIcon', {
             marginRight: T.px(st.oldPrice.padding),
             width: T.px(25),
@@ -386,7 +384,6 @@ var Templates = {
             fontWeight: st.title.fontWeight,
             paddingBottom: T.px(st.title.paddingBottom)
         });
-
         T.updateStyle('.dealinfo-content-block', {
             border: T.px(1,1)+ ' solid #c6c6c6',
             background: 'white',
@@ -395,7 +392,6 @@ var Templates = {
             marginBottom: T.px(10),
             overflow: 'hidden'
         });
-
         T.updateStyle('.dealinfo-content-block-title', {
             borderBottom: T.px(1,1)+ ' solid #999',
             background: '#3eacc8',
@@ -405,29 +401,24 @@ var Templates = {
             color: 'white',
             fontSize: T.px(30)
         });
-
         T.updateStyle('.dealinfo-content-block-content', {
             padding: T.px(15) + ' ' + T.px(25),
             color: '#5b5b59',
             fontSize: T.px(22)
         });
-
         T.updateStyle('.dealinfo-content-contacts', {
             padding: '0 ' + T.px(10),
             color: '#5b5b59',
             fontSize: T.px(22)
         });
-
         T.updateStyle('.dealinfo-content-contacts h5', {
             fontSize: T.px(28),
             color: '#333',
             paddingTop: T.px(10)
         });
-
         T.updateStyle('.dealinfo-content-contacts h5 strong', {
             fontWeight: 'normal'
         });
-
         T.updateStyle('.dealinfo-content-map', {
             height:  T.px(400)
         });
