@@ -11,7 +11,7 @@ var App = {
         },100)
     },
     addPage: function(dealId){
-        if (!App.inTransition){
+        if (!App.inTransition && !App.mainPageHScroll.scrollActive){
             App.inTransition = 1;
             T.byId('pages-wrapper').style.display='block';
             if (App.pagesNumber>=5) {
@@ -31,9 +31,9 @@ var App = {
                 template = template.replace("%TITLE%", data.title);
                 template = template.replace("%IMAGESRC%", data.imageSrc);
                 template = template.replace("%SHORT_DESCRIPTION%", data.shortDescription);
-                bottomTemplate = bottomTemplate.replace("%BULK%", data.bulk);
-                bottomTemplate = bottomTemplate.replace("%OLDPRICE%", data.origPrice);
-                bottomTemplate = bottomTemplate.replace("%NEWPRICE%", data.price);
+                bottomTemplate = bottomTemplate.replace("%BULK%", T.formatNumber(data.bulk));
+                bottomTemplate = bottomTemplate.replace("%OLDPRICE%", T.formatNumber(data.origPrice));
+                bottomTemplate = bottomTemplate.replace("%NEWPRICE%", T.formatNumber(data.price));
             }
             newEl.innerHTML = template;
             currentEl.parentNode.appendChild(newEl);

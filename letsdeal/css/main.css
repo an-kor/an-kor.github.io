@@ -516,6 +516,11 @@ body {
     background-position: 50% 100%;
 }
 .dealinfo-content-title{}
+
+.dealinfo-content-title em{
+    font-style: normal;
+    white-space: nowrap;
+}
 .dealinfo-content-block{}
 .dealinfo-content-block-title{}
 .dealinfo-content-block-content{}
