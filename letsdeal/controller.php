@@ -99,7 +99,7 @@ class MobileController {
             $this->logException($e);
         }
     }
-    public function getDeals($type, $from = 0 , $limit = 20, $sort = 'expiration', $sortDirection = 1) {
+    public function getDeals($type, $from = 0 , $limit = 20, $sort = 'endtime', $sortDirection = 1) {
 
         $result = array();
         try {
@@ -112,7 +112,10 @@ class MobileController {
                     "origPrice" => round($record['origprice']),
                     "bulk" => $record['bulk'],
                     "imageSrc" => $record['image']['url'],
-                    "shortDescription" => $record['title']
+                    "shortDescription" => $record['title'],
+                    "endtime" => strtotime($record['endtime']),
+                    "lat" => $record['latitude'],
+                    "lon" => $record['longitude']
                 );
             }
         } catch (Exception $e){

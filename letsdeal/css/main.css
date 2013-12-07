@@ -506,7 +506,9 @@ body {
     -ms-flex: 1;
     flex: 1;
 }
-
+.dealinfo-content{
+    -webkit-backface-visibility: hidden;
+}
 .dealinfo-content-wrapper{}
 .dealinfo-content-image{
     background-color: #737373;
@@ -525,9 +527,13 @@ body {
 .dealinfo-content-block-title{}
 .dealinfo-content-block-content{}
 .dealinfo-content-map{
+    -webkit-transform: translateZ(0);
     -webkit-backface-visibility: hidden;
 }
 .dealinfo-content-contacts{}
 .dealinfo-content-contacts h5{}
 .dealinfo-content-contacts p{}
 .dealinfo-content-contacts h5 strong{}
+.leaflet-control-attribution {
+    display:none;
+}

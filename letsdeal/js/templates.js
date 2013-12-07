@@ -394,8 +394,14 @@ var Templates = {
         T.updateStyle('.dealinfo-content-block', {
             border: T.px(1,1)+ ' solid #c6c6c6',
             background: 'white',
-            boxShadow: (!T.isAndroid2)? '0px 1px 1px 1px rgba(0,0,0,0.05)':'',
+            boxShadow: (!T.isAndroid2)? '0px 1px '+T.px(1,1)+' '+T.px(1,1)+' rgba(0,0,0,0.05)':'',
             borderRadius: (!T.isAndroid2)? T.px(10,1):'',
+            marginBottom: T.px(10),
+            overflow: 'hidden'
+        });
+        T.updateStyle('.dealinfo-content-map', {
+            border: T.px(1,1)+ ' solid #c6c6c6',
+            boxShadow: (!T.isAndroid2)? '0px 1px '+T.px(1,1)+' '+T.px(1,1)+' rgba(0,0,0,0.05)':'',
             marginBottom: T.px(10),
             overflow: 'hidden'
         });

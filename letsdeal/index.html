@@ -28,9 +28,10 @@
 
     <link rel="stylesheet" href="css/normalize.css">
     <link rel="stylesheet" href="css/main.css">
-    <!--script type="text/javascript" src="js/helper.js"></script-->
+    <link rel="stylesheet" href="css/leaflet.css">
     <script type="text/javascript" src="js/vendor/fastclick.js"></script>
     <script type="text/javascript" src="js/vendor/iscroll.js"></script>
+    <script type="text/javascript" src="js/vendor/leaflet/leaflet.js"></script>
     <script src="//use.edgefonts.net/source-sans-pro:n3,n6.js"></script>
 </head>
 <body>
@@ -104,7 +105,7 @@
         <div class="dealinfo-bottom-secondline">
             <div class="dealinfo-bottom-bought">%BULK% köpta</div>
             <div class="spacer"></div>
-            <div class="dealinfo-bottom-countdown">24:14:35 kvar</div>
+            <div class="dealinfo-bottom-countdown"><span></span> kvar</div>
             <div class="dealinfo-bottom-infoIcon"></div>
         </div>
     </div>
@@ -127,9 +128,7 @@
                 <div class="dealinfo-content-block-title">Om dealen</div>
                 <div class="dealinfo-content-block-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum mollis velit non gravida venenatis. Praesent consequat lectus purus, ut scelerisque velit condimentum eu. Maecenas sagittis ante ut turpis varius interdum. Quisque tellus ipsum, eleifend non ipsum id, suscipit ultricies neque.</div>
             </div>
-            <div class="dealinfo-content-block">
-                <div class="dealinfo-content-map"><iframe src="http://leafletjs.com/examples/mobile-example.html" style="width:100%; height:100%" frameborder="0"></iframe></div>
-            </div>
+            <div class="dealinfo-content-map" id="%MAP_ID%"></div>
             <div class="dealinfo-content-contacts">
                 <h5><strong>Adress</strong></h5>
                 <p>Torsgatan 36<br /> 113 62 Stockholm</p>
