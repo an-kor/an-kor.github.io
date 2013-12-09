@@ -391,6 +391,10 @@ var Templates = {
             fontWeight: st.title.fontWeight,
             paddingBottom: T.px(st.title.paddingBottom)
         });
+
+        T.updateStyle('.dealinfo-content-loading', {
+            height: T.px(80)
+        });
         T.updateStyle('.dealinfo-content-block', {
             border: T.px(1,1)+ ' solid #c6c6c6',
             background: 'white',
@@ -434,6 +438,9 @@ var Templates = {
         });
         T.updateStyle('.dealinfo-content-map', {
             height:  T.px(400)
+        });
+        T.updateStyle('.dealinfo-content-block-content ul li', {
+            marginLeft:  T.px(20)
         });
     }
 };

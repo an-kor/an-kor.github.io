@@ -85,7 +85,7 @@ var T = {
     request: function(action, callback, params, errorCallback, timeout) {
         var url = './controller.php';
         if (!timeout) {
-            timeout = 3000;
+            timeout = 8000;
         }
         if (!params) {
             params = {action: action}

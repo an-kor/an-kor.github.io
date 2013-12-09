@@ -86,10 +86,9 @@
             <div class="top-menu-share-btn"></div>
         </div>
         <div class="dealinfo-wrapper wrapper">
-            %CONTENT%
-            <!--div class="dealinfo-scroller scroller">
+            <div class="dealinfo-scroller scroller">
                 %CONTENT%
-            </div-->
+            </div>
         </div>
     </div>
 </div>
@@ -116,27 +115,24 @@
         <div class="dealinfo-content-image" style="background-image:url(%IMAGESRC%)"></div>
         <div class="dealinfo-content-wrapper">
             <div class="dealinfo-content-title">%SHORT_DESCRIPTION%</div>
-            <div class="dealinfo-content-block">
-                <div class="dealinfo-content-block-title">Höjdpunkter</div>
-                <div class="dealinfo-content-block-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum mollis velit non gravida venenatis. Praesent consequat lectus purus, ut scelerisque velit condimentum eu. Maecenas sagittis ante ut turpis varius interdum. Quisque tellus ipsum, eleifend non ipsum id, suscipit ultricies neque.</div>
-            </div>
-            <div class="dealinfo-content-block">
-                <div class="dealinfo-content-block-title">Vilkor</div>
-                <div class="dealinfo-content-block-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum mollis velit non gravida venenatis. Praesent consequat lectus purus, ut scelerisque velit condimentum eu. Maecenas sagittis ante ut turpis varius interdum. Quisque tellus ipsum, eleifend non ipsum id, suscipit ultricies neque.</div>
-            </div>
-            <div class="dealinfo-content-block">
-                <div class="dealinfo-content-block-title">Om dealen</div>
-                <div class="dealinfo-content-block-content">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum mollis velit non gravida venenatis. Praesent consequat lectus purus, ut scelerisque velit condimentum eu. Maecenas sagittis ante ut turpis varius interdum. Quisque tellus ipsum, eleifend non ipsum id, suscipit ultricies neque.</div>
-            </div>
-            <div class="dealinfo-content-map" id="%MAP_ID%"></div>
-            <div class="dealinfo-content-contacts">
-                <h5><strong>Adress</strong></h5>
-                <p>Torsgatan 36<br /> 113 62 Stockholm</p>
-                <p>Tel: 0761&ndash;63 15 40</p>
-                <h5><strong>&Ouml;ppettider</strong></h5>
-                <p>M&aring;n - Tor 10:00 - 18:00<br /> Fredag 10:00 - 16:00<br /> L&ouml;r - S&ouml;n i m&aring;n av plats</p>
-                <h5><strong>Hemsida</strong></h5>
-                <p><a href="http://www.refanharmoni.dinstudio.se/" target="_blank">www.refanharmoni.dinstudio.se</a></p>
+            <div class="dealinfo-content-loading"></div>
+            <div class="dealinfo-content-details">
+                <div class="dealinfo-content-block">
+                    <div class="dealinfo-content-block-title">Höjdpunkter</div>
+                    <div class="dealinfo-content-block-content">%HIGHLIGHTS%</div>
+                </div>
+                <div class="dealinfo-content-block">
+                    <div class="dealinfo-content-block-title">Vilkor</div>
+                    <div class="dealinfo-content-block-content">%TERMS%</div>
+                </div>
+                <div class="dealinfo-content-block">
+                    <div class="dealinfo-content-block-title">Om dealen</div>
+                    <div class="dealinfo-content-block-content">%ABOUT%</div>
+                </div>
+                <div class="dealinfo-content-map" id="%MAP_ID%"></div>
+                <div class="dealinfo-content-contacts">
+                    %CONTACTS%
+                </div>
             </div>
         </div>
     </div>

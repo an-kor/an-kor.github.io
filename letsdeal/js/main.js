@@ -57,7 +57,7 @@ var App = {
             }, 1000);
             newEl.innerHTML = template;
             currentEl.parentNode.appendChild(newEl);
-            if (T.isIOS) {
+            /*if (T.isIOS) {
                 var wrapper = T.query('.dealinfo-wrapper')[0];
                 wrapper.scrollTop = 1;
                 wrapper.bottomReached = 0;
@@ -75,8 +75,9 @@ var App = {
                         }
                     }
                 });
-            }
-            if (data.lat > 0) {
+            }*/
+
+            /*if (data.lat > 0) {
                 var map = L.map("dealinfo-map-"+data.id).setView([data.lat, data.lon], 13);
                 var marker = L.marker([data.lat, data.lon]).addTo(map);
                 L.tileLayer('https://mts0.google.com/vt/lyrs=m@240000000&hl=x-local&src=app&x={x}&y={y}&z={z}&s=Ga', {
@@ -86,10 +87,38 @@ var App = {
             } else {
                 T.byId("dealinfo-map-"+data.id).style.display = 'none';
             }
-            // var scroller = new IScroll(T.query('.dealinfo-wrapper')[0]);
-            // setTimeout(function(){
-            //    scroller.refresh();
-            // },500);
+            */
+            T.request('dealinfo', function(dealInfo){
+                var el = T.query('.dealinfo-content-details')[0], template = el.innerHTML;
+                template = template.replace("%ABOUT%", dealInfo.about);
+                template = template.replace("%HIGHLIGHTS%", dealInfo.highlights);
+                template = template.replace("%TERMS%", dealInfo.terms);
+                template = template.replace("%CONTACTS%", dealInfo.contacts);
+                el.innerHTML = template;
+                el.style.display='block';
+                if (data.lat > 0) {
+                    var map = L.map("dealinfo-map-"+data.id).setView([data.lat, data.lon], 13);
+                    var marker = L.marker([data.lat, data.lon]).addTo(map);
+                    L.tileLayer('https://mts0.google.com/vt/lyrs=m@240000000&hl=x-local&src=app&x={x}&y={y}&z={z}&s=Ga', {
+                        attribution: '',
+                        maxZoom: 19
+                    }).addTo(map);
+                } else {
+                    T.byId("dealinfo-map-"+data.id).style.display = 'none';
+                }
+                T.query('.dealinfo-content-loading')[0].style.display = 'none';
+                var scroller = new IScroll(T.query('.dealinfo-wrapper')[0]);
+                setTimeout(function(){
+                    scroller.refresh();
+                },500);
+            }, {dealId: data.id}, function(){
+                T.query('.dealinfo-content-loading')[0].style.display = 'none';
+                var scroller = new IScroll(T.query('.dealinfo-wrapper')[0]);
+                setTimeout(function(){
+                    scroller.refresh();
+                },500);
+            });
+
             var bottomEl = document.createElement("div");
             bottomEl.innerHTML = bottomTemplate;
             newEl.appendChild(bottomEl);

@@ -2,7 +2,9 @@
 class MobileController {
     const LOG_FILE = 'logs/ajax.log';//var/log/letsdeal
     const FEED_URL = 'http://letsdeal.se/mfeed.php';
+    const DEAL_URL = 'http://letsdeal.se/deal/';
     const FEED_LIFETIME = 1800;
+    const DEALINFO_LIFETIME = 36000;
 
     private $m;
     private $db;
@@ -17,6 +19,7 @@ class MobileController {
         $this->dbDeals= $this->db->deals;
         $this->dbCities = $this->db->cities;
         $this->dbCategories = $this->db->categories;
+        $this->dbDealsInfo= $this->db->dealsinfo;
         $lastTs = $this->dbSettings->findOne(array('key' => 'lastFeedFetchTs'));
         if ($lastTs['value'] < time() - $this::FEED_LIFETIME ) {
             $this->getFeed();
@@ -40,27 +43,107 @@ class MobileController {
     private function logError($errorMsg){
         $this->log('ERROR: ' . $errorMsg);
     }
-
-    public function getFeed() {
+    public function getPageContent($url) {
         $xml = null;
+        $result = '';
         try {
-            $url = $this::FEED_URL;
             $ch = curl_init($url);
             curl_setopt($ch, CURLOPT_URL,$url);
             curl_setopt($ch, CURLOPT_FAILONERROR, 1);
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
             $this->log('Trying to get data from ' . $url);
-            $result = curl_exec($ch);
             if(curl_errno($ch))
             {
                 $this->logError(curl_error($ch));
             } else {
+                $result = curl_exec($ch);
+                $this->log('Received content from  ' . $url);
+            }
+            curl_close($ch);
+        } catch (Exception $e){
+            $this->logException($e);
+        }
+        return $result;
+    }
+
+    public function getDealInfo($dealId) {
+        $xml = null; $record = null;
+        try {
+            $cursor = $this->dbDealsInfo->findone(array("id" => $dealId));
+
+            if ($cursor && $cursor['ts'] > time() - $this::DEALINFO_LIFETIME ) {
+                $record = $cursor;
+            } else {
+                $url = $this::DEAL_URL . $dealId;
+                $result = $this->getPageContent($url);
+                if ($result != '') {
+                    preg_match_all('/Om dealen<\/h3>(.*?)<!-- section/s', $result, $matches);
+                    $about = $matches[0][0];
+                    preg_match_all('/<div class=\"cont\">(.*?)<\/div>/s', $about, $matches);
+                    $about = trim($matches[1][0]);
+
+                    preg_match_all('/Höjdpunkter<\/h3>(.*?)<\/div>/s', $result, $matches);
+                    $highlights = trim($matches[1][0]);
+
+                    preg_match_all('/Villkor<\/h3>(.*?)<\/div>/s', $result, $matches);
+                    $terms = trim($matches[1][0]);
+
+                    preg_match_all('/Dealen säljes av(.*?)<div class=\"heading/s', $result, $matches);
+                    $seller = trim(strip_tags($matches[1][0]));
+
+                    preg_match_all('/Adress(.*?)<\/div>/s', $result, $matches);
+                    if (isset($matches[1][0])) {
+                        $contacts = "<h5>Adress</h5>".trim(substr($matches[1][0], strpos($matches[1][0], "<p>")));
+                    } else {
+                        $contacts = "<p><strong><em>Uppge leveransadress när du gör din beställning på Letsdeal.se</em></strong></p>";
+                    }
+                    $record = array(
+                        "id" => $dealId,
+                        "ts" => time(),
+                        "about" => $about,
+                        "highlights" => $highlights,
+                        "terms" => $terms,
+                        "seller" => $seller,
+                        "contacts" => $contacts
+                    );
+                    if ($cursor) {
+                        $this->dbDealsInfo->update(array("id" => $cursor['id']), array('$set' => $record));
+                    } else {
+                        $this->dbDealsInfo->insert($record);
+                    }
+                }
+
+            }
+        } catch (Exception $e){
+            $this->logException($e);
+        }
+        return $record;
+    }
+
+    public function getDealInfoForAllDeals() {
+        $result = array();
+        try {
+            $cursor = $this->dbDeals->find();
+            foreach ($cursor as $record) {
+                $this->getDealInfo($record['id']);
+            }
+        } catch (Exception $e){
+            $this->logException($e);
+        }
+        return $result;
+    }
+
+    public function getFeed() {
+        $xml = null;
+        try {
+            $url = $this::FEED_URL;
+            $result = $this->getPageContent($url);
+            if($result != '') {
                 $xml = simplexml_load_string($result, 'SimpleXMLElement', LIBXML_NOCDATA);
                 $this->log('Successful XML parsing of the document from ' . $url);
                 $this->saveFeedToDb($xml);
             }
-            curl_close($ch);
         } catch (Exception $e){
             $this->logException($e);
         }
@@ -121,7 +204,7 @@ class MobileController {
         } catch (Exception $e){
             $this->logException($e);
         }
-        return json_encode($result);
+        return $result;
     }
 
     public function getCategories() {
@@ -147,11 +230,10 @@ class MobileController {
                     "dealsCount" => $this->dbDeals->find(array("type" => $city['link'][0]))->count()
                 );
             }
-            return json_encode($result);
         } catch (Exception $e){
             $this->logException($e);
         }
-        return json_encode($result);
+        return $result;
     }
 }
 
@@ -161,6 +243,9 @@ if (isset($_REQUEST['action'])){
         $_REQUEST[$key] = (string) $value;
     }
     switch ($_REQUEST['action']) {
+        case "checkalldeals":
+            $app->getDealInfoForAllDeals();
+            break;
         case 'deals':
             if (!isset($_REQUEST['from'])) {
                 $_REQUEST['from'] = 0;
@@ -174,10 +259,16 @@ if (isset($_REQUEST['action'])){
             if (!isset($_REQUEST['sortDirection'])) {
                 $_REQUEST['sortDirection'] = 1;
             }
-            echo $app->getDeals($_REQUEST['type'], $_REQUEST['from'], $_REQUEST['limit'], $_REQUEST['sort'], $_REQUEST['sortDirection']);
+            echo json_encode($app->getDeals($_REQUEST['type'], $_REQUEST['from'], $_REQUEST['limit'], $_REQUEST['sort'], $_REQUEST['sortDirection']));
             break;
         case 'categories':
-            echo $app->getCategories();
+            echo json_encode($app->getCategories());
+            break;
+        case 'dealinfo':
+            if (!isset($_REQUEST['dealId'])) {
+                $_REQUEST['dealId'] = "0";
+            }
+            echo json_encode($app->getDealInfo($_REQUEST['dealId']));
             break;
     }
 }

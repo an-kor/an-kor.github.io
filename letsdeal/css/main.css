@@ -462,8 +462,8 @@ body {
 }
 
 .dealinfo-wrapper {
-    overflow-y: scroll;
-    -webkit-overflow-scrolling: touch;
+    /*overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;*/
 }
 
 .dealinfo-scroller{
@@ -510,6 +510,18 @@ body {
     -webkit-backface-visibility: hidden;
 }
 .dealinfo-content-wrapper{}
+.dealinfo-content-details{
+    display: none;
+}
+
+.dealinfo-content-loading {
+    opacity:0.75;
+    width:100%;
+    background-image: url(../img/loadinfo.gif);
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+}
+
 .dealinfo-content-image{
     background-color: #737373;
     -webkit-backface-visibility: hidden;
@@ -531,9 +543,19 @@ body {
     -webkit-backface-visibility: hidden;
 }
 .dealinfo-content-contacts{}
-.dealinfo-content-contacts h5{}
+.dealinfo-content-contacts h5{
+    font-weight: normal;
+}
 .dealinfo-content-contacts p{}
-.dealinfo-content-contacts h5 strong{}
+.dealinfo-content-contacts h5 strong{
+    font-weight: normal;
+}
+.dealinfo-content-block-content ul li {
+    list-style: square;
+}
+
+
+
 .leaflet-control-attribution {
     display:none;
 }
