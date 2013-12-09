@@ -420,7 +420,9 @@ IScroll.prototype = {
 		this.absStartY = this.y;
 		this.pointX    = point.pageX;
 		this.pointY    = point.pageY;
-
+        if (this.options.hideScrollbarsOnMove) {
+            this.indicators[0].wrapper.style.opacity = 1;
+        }
 		this._execEvent('beforeScrollStart');
 	},
 
@@ -546,6 +548,14 @@ IScroll.prototype = {
 		this.isInTransition = 0;
 		this.initiated = 0;
 		this.endTime = utils.getTime();
+
+
+        if (this.options.hideScrollbarsOnMove) {
+            var self = this;
+            setTimeout(function(){
+                self.indicators[0].wrapper.style.opacity = 0;
+            }, 700)
+        }
 
 		// reset if we are outside of the boundaries
 		if (this.resetPosition(this.options.bounceTime)) {
@@ -1504,7 +1514,7 @@ function createDefaultScrollbar (direction, interactive, type) {
 		indicator = document.createElement('div');
 
 	if ( type === true ) {
-		scrollbar.style.cssText = 'position:absolute;z-index:9999';
+		scrollbar.style.cssText = 'position:absolute;z-index:9999;opacity:0;-webkit-transition: opacity 0.3s;-webkit-backface-visibility: hidden;';
 		indicator.style.cssText = '-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;position:absolute;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.9);border-radius:'+ T.p(5)+'px';
 	}
 
@@ -1642,11 +1652,11 @@ Indicator.prototype = {
 		if ( !this.options.disableMouse ) {
 			utils.addEvent(window, 'mousemove', this);
 		}
-
 		this.scroller._execEvent('beforeScrollStart');
 	},
 
 	_move: function (e) {
+
 		var point = e.touches ? e.touches[0] : e,
 			deltaX, deltaY,
 			newX, newY,

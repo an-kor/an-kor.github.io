@@ -10,6 +10,26 @@ var App = {
             T.query('#top-menu-wrapper li:nth-child('+(i+1)+')').className = 'top-menu-tabs-active';
         },100)
     },
+    sharePage: function(dealId){
+        var el = T.byId('pages-new');
+        var template = T.byId('dealinfo-share-template').innerHTML,
+            newEl = document.createElement("div");
+        newEl.style.left = -T.w()+'px';
+        T.updateStyle('#pages-new',{
+            webkitFilter: 'blur(10px)'
+        });
+        newEl.innerHTML = template;
+        el.parentNode.appendChild(newEl);
+        T.query('.dealinfo-share-block')[0].style.marginTop = T.h() - 5.5*T.p(80) + 'px';
+    },
+    hideSharePage: function(){
+
+        T.updateStyle('#pages-new',{
+            webkitFilter: null
+        });
+        var el = T.query('.dealinfo-share')[0].parentNode;
+        el.parentNode.removeChild(el);
+    },
     addPage: function(dealId){
         if (!App.inTransition && !App.mainPageHScroll.scrollActive){
             App.inTransition = 1;
@@ -21,8 +41,16 @@ var App = {
             var currentEl, newEl;
             currentEl = T.byId('pages-current');
             newEl = document.createElement("div");
+            newEl.id = "pages-new";
             newEl.style.width = T.w()+'px';
             var template = T.byId('deal-page-template').innerHTML;
+            /*if (T.isIOS) {
+                template = template.replace(/%IF_IOS:/g, "");
+                template = template.replace(/%/g, "");
+            } else {
+                template = template.replace(/%IF_IOS:(.*)%/g, "");
+            }*/
+
             var contentTemplate = T.byId('dealinfo-content-template').innerHTML;
             var bottomTemplate = T.byId('dealinfo-bottom-template').innerHTML;
             template = template.replace("%CONTENT%", contentTemplate);
@@ -44,16 +72,20 @@ var App = {
                     hours = Math.floor(delta/3600),
                     minutes = Math.floor((delta - (hours*3600))/60),
                     seconds = (delta - (hours*3600) - (minutes*60));
-                if (hours < 10) {
-                    hours = '0' + hours;
+                if (delta>0) {
+                    if (hours < 10) {
+                        hours = '0' + hours;
+                    }
+                    if (minutes < 10) {
+                        minutes = '0' + minutes;
+                    }
+                    if (seconds < 10) {
+                        seconds = '0' + seconds;
+                    }
+                    T.query('.dealinfo-bottom-countdown span')[0].innerHTML = hours+ ":" + minutes + ":" + seconds;
+                } else {
+                    T.query('.dealinfo-bottom-countdown')[0].innerHTML = '';
                 }
-                if (minutes < 10) {
-                    minutes = '0' + minutes;
-                }
-                if (seconds < 10) {
-                    seconds = '0' + seconds;
-                }
-                T.query('.dealinfo-bottom-countdown span')[0].innerHTML = hours+ ":" + minutes + ":" + seconds;
             }, 1000);
             newEl.innerHTML = template;
             currentEl.parentNode.appendChild(newEl);
@@ -107,12 +139,15 @@ var App = {
                     T.byId("dealinfo-map-"+data.id).style.display = 'none';
                 }
                 T.query('.dealinfo-content-loading')[0].style.display = 'none';
-                var scroller = new IScroll(T.query('.dealinfo-wrapper')[0], {
-                    scrollbars: true
-                });
-                setTimeout(function(){
-                    scroller.refresh();
-                },500);
+                if (T.isIOS) {
+                    var scroller = new IScroll(T.query('.dealinfo-wrapper')[0], {
+                        scrollbars: true,
+                        hideScrollbarsOnMove:true
+                    });
+                    setTimeout(function(){
+                        scroller.refresh();
+                    },500);
+                }
             }, {dealId: data.id}, function(){
                 T.query('.dealinfo-content-loading')[0].style.display = 'none';
                 var scroller = new IScroll(T.query('.dealinfo-wrapper')[0]);

@@ -31,7 +31,11 @@ var Templates = {
             '</select>';
     },
     prepareFooter: function(){
-        T.setH('footer', T.p(Styles.footer.height, 1));
+        T.updateStyle('#footer',{
+            height: T.px(Styles.footer.height, 1),
+            boxShadow: (!T.isAndroid2)? '0px 0px '+T.px(50)+' 1px rgba(0,0,0,0.25)':''
+        });
+
         T.updateStyle('#footer-tabs', {
             background: Styles.footer.bgColor,
             borderTop: Styles.footer.borderTop
@@ -179,7 +183,7 @@ var Templates = {
             scrollY: 0,
             snap: true,
             momentum: false,
-            bounce: false,
+            //bounce: false,
             snapThreshold: 0.1,
             lockDirection: true,
             directionLockThreshold: 20,
@@ -311,7 +315,7 @@ var Templates = {
         //BOTTOM
         T.updateStyle('.dealinfo-bottom', {
             width: T.w()+'px',
-            boxShadow: (!T.isAndroid2)? '0px -1px 1px 1px rgba(0,0,0,0.1)':'',
+            boxShadow: (!T.isAndroid2)? '0px 0px '+T.px(50)+' 0px rgba(0,0,0,0.25)':'',
             bottom: 0
         });
         T.updateStyle('.dealinfo-bottom-firstline', {
@@ -412,12 +416,17 @@ var Templates = {
         T.updateStyle('.dealinfo-content-block-title', {
             borderBottom: T.px(1,1)+ ' solid #999',
             background: '#3eacc8',
-            paddingLeft: T.px(10),
+            paddingLeft: T.px(15),
             height: T.px(65),
             lineHeight: T.px(65),
             color: 'white',
             fontSize: T.px(30)
         });
+        T.updateStyle('.dealinfo-content-block h5', {
+            paddingTop: T.px(5),
+            fontSize: T.px(25)
+        });
+
         T.updateStyle('.dealinfo-content-block-content', {
             padding: T.px(15) + ' ' + T.px(25),
             color: '#5b5b59',
@@ -439,8 +448,24 @@ var Templates = {
         T.updateStyle('.dealinfo-content-map', {
             height:  T.px(400)
         });
-        T.updateStyle('.dealinfo-content-block-content ul li', {
-            marginLeft:  T.px(20)
+        if (!T.isIOS) {
+            T.updateStyle('.dealinfo-wrapper', {
+                overflowY: 'scroll',
+                webkitOverflowScrolling: 'touch'
+            });
+        }
+
+        T.updateStyle('.dealinfo-share-block div', {
+            height: T.px(80),
+            lineHeight: T.px(80)
         });
+
+        T.updateStyle('.dealinfo-share-block', {
+            width: T.w() - T.p(20)*2,
+            margin: T.px(20),
+            borderRadius: T.px(5)
+        });
+
+
     }
 };

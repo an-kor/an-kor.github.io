@@ -1,9 +1,9 @@
 <?php
 class MobileController {
-    const LOG_FILE = 'var/log/letsdeal/ajax.log';//var/log/letsdeal
+    const LOG_FILE = 'logs/ajax.log';//var/log/letsdeal
     const FEED_URL = 'http://letsdeal.se/mfeed.php';
     const DEAL_URL = 'http://letsdeal.se/deal/';
-    const FEED_LIFETIME = 1800;
+    const FEED_LIFETIME = 3600;
     const DEALINFO_LIFETIME = 72000;
 
     private $m;
@@ -96,7 +96,7 @@ class MobileController {
                     if (isset($matches[1][0])) {
                         $contacts = "<h5>Adress</h5>".trim(substr($matches[1][0], strpos($matches[1][0], "<p>")));
                     } else {
-                        $contacts = "<p><strong><em>Uppge leveransadress när du gör din beställning på Letsdeal.se</em></strong></p>";
+                        $contacts = "";//"<p><strong><em>Uppge leveransadress när du gör din beställning på Letsdeal.se</em></strong></p>";
                     }
                     $record = array(
                         "id" => $dealId,
@@ -174,6 +174,7 @@ class MobileController {
                 }
                 foreach ($category->deals->item as $deal) {
                     $deal->type = $category->link;
+                    $deal->endtime = (int) strtotime($deal->endtime);
                     $this->dbDeals->insert($deal);
                 }
             }
@@ -186,7 +187,7 @@ class MobileController {
 
         $result = array();
         try {
-            $cursor = $this->dbDeals->find(array("type" => $type))->sort(array($sort => $sortDirection))->limit($limit)->skip($from);
+            $cursor = $this->dbDeals->find(array("type" => $type, "endtime" => array('$gt' => (string)time())))->sort(array($sort => $sortDirection))->limit($limit)->skip($from);
             foreach ($cursor as $record) {
                 $result[] = array(
                     "id" => $record['id'],
@@ -196,7 +197,7 @@ class MobileController {
                     "bulk" => $record['bulk'],
                     "imageSrc" => $record['image']['url'],
                     "shortDescription" => $record['title'],
-                    "endtime" => strtotime($record['endtime']),
+                    "endtime" => $record['endtime'],
                     "lat" => $record['latitude'],
                     "lon" => $record['longitude']
                 );

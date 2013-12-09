@@ -542,6 +542,8 @@ body {
     -webkit-transform: translateZ(0);
     -webkit-backface-visibility: hidden;
 }
+
+.dealinfo-content-block h5{}
 .dealinfo-content-contacts{}
 .dealinfo-content-contacts h5{
     font-weight: normal;
@@ -550,12 +552,57 @@ body {
 .dealinfo-content-contacts h5 strong{
     font-weight: normal;
 }
-.dealinfo-content-block-content ul li {
-    list-style: square;
+
+.dealinfo-content-block-content ul li{
+    line-height: 1.3;
+    margin-left: 0.75em;
 }
 
-
+.dealinfo-content-block-content ul li:before {
+    content: "";
+    border-color: transparent #79d0d7;
+    border-style: solid;
+    border-width: 0.25em 0 0.25em 0.35em;
+    display: block;
+    height: 0;
+    width: 0;
+    left: -0.75em;
+    top: 0.85em;
+    position: relative;
+}
 
 .leaflet-control-attribution {
     display:none;
+}
+.dealinfo-share{
+    position: absolute;
+    top:0;
+    bottom:0;
+    width:100%;
+    background-color: rgba(0,0,2,0.66);
+}
+#pages-new{}
+
+.dealinfo-share-block {
+    background-color: #f1f1f1;
+    overflow-x: hidden;
+}
+
+.dealinfo-share-block div{
+    width:100%;
+    text-align: center;
+}
+.dealinfo-share-block-title {
+    font-size: 25px;
+    color: #333;
+    background-color: white;
+    border-bottom: 1px solid #526d77;
+}
+
+.dealinfo-share-item {
+    font-size: 35px;
+    color: #3eabc8;
+}
+.dealinfo-share-bordergray {
+    border-bottom: 1px solid #a9a9a9;
 }
