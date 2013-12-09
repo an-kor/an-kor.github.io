@@ -466,6 +466,13 @@ var Templates = {
             borderRadius: T.px(5)
         });
 
+        T.updateStyle('.dealinfo-share-block-title', {
+            fontSize: T.px(25)
+        });
+
+        T.updateStyle('.dealinfo-share-item', {
+            fontSize: T.px(35)
+        });
 
     }
 };
