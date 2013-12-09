@@ -1,16 +1,16 @@
 <?php
 class MobileController {
-    const LOG_FILE = 'logs/ajax.log';//var/log/letsdeal
+    const LOG_FILE = 'var/log/letsdeal/ajax.log';//var/log/letsdeal
     const FEED_URL = 'http://letsdeal.se/mfeed.php';
     const DEAL_URL = 'http://letsdeal.se/deal/';
     const FEED_LIFETIME = 1800;
-    const DEALINFO_LIFETIME = 36000;
+    const DEALINFO_LIFETIME = 72000;
 
     private $m;
     private $db;
     private $dbDeals;
     private $dbCities;
-    private $dbCategories;
+    private $dbSections;
 
     public function __construct(){
         $this->m = new MongoClient();
@@ -18,7 +18,7 @@ class MobileController {
         $this->dbSettings = $this->db->settings;
         $this->dbDeals= $this->db->deals;
         $this->dbCities = $this->db->cities;
-        $this->dbCategories = $this->db->categories;
+        $this->dbSections = $this->db->sections;
         $this->dbDealsInfo= $this->db->dealsinfo;
         $lastTs = $this->dbSettings->findOne(array('key' => 'lastFeedFetchTs'));
         if ($lastTs['value'] < time() - $this::FEED_LIFETIME ) {
@@ -150,12 +150,12 @@ class MobileController {
     }
     public function saveFeedToDb($xml) {
         try {
-            $categories = $xml->city;
+            $sections = $xml->city;
             $this->dbCities->drop();
-            $this->dbCategories->drop();
+            $this->dbSections->drop();
             $this->dbDeals->drop();
             $this->dbSettings->drop();
-            foreach ($categories as $category) {
+            foreach ($sections as $category) {
                 if (floatval($category->longitude) != 0) {
                     $record = array(
                         "name" => $category->name,
@@ -170,7 +170,7 @@ class MobileController {
                         "type" => $category->link,
                         "parent" => ''
                     );
-                    $this->dbCategories->insert($record);
+                    $this->dbSections->insert($record);
                 }
                 foreach ($category->deals->item as $deal) {
                     $deal->type = $category->link;
@@ -207,16 +207,16 @@ class MobileController {
         return $result;
     }
 
-    public function getCategories() {
+    public function getSections() {
         $result = new stdClass();
         try {
-            $result->categories = array();
-            $cursor = $this->dbCategories->find();
-            foreach ($cursor as $category) {
-                $result->categories[] = array(
-                    "id" => $category['type'][0],
-                    "name" => $category['name'][0],
-                    "dealsCount" => $this->dbDeals->find(array("type" => $category['type'][0]))->count()
+            $result->sections = array();
+            $cursor = $this->dbSections->find();
+            foreach ($cursor as $section) {
+                $result->sections[] = array(
+                    "id" => $section['type'][0],
+                    "name" => $section['name'][0],
+                    "dealsCount" => $this->dbDeals->find(array("type" => $section['type'][0]))->count()
                 );
             }
             $cursor = $this->dbCities->find();
@@ -239,6 +239,9 @@ class MobileController {
 
 $app = new MobileController();
 if (isset($_REQUEST['action'])){
+    if (!isset($_REQUEST['apikey'])){
+        exit();
+    }
     foreach ($_REQUEST as $key=>$value) {
         $_REQUEST[$key] = (string) $value;
     }
@@ -259,10 +262,10 @@ if (isset($_REQUEST['action'])){
             if (!isset($_REQUEST['sortDirection'])) {
                 $_REQUEST['sortDirection'] = 1;
             }
-            echo json_encode($app->getDeals($_REQUEST['type'], $_REQUEST['from'], $_REQUEST['limit'], $_REQUEST['sort'], $_REQUEST['sortDirection']));
+            echo json_encode($app->getDeals($_REQUEST['section'], $_REQUEST['from'], $_REQUEST['limit'], $_REQUEST['sort'], $_REQUEST['sortDirection']));
             break;
-        case 'categories':
-            echo json_encode($app->getCategories());
+        case 'sections':
+            echo json_encode($app->getSections());
             break;
         case 'dealinfo':
             if (!isset($_REQUEST['dealId'])) {

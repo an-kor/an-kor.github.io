@@ -92,6 +92,7 @@ var T = {
         } else {
             params.action = action;
         }
+        params.apikey = "a4Gsm";
         T.xhrReq({
             url: url,
             dataType: 'text',

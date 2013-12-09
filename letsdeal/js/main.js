@@ -107,7 +107,9 @@ var App = {
                     T.byId("dealinfo-map-"+data.id).style.display = 'none';
                 }
                 T.query('.dealinfo-content-loading')[0].style.display = 'none';
-                var scroller = new IScroll(T.query('.dealinfo-wrapper')[0]);
+                var scroller = new IScroll(T.query('.dealinfo-wrapper')[0], {
+                    scrollbars: true
+                });
                 setTimeout(function(){
                     scroller.refresh();
                 },500);
@@ -150,10 +152,10 @@ var App = {
         T.setH('container', T.h());
         Templates.prepareSplash();
 
-        T.request('categories', function(data){
+        T.request('sections', function(data){
             var i;
-            for (i in data.categories) {
-                Deals.addNewList(data.categories[i]);
+            for (i in data.sections) {
+                Deals.addNewList(data.sections[i]);
             }
             for (i in data.cities) {
                 if (data.cities[i].id == 'stockholm') {

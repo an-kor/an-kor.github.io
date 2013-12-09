@@ -124,7 +124,7 @@ var Deals = {
         });
         Styles.hScroller.numberOfPages++;
     },
-    loadDeals: function(type, from, limit, callback, errorCallback){
+    loadDeals: function(section, from, limit, callback, errorCallback){
         var dealsText = '';
         T.request('deals', function(data){
             try {
@@ -144,7 +144,7 @@ var Deals = {
                 errorCallback();
             }
         }, {
-            type: type,
+            section: section,
             from: from,
             limit: limit
         }, function(){
