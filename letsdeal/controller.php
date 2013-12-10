@@ -1,10 +1,10 @@
 <?php
 class MobileController {
-    const LOG_FILE = 'logs/ajax.log';//var/log/letsdeal
+    const LOG_FILE = 'var/log/letsdeal/ajax.log';//var/log/letsdeal
     const FEED_URL = 'http://letsdeal.se/mfeed.php';
     const DEAL_URL = 'http://letsdeal.se/deal/';
     const FEED_LIFETIME = 3600;
-    const DEALINFO_LIFETIME = 72000;
+    const DEALINFO_LIFETIME = 86400;
 
     private $m;
     private $db;
@@ -174,7 +174,8 @@ class MobileController {
                 }
                 foreach ($category->deals->item as $deal) {
                     $deal->type = $category->link;
-                    $deal->endtime = (int) strtotime($deal->endtime);
+                    $deal = (array) $deal;
+                    $deal['endtime'] = strtotime($deal['endtime']);
                     $this->dbDeals->insert($deal);
                 }
             }
@@ -187,7 +188,7 @@ class MobileController {
 
         $result = array();
         try {
-            $cursor = $this->dbDeals->find(array("type" => $type, "endtime" => array('$gt' => (string)time())))->sort(array($sort => $sortDirection))->limit($limit)->skip($from);
+            $cursor = $this->dbDeals->find(array("type" => $type, "endtime" => array('$gt' => time())))->sort(array($sort => $sortDirection))->limit($limit)->skip($from);
             foreach ($cursor as $record) {
                 $result[] = array(
                     "id" => $record['id'],
@@ -258,7 +259,7 @@ if (isset($_REQUEST['action'])){
                 $_REQUEST['limit'] = 20;
             }
             if (!isset($_REQUEST['sort'])) {
-                $_REQUEST['sort'] = 'expiration';
+                $_REQUEST['sort'] = 'endtime';
             }
             if (!isset($_REQUEST['sortDirection'])) {
                 $_REQUEST['sortDirection'] = 1;

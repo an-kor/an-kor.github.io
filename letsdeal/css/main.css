@@ -579,7 +579,7 @@ body {
     top:0;
     bottom:0;
     width:100%;
-    background-color: rgba(0,0,2,0.66);
+    background-color: rgba(0,0,2,0.5);
 }
 #pages-new{}
 
@@ -605,4 +605,11 @@ body {
 }
 .dealinfo-share-bordergray {
     border-bottom: 1px solid #a9a9a9;
+}
+#page-on-top {
+    position: absolute;
+    top:0;
+    bottom:0;
+    width:100%;
+    z-index: 1000;
 }

@@ -131,7 +131,7 @@ var Templates = {
         });
         T.byId('splash-message').innerHTML = Messages.loadingDeals;
         T.byId('splash').style.display = 'block';
-        if (T.isIOS) {
+        /*if (T.isIOS) {
             var intTime = new Date().getTime();
             var getTime = function() {
                 var intNow = new Date().getTime();
@@ -145,7 +145,7 @@ var Templates = {
                 setTimeout(getTime,500);
             };
             getTime();
-        }
+        }*/
     },
     prepareHScroller: function(){
         T.setH('hscroller-wrapper', T.h() - T.p(Styles.footer.height, 1)+1);
@@ -455,24 +455,25 @@ var Templates = {
             });
         }
 
+        T.updateStyle('.dealinfo-share', {
+            backgroundColor: T.isAndroid ? "rgba(0,0,0,0.75)" : "rgba(0,0,0,0.6)"
+        });
         T.updateStyle('.dealinfo-share-block div', {
             height: T.px(80),
             lineHeight: T.px(80)
         });
-
         T.updateStyle('.dealinfo-share-block', {
             width: T.w() - T.p(20)*2,
             margin: T.px(20),
             borderRadius: T.px(5)
         });
-
         T.updateStyle('.dealinfo-share-block-title', {
             fontSize: T.px(25)
         });
-
         T.updateStyle('.dealinfo-share-item', {
             fontSize: T.px(35)
         });
+
 
     }
 };

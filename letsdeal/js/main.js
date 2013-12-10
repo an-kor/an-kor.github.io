@@ -2,33 +2,38 @@ var App = {
     pagesNumber: 1,
     isDealsLoading: 0,
     inTransition: 0,
-    changeHScrollerPage: function(i){
-        i=parseInt(i);
-        setTimeout(function(){
+    changeHScrollerPage: function (i) {
+        i = parseInt(i);
+        setTimeout(function () {
             App.mainPageHScroll.goToPage(i, 0, Styles.transitionTime, IScroll.ease.quadratic2);
             T.query('#top-menu-wrapper li.top-menu-tabs-active').className = '';
-            T.query('#top-menu-wrapper li:nth-child('+(i+1)+')').className = 'top-menu-tabs-active';
-        },100)
+            T.query('#top-menu-wrapper li:nth-child(' + (i + 1) + ')').className = 'top-menu-tabs-active';
+        }, 100)
     },
-    sharePage: function(dealId){
-        var el = T.byId('pages-new');
-        var template = T.byId('dealinfo-share-template').innerHTML,
-            newEl = document.createElement("div");
-        newEl.style.left = -T.w()+'px';
-        T.updateStyle('#pages-new',{
-            webkitFilter: 'blur(10px)'
-        });
-        newEl.innerHTML = template;
-        el.parentNode.appendChild(newEl);
-        T.query('.dealinfo-share-block')[0].style.marginTop = T.h() - 5.5*T.p(80) + 'px';
+    sharePage: function (dealId) {
+        var template = T.byId('dealinfo-share-template').innerHTML;
+        T.byId('page-on-top').innerHTML = template;
+        T.query('.dealinfo-share-block')[0].style.marginTop = T.h() - 5.5 * T.p(80) + 'px';
+        T.byId('page-on-top').style.display = 'block';
+        T.byId('page-on-top').style.webkitTransition = 'opacity 0.7s';
+        //
+        setTimeout(function(){
+            T.byId('page-on-top').style.opacity = 1;
+        }, 0);
+        setTimeout(function(){
+            T.updateStyle('#pages-new', {
+                webkitFilter: 'blur('+ T.px(5)+')'
+            });
+        }, 5);
     },
-    hideSharePage: function(){
-
-        T.updateStyle('#pages-new',{
-            webkitFilter: null
+    hideSharePage: function () {
+        T.byId('page-on-top').style.opacity = 0;
+        setTimeout(function(){
+            T.byId('page-on-top').style.display = 'none';
+        },700);
+        T.updateStyle('#pages-new', {
+                webkitFilter: null
         });
-        var el = T.query('.dealinfo-share')[0].parentNode;
-        el.parentNode.removeChild(el);
     },
     addPage: function(dealId){
         if (!App.inTransition && !App.mainPageHScroll.scrollActive){
@@ -131,7 +136,7 @@ var App = {
                 if (data.lat > 0) {
                     var map = L.map("dealinfo-map-"+data.id).setView([data.lat, data.lon], 13);
                     var marker = L.marker([data.lat, data.lon]).addTo(map);
-                    L.tileLayer('https://mts0.google.com/vt/lyrs=m@240000000&hl=x-local&src=app&x={x}&y={y}&z={z}&s=Ga', {
+                    L.tileLayer('https://mts0.google.com/vt/lyrs=m@240000000&hl=sv&src=app&x={x}&y={y}&z={z}&s=Ga', {
                         attribution: '',
                         maxZoom: 19
                     }).addTo(map);
