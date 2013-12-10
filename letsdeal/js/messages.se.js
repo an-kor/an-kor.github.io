@@ -4,5 +4,17 @@ var Messages = {
     "myDeals": "Mina deals",
     "changeCity": "Ändra stad",
     "settings": "Inställningar",
-    "connectionError":"Anslutningsfel"
+    "connectionError":"Anslutningsfel",
+    "hours": "tim",
+    "minutes": "min",
+    "seconds": "sek",
+    "left": "kvar",
+    "shareWithFriends": "Berätta för dina vänner om dealen",
+    "cancel": "Avbryt",
+    "buy": "Köp",
+    "bought": "köpta",
+    "kr": "kr",
+    "highlights": "Höjdpunkter",
+    "terms": "Vilkor",
+    "about": "Om dealen"
 };

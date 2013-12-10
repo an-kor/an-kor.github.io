@@ -12,11 +12,14 @@ var App = {
     },
     sharePage: function (dealId) {
         var template = T.byId('dealinfo-share-template').innerHTML;
+        template = template.replace('%TITLE_MSG%', Messages.shareWithFriends);
+        template = template.replace('%CANCEL_MSG%', Messages.cancel);
         T.byId('page-on-top').innerHTML = template;
         T.query('.dealinfo-share-block')[0].style.marginTop = T.h() - 5.5 * T.p(80) + 'px';
         T.byId('page-on-top').style.display = 'block';
-        T.byId('page-on-top').style.webkitTransition = 'opacity 0.7s';
-        //
+        if (T.isIOS) {
+            T.byId('page-on-top').style.webkitTransition = 'opacity 1.5s';
+        }
         setTimeout(function(){
             T.byId('page-on-top').style.opacity = 1;
         }, 0);
@@ -28,12 +31,13 @@ var App = {
     },
     hideSharePage: function () {
         T.byId('page-on-top').style.opacity = 0;
-        setTimeout(function(){
-            T.byId('page-on-top').style.display = 'none';
-        },700);
-        T.updateStyle('#pages-new', {
-                webkitFilter: null
-        });
+        T.byId('page-on-top').style.display = 'none';
+        if (T.isIOS) {
+            T.byId('page-on-top').style.webkitTransition = null;
+            T.updateStyle('#pages-new', {
+                    webkitFilter: null
+            });
+        }
     },
     addPage: function(dealId){
         if (!App.inTransition && !App.mainPageHScroll.scrollActive){
@@ -65,9 +69,10 @@ var App = {
                 template = template.replace("%IMAGESRC%", data.imageSrc);
                 template = template.replace("%MAP_ID%", "dealinfo-map-"+data.id);
                 template = template.replace("%SHORT_DESCRIPTION%", data.shortDescription);
-                bottomTemplate = bottomTemplate.replace("%BULK%", T.formatNumber(data.bulk));
-                bottomTemplate = bottomTemplate.replace("%OLDPRICE%", T.formatNumber(data.origPrice));
-                bottomTemplate = bottomTemplate.replace("%NEWPRICE%", T.formatNumber(data.price));
+                bottomTemplate = bottomTemplate.replace("%BULK%", T.formatNumber(data.bulk) + " " + Messages.bought);
+                bottomTemplate = bottomTemplate.replace("%BUY_MSG%", Messages.buy);
+                bottomTemplate = bottomTemplate.replace("%OLDPRICE%", T.formatNumber(data.origPrice)+" "+Messages.kr);
+                bottomTemplate = bottomTemplate.replace("%NEWPRICE%", T.formatNumber(data.price)+" "+Messages.kr);
             }
             clearInterval(App.countDownInterval);
             var countdown = parseInt(data.endtime);
@@ -87,7 +92,7 @@ var App = {
                     if (seconds < 10) {
                         seconds = '0' + seconds;
                     }
-                    T.query('.dealinfo-bottom-countdown span')[0].innerHTML = hours+ ":" + minutes + ":" + seconds;
+                    T.query('.dealinfo-bottom-countdown')[0].innerHTML = hours +" "+ Messages.hours+", " + minutes +" "+ Messages.minutes+", " + seconds +" "+ Messages.seconds + " " + Messages.left;
                 } else {
                     T.query('.dealinfo-bottom-countdown')[0].innerHTML = '';
                 }
@@ -128,8 +133,11 @@ var App = {
             T.request('dealinfo', function(dealInfo){
                 var el = T.query('.dealinfo-content-details')[0], template = el.innerHTML;
                 template = template.replace("%ABOUT%", dealInfo.about);
+                template = template.replace("%ABOUT_MSG%", Messages.about);
                 template = template.replace("%HIGHLIGHTS%", dealInfo.highlights);
+                template = template.replace("%HIGHLIGHTS_MSG%", Messages.highlights);
                 template = template.replace("%TERMS%", dealInfo.terms);
+                template = template.replace("%TERMS_MSG%", Messages.terms);
                 template = template.replace("%CONTACTS%", dealInfo.contacts);
                 el.innerHTML = template;
                 el.style.display='block';

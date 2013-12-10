@@ -1,6 +1,6 @@
 <?php
 class MobileController {
-    const LOG_FILE = 'var/log/letsdeal/ajax.log';//var/log/letsdeal
+    const LOG_FILE = '/var/log/letsdeal/ajax.log';
     const FEED_URL = 'http://letsdeal.se/mfeed.php';
     const DEAL_URL = 'http://letsdeal.se/deal/';
     const FEED_LIFETIME = 3600;

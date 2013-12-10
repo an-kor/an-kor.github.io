@@ -97,15 +97,15 @@
 <div id="dealinfo-bottom-template" class="template">
     <div class="dealinfo-bottom">
         <div class="dealinfo-bottom-firstline">
-            <div class="dealinfo-bottom-price-old">%OLDPRICE% kr</div>
-            <div class="dealinfo-bottom-price-new">%NEWPRICE% kr</div>
+            <div class="dealinfo-bottom-price-old">%OLDPRICE%</div>
+            <div class="dealinfo-bottom-price-new">%NEWPRICE%</div>
             <div class="spacer"></div>
-            <div class="dealinfo-bottom-buyBtn">Köp</div>
+            <div class="dealinfo-bottom-buyBtn">%BUY_MSG%</div>
         </div>
         <div class="dealinfo-bottom-secondline">
-            <div class="dealinfo-bottom-bought">%BULK% köpta</div>
+            <div class="dealinfo-bottom-bought">%BULK%</div>
             <div class="spacer"></div>
-            <div class="dealinfo-bottom-countdown"><span></span> kvar</div>
+            <div class="dealinfo-bottom-countdown"></div>
             <div class="dealinfo-bottom-infoIcon"></div>
         </div>
     </div>
@@ -119,21 +119,19 @@
             <div class="dealinfo-content-loading"></div>
             <div class="dealinfo-content-details">
                 <div class="dealinfo-content-block">
-                    <div class="dealinfo-content-block-title">Höjdpunkter</div>
+                    <div class="dealinfo-content-block-title">%HIGHLIGHTS_MSG%</div>
                     <div class="dealinfo-content-block-content">%HIGHLIGHTS%</div>
                 </div>
                 <div class="dealinfo-content-block">
-                    <div class="dealinfo-content-block-title">Vilkor</div>
+                    <div class="dealinfo-content-block-title">%TERMS_MSG%</div>
                     <div class="dealinfo-content-block-content">%TERMS%</div>
                 </div>
                 <div class="dealinfo-content-block">
-                    <div class="dealinfo-content-block-title">Om dealen</div>
+                    <div class="dealinfo-content-block-title">%ABOUT_MSG%</div>
                     <div class="dealinfo-content-block-content">%ABOUT%</div>
                 </div>
                 <div class="dealinfo-content-map" id="%MAP_ID%"></div>
-                <div class="dealinfo-content-contacts">
-                    %CONTACTS%
-                </div>
+                <div class="dealinfo-content-contacts">%CONTACTS%</div>
             </div>
         </div>
     </div>
@@ -143,14 +141,14 @@
 <div id="dealinfo-share-template" class="template">
     <div onclick="App.hideSharePage();" ontouchmove="return false;" class="dealinfo-share">
         <div class="dealinfo-share-block">
-            <div class="dealinfo-share-block-title">Beratta for dina vanner om dealen</div>
+            <div class="dealinfo-share-block-title">%TITLE_MSG%</div>
             <div onclick="App.hideSharePage()" class="dealinfo-share-item dealinfo-share-bordergray">Facebook</div>
             <div onclick="App.hideSharePage()" class="dealinfo-share-item dealinfo-share-bordergray">E-post</div>
             <div onclick="App.hideSharePage()" class="dealinfo-share-item">Twitter</div>
         </div>
 
         <div class="dealinfo-share-block">
-            <div class="dealinfo-share-item" onclick="App.hideSharePage()">Avbryt</div>
+            <div class="dealinfo-share-item" onclick="App.hideSharePage()">%CANCEL_MSG%</div>
         </div>
     </div>
 </div>
