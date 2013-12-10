@@ -19,15 +19,15 @@ var App = {
         T.byId('page-on-top').style.display = 'block';
         if (T.isIOS) {
             T.byId('page-on-top').style.webkitTransition = 'opacity 1.5s';
+            setTimeout(function(){
+                T.updateStyle('#pages-new', {
+                    webkitFilter: 'blur('+ T.px(5)+')'
+                });
+            }, 5);
         }
         setTimeout(function(){
             T.byId('page-on-top').style.opacity = 1;
         }, 0);
-        setTimeout(function(){
-            T.updateStyle('#pages-new', {
-                webkitFilter: 'blur('+ T.px(5)+')'
-            });
-        }, 5);
     },
     hideSharePage: function () {
         T.byId('page-on-top').style.opacity = 0;
