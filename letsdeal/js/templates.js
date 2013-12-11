@@ -397,7 +397,8 @@ var Templates = {
         });
 
         T.updateStyle('.dealinfo-content-loading', {
-            height: T.px(80)
+            height: T.px(64),
+            backgroundSize: 'contain'
         });
         T.updateStyle('.dealinfo-content-block', {
             border: T.px(1,1)+ ' solid #c6c6c6',
@@ -456,7 +457,7 @@ var Templates = {
         }
 
         T.updateStyle('.dealinfo-share', {
-            backgroundColor: T.isAndroid ? "rgba(0,0,0,0.75)" : "rgba(0,0,0,0.6)"
+            backgroundColor: T.isAndroid ? "rgba(0,0,0,0.75)" : "rgba(0,0,0,0.75)"
         });
         T.updateStyle('.dealinfo-share-block div', {
             height: T.px(80),

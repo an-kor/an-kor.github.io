@@ -509,6 +509,10 @@ body {
 .dealinfo-content{
     -webkit-backface-visibility: hidden;
 }
+
+.dealinfo-content div{
+    -webkit-backface-visibility: hidden;
+}
 .dealinfo-content-wrapper{}
 .dealinfo-content-details{
     display: none;
@@ -535,12 +539,15 @@ body {
     font-style: normal;
     white-space: nowrap;
 }
-.dealinfo-content-block{}
+.dealinfo-content-block{
+    -webkit-backface-visibility: hidden;
+}
 .dealinfo-content-block-title{}
-.dealinfo-content-block-content{}
+.dealinfo-content-block-content{
+    -webkit-backface-visibility: hidden;
+}
 .dealinfo-content-map{
     -webkit-transform: translateZ(0);
-    -webkit-backface-visibility: hidden;
 }
 
 .dealinfo-content-block h5{}

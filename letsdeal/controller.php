@@ -4,7 +4,7 @@ class MobileController {
     const FEED_URL = 'http://letsdeal.se/mfeed.php';
     const DEAL_URL = 'http://letsdeal.se/deal/';
     const FEED_LIFETIME = 3600;
-    const DEALINFO_LIFETIME = 86400;
+    const DEALINFO_LIFETIME = 43000;
 
     private $m;
     private $db;
@@ -239,41 +239,55 @@ class MobileController {
     }
 }
 
-$app = new MobileController();
-if (isset($_REQUEST['action'])){
-    if (!isset($_REQUEST['apikey'])){
-        exit();
-    }
-    foreach ($_REQUEST as $key=>$value) {
-        $_REQUEST[$key] = (string) $value;
-    }
-    switch ($_REQUEST['action']) {
+
+if(defined('STDIN') ) {
+    $app = new MobileController();
+    switch ($argv[1]) {
         case "checkalldeals":
             $app->getDealInfoForAllDeals();
-            break;
-        case 'deals':
-            if (!isset($_REQUEST['from'])) {
-                $_REQUEST['from'] = 0;
-            }
-            if (!isset($_REQUEST['limit'])) {
-                $_REQUEST['limit'] = 20;
-            }
-            if (!isset($_REQUEST['sort'])) {
-                $_REQUEST['sort'] = 'endtime';
-            }
-            if (!isset($_REQUEST['sortDirection'])) {
-                $_REQUEST['sortDirection'] = 1;
-            }
-            echo json_encode($app->getDeals($_REQUEST['section'], $_REQUEST['from'], $_REQUEST['limit'], $_REQUEST['sort'], $_REQUEST['sortDirection']));
-            break;
-        case 'sections':
-            echo json_encode($app->getSections());
-            break;
-        case 'dealinfo':
-            if (!isset($_REQUEST['dealId'])) {
-                $_REQUEST['dealId'] = "0";
-            }
-            echo json_encode($app->getDealInfo($_REQUEST['dealId']));
-            break;
+        break;
+        case "getfeed":
+            $app->getFeed();
+        break;
+    }
+} else {
+    if (isset($_REQUEST['action'])){
+        if (!isset($_REQUEST['apikey'])){
+            exit();
+        }
+        foreach ($_REQUEST as $key=>$value) {
+            $_REQUEST[$key] = (string) $value;
+        }
+        $app = new MobileController();
+        switch ($_REQUEST['action']) {
+            case "checkalldeals":
+                $app->getDealInfoForAllDeals();
+                echo 'success';
+                break;
+            case 'deals':
+                if (!isset($_REQUEST['from'])) {
+                    $_REQUEST['from'] = 0;
+                }
+                if (!isset($_REQUEST['limit'])) {
+                    $_REQUEST['limit'] = 20;
+                }
+                if (!isset($_REQUEST['sort'])) {
+                    $_REQUEST['sort'] = 'endtime';
+                }
+                if (!isset($_REQUEST['sortDirection'])) {
+                    $_REQUEST['sortDirection'] = 1;
+                }
+                echo json_encode($app->getDeals($_REQUEST['section'], $_REQUEST['from'], $_REQUEST['limit'], $_REQUEST['sort'], $_REQUEST['sortDirection']));
+                break;
+            case 'sections':
+                echo json_encode($app->getSections());
+                break;
+            case 'dealinfo':
+                if (!isset($_REQUEST['dealId'])) {
+                    $_REQUEST['dealId'] = "0";
+                }
+                echo json_encode($app->getDealInfo($_REQUEST['dealId']));
+                break;
+        }
     }
 }
