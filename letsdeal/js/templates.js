@@ -61,7 +61,6 @@ var Templates = {
         T.setH('top-menu-wrapper', T.p(Styles.topMenu.height));
 
         T.updateStyle('#top-menu-background', {
-
             height: T.p(Styles.topMenu.height) + 'px',
             background: Styles.topMenu.bgColor
         });
@@ -102,6 +101,11 @@ var Templates = {
         T.updateStyle('.top-menu-share-btn', {
             width: T.px(80),
             backgroundSize: T.px(80) + ' ' + T.px(80)
+        });
+
+        T.updateStyle('.top-menu', {
+            borderBottom: T.px(1,1) + ' solid rgba(170,169,164,0.5)',
+            boxShadow: (!T.isAndroid2)? '0px '+ T.px(1,1)+' '+ T.px(2,1)+' '+ T.px(1,1)+' rgba(170,169,164,0.2)':''
         });
 
         T.updateStyle('.top-menu-title', {
@@ -308,8 +312,8 @@ var Templates = {
         var st = Styles.dealInfo.bottom;
         T.updateStyle('.dealinfo-wrapper', {
             top: T.px(Styles.topMenu.height),
-            bottom: T.px(st.height),
-            borderTop: T.px(2) + ' solid ' + Styles.hScroller.bgColor
+            bottom: T.px(st.height)
+            //borderTop: T.px(2) + ' solid ' + Styles.hScroller.bgColor
         });
 
         //BOTTOM
@@ -409,19 +413,22 @@ var Templates = {
             overflow: 'hidden'
         });
         T.updateStyle('.dealinfo-content-map', {
+            height:  T.px(400),
+
             border: T.px(1,1)+ ' solid #c6c6c6',
             boxShadow: (!T.isAndroid2)? '0px 1px '+T.px(1,1)+' '+T.px(1,1)+' rgba(0,0,0,0.05)':'',
             marginBottom: T.px(10),
             overflow: 'hidden'
         });
         T.updateStyle('.dealinfo-content-block-title', {
-            borderBottom: T.px(1,1)+ ' solid #999',
+            borderBottom: T.px(1,1)+ ' solid #aaa9a4',
             background: '#3eacc8',
             paddingLeft: T.px(15),
             height: T.px(65),
             lineHeight: T.px(65),
             color: 'white',
-            fontSize: T.px(30)
+            fontSize: T.px(30),
+            overflow: 'hidden'
         });
         T.updateStyle('.dealinfo-content-block h5', {
             paddingTop: T.px(5),
@@ -445,9 +452,6 @@ var Templates = {
         });
         T.updateStyle('.dealinfo-content-contacts h5 strong', {
             fontWeight: 'normal'
-        });
-        T.updateStyle('.dealinfo-content-map', {
-            height:  T.px(400)
         });
         if (!T.isIOS) {
             T.updateStyle('.dealinfo-wrapper', {
