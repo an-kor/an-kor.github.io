@@ -3,17 +3,37 @@ var App = {
     isDealsLoading: 0,
     inTransition: 0,
     showIFrame:function(title, src){
+        App.addPage();
         var currentEl, newEl;
         currentEl = T.byId('pages-current');
         newEl = document.createElement("div");
-        newEl.id = "pages-new";
+        newEl.id = "pages-iframe";
         newEl.style.width = T.w()+'px';
         var template = T.byId('iframe-page-template').innerHTML;
         template = template.replace('%TITLE%', title);
         template = template.replace('src=""', 'src="'+src+'"');
+        template = template.replace('onload=""', 'onload="T.query(\'.content-loading-iframe\')[0].style.display=\'none\'; this.style.display=\'block\'"');
         newEl.innerHTML = template;
         currentEl.parentNode.appendChild(newEl);
-        App.addPage();
+        if (T.isIOS) {
+            var wrapper = T.query('.iframe-wrapper')[0];
+            wrapper.scrollTop = 1;
+            wrapper.bottomReached = 0;
+            wrapper.addEventListener("scroll",function(e){
+                if (!wrapper.bottomReached) {
+                    if (wrapper.scrollTop == 0) {
+                        wrapper.scrollTop = 1
+                    }
+                    if(wrapper.scrollTop > wrapper.scrollHeight - T.h()) {
+                        wrapper.bottomReached = 1;
+                        setTimeout(function(){
+                            wrapper.bottomReached = 0;
+                        },300);
+                        wrapper.scrollTop = wrapper.scrollTop - 1;
+                    }
+                }
+            });
+        }
     },
     showMyDeals:function(){
         App.showIFrame(Messages.myDeals, Messages.myDealsSrc);
@@ -28,6 +48,10 @@ var App = {
     },
     addPage: function(){
         if (!App.inTransition && !App.mainPageHScroll.scrollActive){
+            var currentEl = T.byId('pages-current');
+            if (currentEl.parentNode.lastChild.id == 'pages-iframe'){
+                currentEl.parentNode.removeChild(currentEl.parentNode.lastChild);
+            }
             App.inTransition = 1;
             T.byId('pages-wrapper').style.display='block';
             if (App.pagesNumber>=5) {
@@ -45,8 +69,7 @@ var App = {
         clearInterval(App.countDownInterval);
         App.pagesScroll.scrollBy(T.w(),0,Styles.transitionTime);
         setTimeout(function(){
-            var currentEl;
-            currentEl = T.byId('pages-current');
+            var currentEl = T.byId('pages-current');
             currentEl.parentNode.removeChild(currentEl.parentNode.lastChild);
             App.pagesNumber--;
         },Styles.transitionTime);

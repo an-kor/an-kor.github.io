@@ -50,7 +50,7 @@ var Templates = {
         T.byId('footer-tabs-search').innerHTML = Messages.searchDeal;
         T.byId('footer-tabs-mydeals').innerHTML = Messages.myDeals;
         T.byId('footer-tabs-city').innerHTML = Messages.changeCity;
-        T.byId('footer-tabs-settings').innerHTML = Messages.settings;
+        /*T.byId('footer-tabs-settings').innerHTML = Messages.settings;*/
     },
     prepareHeader: function(){
         if (T.p(Styles.topMenu.fontSize)>T.w()/17) {
@@ -106,7 +106,7 @@ var Templates = {
         T.updateStyle('.top-menu', {
             height: T.px(Styles.topMenu.height),
             borderBottom: T.px(1,1) + ' solid rgba(170,169,164,0.5)',
-            boxShadow: (!T.isAndroid2)? '0px '+ T.px(1,1)+' '+ T.px(2,1)+' '+ T.px(1,1)+' rgba(170,169,164,0.2)':''
+            boxShadow: (!T.isAndroid2)? '0px '+ T.px(1,1)+' '+ T.px(2,1)+' '+ T.px(1,1)+' rgba(170,169,164,0.3)':''
         });
 
         T.updateStyle('.top-menu-title', {
@@ -408,7 +408,7 @@ var Templates = {
             paddingBottom: T.px(st.title.paddingBottom)
         });
 
-        T.updateStyle('.dealinfo-content-loading', {
+        T.updateStyle('.content-loading', {
             height: T.px(64),
             backgroundSize: 'contain'
         });

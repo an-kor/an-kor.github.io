@@ -12,11 +12,14 @@ var Messages = {
     "shareWithFriends": "Berätta för dina vänner om dealen",
     "cancel": "Avbryt",
     "buy": "Köp",
+    "buyAction": "Köp av",
     "bought": "köpta",
     "kr": "kr",
     "highlights": "Höjdpunkter",
     "terms": "Vilkor",
     "about": "Om dealen",
+    "other": "Övrigt",
+    "seller": "Dealen säljes av",
     "myDealsSrc": "http://letsdeal.se/?mydealsmob",
-    "buySrc": "http://www.letsdeal.se/?mobilebuy&deal=%DEAL_ID%&device=app&email=test@example.com&udid=123"
+    "buySrc": "http://www.letsdeal.se/?mobilebuy&deal=%DEAL_ID%&device=app&email=&udid="
 };

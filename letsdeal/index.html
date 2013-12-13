@@ -68,7 +68,7 @@
                         <li><a href="javascript:" id="footer-tabs-search"></a></li>
                         <li><a href="javascript:" onclick="App.showMyDeals()" id="footer-tabs-mydeals"></a></li>
                         <li><a href="javascript:" id="footer-tabs-city"></a></li>
-                        <li><a href="javascript:" id="footer-tabs-settings"></a></li>
+                        <!--li><a href="javascript:" id="footer-tabs-settings"></a></li-->
                     </ul>
                 </div>
             </div>
@@ -88,7 +88,8 @@
             <div class="top-menu-title">%TITLE%</div>
         </div>
         <div class="iframe-wrapper wrapper">
-            <iframe src="" seamless frameborder="0" width="100%" height="101%" scrollbars="no"></iframe>
+            <div class="content-loading content-loading-iframe"></div>
+            <iframe src="" frameborder="0" width="100%" height="100%" scrollbars="no" allowtransparency="true" style="background:transparent;display:none;" onload=""></iframe>
         </div>
     </div>
 </div>
@@ -128,7 +129,7 @@
         <div class="dealinfo-content-image" style="background-image:url(%IMAGESRC%)"></div>
         <div class="dealinfo-content-wrapper">
             <div class="dealinfo-content-title">%SHORT_DESCRIPTION%</div>
-            <div class="dealinfo-content-loading"></div>
+            <div class="content-loading"></div>
             <div class="dealinfo-content-details">
                 <div class="dealinfo-content-block">
                     <div class="dealinfo-content-block-title">%HIGHLIGHTS_MSG%</div>
@@ -142,8 +143,11 @@
                     <div class="dealinfo-content-block-title">%ABOUT_MSG%</div>
                     <div class="dealinfo-content-block-content">%ABOUT%</div>
                 </div>
+                %OTHER:<div class="dealinfo-content-block"><div class="dealinfo-content-block-title">%OTHER_MSG%</div><div class="dealinfo-content-block-content">%OTHER_IMG%</div></div>:OTHER%
                 <div class="dealinfo-content-map" id="%MAP_ID%"></div>
+                <div class="dealinfo-content-contacts">%SELLER_MSG%: %SELLER%</div>
                 <div class="dealinfo-content-contacts">%CONTACTS%</div>
+
             </div>
         </div>
     </div>

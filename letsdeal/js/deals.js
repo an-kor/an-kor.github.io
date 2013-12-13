@@ -13,9 +13,10 @@ var Deals = {
     },
     showBuyPage:function(dealId){
         var data = Deals.loadedDeals[dealId];
-        App.showIFrame(Messages.buy +' '+ data.title, Messages.buySrc.replace("%DEAL_ID%", data.id));
+        App.showIFrame(Messages.buyAction +' '+ data.title, Messages.buySrc.replace("%DEAL_ID%", data.id));
     },
     showDeal:function(dealId){
+        App.addPage();
         var currentEl, newEl;
         currentEl = T.byId('pages-current');
         newEl = document.createElement("div");
@@ -72,6 +73,16 @@ var Deals = {
             template = template.replace("%TERMS%", dealInfo.terms);
             template = template.replace("%TERMS_MSG%", Messages.terms);
             template = template.replace("%CONTACTS%", dealInfo.contacts);
+            template = template.replace("%SELLER%", dealInfo.seller);
+            template = template.replace("%SELLER_MSG%", Messages.seller);
+            if (dealInfo.otherImg && dealInfo.otherImg != "") {
+                template = template.replace("%OTHER:", '');
+                template = template.replace(":OTHER%", '');
+                template = template.replace("%OTHER_MSG%", Messages.other);
+                template = template.replace("%OTHER_IMG%", '<img src="'+dealInfo.otherImg+'" onload="App.dealInfoScroller.refresh();"/>');
+            } else {
+                template = template.replace(/%OTHER:.*:OTHER%/m, '');
+            }
             el.innerHTML = template;
             el.style.display='block';
             if (data.lat > 0) {
@@ -84,18 +95,21 @@ var Deals = {
             } else {
                 T.byId("dealinfo-map-"+data.id).style.display = 'none';
             }
-            T.query('.dealinfo-content-loading')[0].style.display = 'none';
+            T.query('.content-loading')[0].style.display = 'none';
             if (T.isIOS) {
-                var scroller = new IScroll(T.query('.dealinfo-wrapper')[0], {
+                if (App.dealInfoScroller) {
+                    App.dealInfoScroller.destroy();
+                }
+                App.dealInfoScroller = new IScroll(T.query('.dealinfo-wrapper')[0], {
                     scrollbars: true,
                     hideScrollbarsOnMove:true
                 });
                 setTimeout(function(){
-                    scroller.refresh();
+                    App.dealInfoScroller.refresh();
                 },500);
             }
         }, {dealId: data.id}, function(){
-            T.query('.dealinfo-content-loading')[0].style.display = 'none';
+            T.query('.content-loading')[0].style.display = 'none';
             var scroller = new IScroll(T.query('.dealinfo-wrapper')[0]);
             setTimeout(function(){
                 scroller.refresh();
@@ -105,7 +119,6 @@ var Deals = {
         var bottomEl = document.createElement("div");
         bottomEl.innerHTML = bottomTemplate;
         newEl.appendChild(bottomEl);
-        App.addPage();
     },
     appendDeals: function(wrapper){
         var dealItems = T.query('#deallist_' + wrapper.index + ' .deallist-item');

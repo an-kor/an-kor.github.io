@@ -79,19 +79,39 @@ class MobileController {
                 $url = $this::DEAL_URL . $dealId;
                 $result = $this->getPageContent($url);
                 if ($result != '') {
+                    $about = "";
                     preg_match_all('/Om dealen<\/h3>(.*?)<!-- section/s', $result, $matches);
-                    $about = $matches[0][0];
-                    preg_match_all('/<div class=\"cont\">(.*?)<\/div>/s', $about, $matches);
-                    $about = trim($matches[1][0]);
+                    if ($matches[0]) {
+                        $about = $matches[0][0];
+                        preg_match_all('/<div class=\"cont\">(.*?)<\/div>/s', $about, $matches);
+                        if ($matches[1]) {
+                            $about = trim($matches[1][0]);
+                        }
+                    }
 
                     preg_match_all('/Höjdpunkter<\/h3>(.*?)<\/div>/s', $result, $matches);
-                    $highlights = trim($matches[1][0]);
+                    $highlights = "";
+                    if ($matches[1]) {
+                        $highlights = trim($matches[1][0]);
+                    }
 
                     preg_match_all('/Villkor<\/h3>(.*?)<\/div>/s', $result, $matches);
-                    $terms = trim($matches[1][0]);
+                    $terms = "";
+                    if ($matches[1]) {
+                        $terms = trim($matches[1][0]);
+                    }
 
                     preg_match_all('/Dealen säljes av(.*?)<div class=\"heading/s', $result, $matches);
-                    $seller = trim(strip_tags($matches[1][0]));
+                    $seller = "";
+                    if ($matches[1]) {
+                        $seller = trim(strip_tags($matches[1][0]));
+                    }
+
+                    preg_match_all('/Övrigt<\/h3>(.*?)src=\"(.*?)\" alt/s', $result, $matches);
+                    $otherImg = "";
+                    if ($matches[2]) {
+                        $otherImg = trim(strip_tags($matches[2][0]));
+                    }
 
                     preg_match_all('/Adress(.*?)<\/div>/s', $result, $matches);
                     if (isset($matches[1][0])) {
@@ -106,7 +126,8 @@ class MobileController {
                         "highlights" => $highlights,
                         "terms" => $terms,
                         "seller" => $seller,
-                        "contacts" => $contacts
+                        "contacts" => $contacts,
+                        "otherImg" => $otherImg
                     );
                     if ($cursor) {
                         $this->dbDealsInfo->update(array("id" => $cursor['id']), array('$set' => $record));
