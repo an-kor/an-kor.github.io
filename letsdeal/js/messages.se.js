@@ -16,5 +16,7 @@ var Messages = {
     "kr": "kr",
     "highlights": "Höjdpunkter",
     "terms": "Vilkor",
-    "about": "Om dealen"
+    "about": "Om dealen",
+    "myDealsSrc": "http://letsdeal.se/?mydealsmob",
+    "buySrc": "http://www.letsdeal.se/?mobilebuy&deal=%DEAL_ID%&device=app&email=test@example.com&udid=123"
 };

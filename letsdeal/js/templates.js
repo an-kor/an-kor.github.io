@@ -9,7 +9,7 @@ var Templates = {
             '</div>';
     },
     dealsItem: function(data){
-        return '<li onclick="App.addPage('+data.id+')"><div class="deallist-item" style="background-image: url('+data.imageSrc+');"><div>' +
+        return '<li onclick="Deals.showDeal('+data.id+')"><div class="deallist-item" style="background-image: url('+data.imageSrc+');"><div>' +
             '<div class="deallist-item-header">'+data.title+'</div>' +
             '<div class="deallist-item-footer">' +
             '<div class="deallist-item-footer-bought">'+data.bulk+' köpta</div>' +
@@ -104,19 +104,25 @@ var Templates = {
         });
 
         T.updateStyle('.top-menu', {
+            height: T.px(Styles.topMenu.height),
             borderBottom: T.px(1,1) + ' solid rgba(170,169,164,0.5)',
             boxShadow: (!T.isAndroid2)? '0px '+ T.px(1,1)+' '+ T.px(2,1)+' '+ T.px(1,1)+' rgba(170,169,164,0.2)':''
         });
 
         T.updateStyle('.top-menu-title', {
             width: T.w() - T.p(160) + 'px',
-            lineHeight: T.p(Styles.topMenu.height) + 'px',
+            lineHeight: T.px(Styles.topMenu.height),
             color: Styles.topMenu.color,
-            fontSize: T.p(Styles.topMenu.fontSize) + 'px',
+            fontSize: T.px(Styles.topMenu.fontSize),
             fontWeight: Styles.topMenu.fontWeight
         });
 
         T.query('#top-menu-wrapper li:nth-child(1)').className = 'top-menu-tabs-active';
+
+        T.updateStyle('.iframe-wrapper', {
+            top: T.px(Styles.topMenu.height),
+            bottom: 0
+        });
     },
 
     prepareSplash: function(){
@@ -302,6 +308,8 @@ var Templates = {
         T.updateStyle('#pages-scroller > div', {
             width: T.w()+'px'
         });
+
+
         App.pagesScroll = new IScroll(T.byId('pages-wrapper'), {
             scrollX: true,
             scrollY: 0

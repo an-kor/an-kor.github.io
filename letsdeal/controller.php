@@ -43,6 +43,7 @@ class MobileController {
     private function logError($errorMsg){
         $this->log('ERROR: ' . $errorMsg);
     }
+
     public function getPageContent($url) {
         $xml = null;
         $result = '';

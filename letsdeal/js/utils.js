@@ -43,10 +43,10 @@ var T = {
             if (Math.abs(window.orientation) == 90) {
                 height = screen.availWidth;
             }
-            if (window.innerHeight>(height*0.6)) {
+            if (window.innerHeight>((height/window.devicePixelRatio)*0.6)) {
                 return window.innerHeight
             } else {
-                return height-window.screenTop
+                return (height-window.screenTop)/window.devicePixelRatio
             }
         } else {
             return window.innerHeight;
