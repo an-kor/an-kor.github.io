@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0, minimal-ui">
     <meta http-equiv="cleartype" content="on">
 
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/touch/apple-touch-icon-144x144-precomposed.png">
@@ -23,7 +23,7 @@
     <meta name="msapplication-TileColor" content="#222222">
 
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="">
 
     <link rel="stylesheet" href="css/normalize.css">
@@ -65,7 +65,7 @@
                 </div-->
                 <div id="footer">
                     <ul id="footer-tabs">
-                        <li><a href="javascript:" id="footer-tabs-search"></a></li>
+                        <li><a href="javascript:" onclick="App.showSearchPage()"  id="footer-tabs-search"></a></li>
                         <li><a href="javascript:" onclick="App.showMyDeals()" id="footer-tabs-mydeals"></a></li>
                         <li><a href="javascript:" id="footer-tabs-city"></a></li>
                         <!--li><a href="javascript:" id="footer-tabs-settings"></a></li-->
@@ -91,6 +91,28 @@
             <div class="content-loading content-loading-iframe"></div>
             <iframe src="" frameborder="0" width="100%" height="100%" scrollbars="no" allowtransparency="true" style="background:transparent;display:none;" onload=""></iframe>
         </div>
+    </div>
+</div>
+
+<div id="search-page-template" class="template">
+    <div class="search-page">
+        <div class="top-menu">
+            <div class="top-menu-back-btn" onclick="App.goBack()"></div>
+            <div class="top-menu-search">
+                <form onsubmit="T.query('.top-menu-search-input')[0].blur(); return false;">
+                    <input type="text" value="" class="top-menu-search-input" placeholder="%PLACEHOLDER%"/>
+                </form>
+            </div>
+        </div>
+        <div class="search-wrapper wrapper"></div>
+    </div>
+</div>
+
+<div id="search-item-template" class="template">
+    <div class="search-item-image">%IMG%</div>
+    <div class="search-item-text">
+        <div class="search-item-title">%TITLE%</div>
+        <div class="search-item-description">%DESCRIPTION%</div>
     </div>
 </div>
 
@@ -143,7 +165,7 @@
                     <div class="dealinfo-content-block-title">%ABOUT_MSG%</div>
                     <div class="dealinfo-content-block-content">%ABOUT%</div>
                 </div>
-                %OTHER:<div class="dealinfo-content-block"><div class="dealinfo-content-block-title">%OTHER_MSG%</div><div class="dealinfo-content-block-content">%OTHER_IMG%</div></div>:OTHER%
+                %OTHER:<div class="dealinfo-content-block"><div class="dealinfo-content-block-title">%OTHER_MSG%</div><div class="dealinfo-content-block-content dealinfo-content-block-image">%OTHER_IMG%</div></div>:OTHER%
                 <div class="dealinfo-content-map" id="%MAP_ID%"></div>
                 <div class="dealinfo-content-contacts">%SELLER_MSG%: %SELLER%</div>
                 <div class="dealinfo-content-contacts">%CONTACTS%</div>

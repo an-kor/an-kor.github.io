@@ -20,6 +20,7 @@ var Messages = {
     "about": "Om dealen",
     "other": "Övrigt",
     "seller": "Dealen säljes av",
+    "searchPlaceholder": "Sök deals",
     "myDealsSrc": "http://letsdeal.se/?mydealsmob",
     "buySrc": "http://www.letsdeal.se/?mobilebuy&deal=%DEAL_ID%&device=app&email=&udid="
 };

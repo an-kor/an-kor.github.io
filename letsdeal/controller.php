@@ -4,7 +4,7 @@ class MobileController {
     const FEED_URL = 'http://letsdeal.se/mfeed.php';
     const DEAL_URL = 'http://letsdeal.se/deal/';
     const FEED_LIFETIME = 3600;
-    const DEALINFO_LIFETIME = 43000;
+    const DEALINFO_LIFETIME = 43200;
 
     private $m;
     private $db;
@@ -146,6 +146,9 @@ class MobileController {
     public function getDealInfoForAllDeals() {
         $result = array();
         try {
+
+            $this->dbDealsInfo->remove(array("ts" => array('$lt' => time() - $this::DEALINFO_LIFETIME)));
+
             $cursor = $this->dbDeals->find();
             foreach ($cursor as $record) {
                 $this->getDealInfo($record['id']);

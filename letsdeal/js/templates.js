@@ -124,6 +124,52 @@ var Templates = {
             bottom: 0
         });
     },
+    prepareSearch: function(){
+        T.updateStyle('.top-menu-search', {
+            width: T.w() - T.p(60) + 'px'
+        });
+        T.updateStyle('.top-menu-search input', {
+            margin: T.px(10) +' 0',
+            borderRadius: T.px(4),
+            lineHeight: T.px(Styles.topMenu.height - 20),
+            fontFamily: 'source-sans-pro, sans-serif',
+            padding: '0 ' + T.px(5) +' 0 ' + T.px(50),
+            fontSize: T.px(Styles.topMenu.height - 40),
+            width: T.w() - T.p(100) + 'px',
+            backgroundSize:  T.px(40)
+        });
+        T.updateStyle('.search-wrapper', {
+            top: T.px(Styles.topMenu.height),
+            bottom: 0
+        });
+        if (!T.isIOS) {
+            T.updateStyle('.search-wrapper', {
+                overflowY: 'scroll',
+                webkitOverflowScrolling: 'touch'
+            });
+        }
+
+        T.updateStyle('.search-item', {
+            borderBottom: T.px(1,1) + 'solid #aaa',
+            padding: T.px(7) + ' ' + T.px(0) + ' ' + T.px(5) + ' ' + T.px(20)
+        });
+        T.updateStyle('.search-item-image', {
+            width: T.px(100)
+        });
+        T.updateStyle('.search-item-image img', {
+            height: T.px(100)
+        });
+        T.updateStyle('.search-item-text', {
+            width: T.w() - T.p(200) + 'px',
+            marginLeft: T.px(20)
+        });
+        T.updateStyle('.search-item-title', {
+            fontSize: T.px(40)
+        });
+        T.updateStyle('.search-item-description', {
+            fontSize: T.px(32)
+        });
+    },
 
     prepareSplash: function(){
         T.updateStyle('#splash', {
@@ -175,18 +221,6 @@ var Templates = {
             backgroundColor: Styles.hScroller.bgColor
         });
         T.updateStyle('#hscroller-scroller-list > li', 'width', T.w() + 'px');
-
-        T.updateStyle('.categories-dropdown', {
-            width: T.w() - T.p(26) - (T.isDesktop?16:0) + 'px',
-            'font-size': T.px(30),
-            padding: '0 '+T.px(40)+' 0 '+T.px(20),
-            margin: T.px(10)+' '+T.px(5)+' 0 '+T.px(15),
-            'line-height': T.px(70),
-            color: '#878787',
-            border:  T.p(1,1)+'px solid '+'#d4d2cf',
-            'border-radius':  T.px(2*window.devicePixelRatio,1),
-            'background-size':  T.px(40)
-        });
 
         App.mainPageHScroll = new IScroll(T.byId('hscroller-wrapper'), {
             scrollX: true,
@@ -300,6 +334,19 @@ var Templates = {
             webkitBackgroundSize: T.px(48) + ' ' + T.px(48),
             backgroundSize: T.px(48) + ' ' + T.px(48)
         });
+
+        T.updateStyle('.categories-dropdown', {
+            width: T.w() - T.p(26) - (T.isDesktop?16:0) + 'px',
+            fontSize: T.px(30),
+            padding: '0 '+T.px(40)+' 0 '+T.px(20),
+            margin: T.px(10)+' '+T.px(5)+' 0 '+T.px(15),
+            lineHeight: T.px(70),
+            color: '#878787',
+            border:  T.p(1,1)+'px solid '+'#d4d2cf',
+            borderRadius:  T.px(2*window.devicePixelRatio,1),
+            backgroundSize:  T.px(40)
+        });
+
     },
     preparePages: function(){
         //T.byId('pages-wrapper').style.bottom = T.p(Styles.footer.height) + 'px';
@@ -308,7 +355,6 @@ var Templates = {
         T.updateStyle('#pages-scroller > div', {
             width: T.w()+'px'
         });
-
 
         App.pagesScroll = new IScroll(T.byId('pages-wrapper'), {
             scrollX: true,
@@ -323,6 +369,12 @@ var Templates = {
             bottom: T.px(st.height)
             //borderTop: T.px(2) + ' solid ' + Styles.hScroller.bgColor
         });
+        if (!T.isIOS) {
+            T.updateStyle('.dealinfo-wrapper', {
+                overflowY: 'scroll',
+                webkitOverflowScrolling: 'touch'
+            });
+        }
 
         //BOTTOM
         T.updateStyle('.dealinfo-bottom', {
@@ -396,6 +448,11 @@ var Templates = {
             width: T.w(),
             height: imgHeight+'px'
         });
+        if (T.w()/510>2) {
+            T.updateStyle('.dealinfo-content-image', {
+                webkitFilter: 'blur('+ T.px(8)+')'
+            });
+        }
         T.updateStyle('.dealinfo-content-wrapper', {
             padding: T.px(10) + ' ' + T.px(20)
         });
@@ -409,7 +466,7 @@ var Templates = {
         });
 
         T.updateStyle('.content-loading', {
-            height: T.px(64),
+            height: T.px(48),
             backgroundSize: 'contain'
         });
         T.updateStyle('.dealinfo-content-block', {
@@ -461,12 +518,6 @@ var Templates = {
         T.updateStyle('.dealinfo-content-contacts h5 strong', {
             fontWeight: 'normal'
         });
-        if (!T.isIOS) {
-            T.updateStyle('.dealinfo-wrapper', {
-                overflowY: 'scroll',
-                webkitOverflowScrolling: 'touch'
-            });
-        }
 
         T.updateStyle('.dealinfo-share', {
             backgroundColor: T.isAndroid ? "rgba(0,0,0,0.75)" : "rgba(0,0,0,0.75)"

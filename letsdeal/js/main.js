@@ -38,6 +38,43 @@ var App = {
     showMyDeals:function(){
         App.showIFrame(Messages.myDeals, Messages.myDealsSrc);
     },
+    addSearchItem:function(data){
+        var newEl = document.createElement("div");
+        var template = T.byId('search-item-template').innerHTML;
+        template = template.replace('%TITLE%', data.title);
+        template = template.replace('%DESCRIPTION%', data.description);
+        template = template.replace('%IMG%', '<img src="http://letsdeal-apiimages.s3.amazonaws.com/1181989.jpg" />');
+        newEl.className = 'search-item';
+        newEl.innerHTML = template;
+        T.query('.search-wrapper')[0].appendChild(newEl);
+        if (T.isIOS && App.searchScroller) {
+            App.searchScroller.refresh();
+        }
+    },
+    showSearchPage:function(){
+        App.addPage();
+        var currentEl, newEl;
+        currentEl = T.byId('pages-current');
+        newEl = document.createElement("div");
+        newEl.id = "pages-search";
+        newEl.style.width = T.w()+'px';
+        var template = T.byId('search-page-template').innerHTML;
+        template = template.replace('%PLACEHOLDER%', Messages.searchPlaceholder);
+        newEl.innerHTML = template;
+        currentEl.parentNode.appendChild(newEl);
+        if (T.isIOS) {
+            if (App.searchScroller) {
+                App.searchScroller.destroy();
+            }
+            App.searchScroller = new IScroll(T.query('.search-wrapper')[0], {
+                scrollbars: true,
+                hideScrollbarsOnMove:true
+            });
+        }
+        for (var i=0;i<33;i++){
+            this.addSearchItem({title:'Test item ' + i, description: 'Description with a lot of meaningless words', imgSrc: ''})
+        }
+    },
     changeHScrollerPage: function (i) {
         i = parseInt(i);
         setTimeout(function () {
@@ -101,6 +138,7 @@ var App = {
             Templates.prepareDeals();
             Templates.prepareDealInfo();
             Templates.prepareFooter();
+            Templates.prepareSearch();
             setTimeout(function(){
                 T.byId('container').style.opacity=1;
                 T.byId('splash').style.display = 'none';
