@@ -2,6 +2,7 @@ var Styles = {
     defaultFontSize: 24,
     footer: {
         bgColor: '#4abad3',
+        bgColorHover: '#3aa2bc',
         borderTop: '1px solid #55bfda',
         fontSize: 20,
         height: 105
@@ -18,6 +19,10 @@ var Styles = {
         bgColor: '#edebe6',
         numberOfPages: 0,
         numberOfImages: 10
+    },
+    searchItem: {
+        bgColor: '#edebe6',
+        bgColorHover: '#f8f6f1'
     },
     dealInfo: {
         bottomHeight: 166,
@@ -62,6 +67,7 @@ var Styles = {
                 fontWeight: 'bold',
                 borderRadius: 4,
                 bgColor: '#3ebd4a',
+                bgColorHover: '#38aa43',
                 color: 'white'
             }
         }

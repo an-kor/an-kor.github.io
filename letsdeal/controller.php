@@ -209,6 +209,30 @@ class MobileController {
             $this->logException($e);
         }
     }
+    public function searchDeals($text) {
+        $result = array();
+        try {
+            $cursor = $this->dbDeals->find(array('$or' => array(array("title" => new MongoRegex("/\b".$text."/i")),array("shortname" => new MongoRegex("/\b".$text."/i")))))->limit(30);
+            foreach ($cursor as $record) {
+                $result[$record['id']] = array(
+                    "id" => $record['id'],
+                    "title" => $record['shortname'],
+                    "price" => round($record['price']),
+                    "origPrice" => round($record['origprice']),
+                    "bulk" => $record['bulk'],
+                    "imageSrc" => $record['image']['url'],
+                    "info" => $record['title'],
+                    "endtime" => $record['endtime'],
+                    "lat" => $record['latitude'],
+                    "lon" => $record['longitude'],
+                    "smallimage" => $record['smallimage']
+                );
+            }
+        } catch (Exception $e){
+            $this->logException($e);
+        }
+        return $result;
+    }
     public function getDeals($type, $from = 0 , $limit = 20, $sort = 'endtime', $sortDirection = 1) {
 
         $result = array();
@@ -222,7 +246,7 @@ class MobileController {
                     "origPrice" => round($record['origprice']),
                     "bulk" => $record['bulk'],
                     "imageSrc" => $record['image']['url'],
-                    "shortDescription" => $record['title'],
+                    "info" => $record['title'],
                     "endtime" => $record['endtime'],
                     "lat" => $record['latitude'],
                     "lon" => $record['longitude']
@@ -303,6 +327,13 @@ if(defined('STDIN') ) {
                     $_REQUEST['sortDirection'] = 1;
                 }
                 echo json_encode($app->getDeals($_REQUEST['section'], $_REQUEST['from'], $_REQUEST['limit'], $_REQUEST['sort'], $_REQUEST['sortDirection']));
+                break;
+            case 'dealsearch':
+                if (!isset($_REQUEST['text']) || strlen($_REQUEST['text'])<4) {
+                    echo json_encode(array());
+                } else {
+                    echo json_encode($app->searchDeals($_REQUEST['text']));
+                }
                 break;
             case 'sections':
                 echo json_encode($app->getSections());

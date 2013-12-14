@@ -646,6 +646,8 @@ iframe{
     float: left;
     width:100%;
     border-bottom: 1px solid #aaa;
+    background-image: url(../img/search-item-bg.png);
+    background-repeat: no-repeat;
 }
 .search-item div{
     float: left;
@@ -677,7 +679,7 @@ iframe{
 .top-menu-search {}
 .top-menu-search input {
     background-color: white;
-    background-image: url(../img/bg-dropdown.png);
+    background-image: url(../img/input-search.png);
     background-repeat: no-repeat;
     background-position: 0% 50%;
 }

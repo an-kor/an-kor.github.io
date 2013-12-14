@@ -16,7 +16,6 @@ var Deals = {
         App.showIFrame(Messages.buyAction +' '+ data.title, Messages.buySrc.replace("%DEAL_ID%", data.id));
     },
     showDeal:function(dealId){
-        App.addPage();
         var currentEl, newEl;
         currentEl = T.byId('pages-current');
         newEl = document.createElement("div");
@@ -28,17 +27,23 @@ var Deals = {
         var bottomTemplate = T.byId('dealinfo-bottom-template').innerHTML;
         template = template.replace("%CONTENT%", contentTemplate);
         if (dealId) {
-            var data = Deals.loadedDeals[dealId];
-            template = template.replace("%TITLE%", data.title);
-            template = template.replace("%IMAGESRC%", data.imageSrc);
-            template = template.replace("%MAP_ID%", "dealinfo-map-"+data.id);
-            template = template.replace("%SHORT_DESCRIPTION%", data.shortDescription);
-            bottomTemplate = bottomTemplate.replace("%BULK%", T.formatNumber(data.bulk) + " " + Messages.bought);
-            bottomTemplate = bottomTemplate.replace("%BUY_MSG%", Messages.buy);
-            bottomTemplate = bottomTemplate.replace("%DEAL_ID%", data.id);
-            bottomTemplate = bottomTemplate.replace("%OLDPRICE%", T.formatNumber(data.origPrice)+" "+Messages.kr);
-            bottomTemplate = bottomTemplate.replace("%NEWPRICE%", T.formatNumber(data.price)+" "+Messages.kr);
+            if(Deals.loadedDeals[dealId]) {
+                var data = Deals.loadedDeals[dealId];
+                template = template.replace("%TITLE%", data.title);
+                template = template.replace("%IMAGESRC%", data.imageSrc);
+                template = template.replace("%MAP_ID%", "dealinfo-map-"+data.id);
+                template = template.replace("%SHORT_DESCRIPTION%", data.info);
+                bottomTemplate = bottomTemplate.replace("%BULK%", T.formatNumber(data.bulk) + " " + Messages.bought);
+                bottomTemplate = bottomTemplate.replace("%BUY_MSG%", Messages.buy);
+                bottomTemplate = bottomTemplate.replace("%DEAL_ID%", data.id);
+                bottomTemplate = bottomTemplate.replace("%OLDPRICE%", T.formatNumber(data.origPrice)+" "+Messages.kr);
+                bottomTemplate = bottomTemplate.replace("%NEWPRICE%", T.formatNumber(data.price)+" "+Messages.kr);
+            } else {
+                return false;
+            }
         }
+        App.addPage();
+
         clearInterval(App.countDownInterval);
         var countdown = parseInt(data.endtime);
         App.countDownInterval = setInterval(function(){
@@ -79,7 +84,7 @@ var Deals = {
                 template = template.replace("%OTHER:", '');
                 template = template.replace(":OTHER%", '');
                 template = template.replace("%OTHER_MSG%", Messages.other);
-                template = template.replace("%OTHER_IMG%", '<img src="'+dealInfo.otherImg+'" onload="App.dealInfoScroller.refresh();"/>');
+                template = template.replace("%OTHER_IMG%", '<img src="'+dealInfo.otherImg+'" onload="if (App.dealInfoScroller) App.dealInfoScroller.refresh();"/>');
             } else {
                 template = template.replace(/%OTHER:.*:OTHER%/m, '');
             }
@@ -119,6 +124,7 @@ var Deals = {
         var bottomEl = document.createElement("div");
         bottomEl.innerHTML = bottomTemplate;
         newEl.appendChild(bottomEl);
+        T.initHover(T.query('.dealinfo-bottom-buyBtn')[0],Styles.dealInfo.bottom.buyBtn.bgColorHover);
     },
     appendDeals: function(wrapper){
         var dealItems = T.query('#deallist_' + wrapper.index + ' .deallist-item');

@@ -39,15 +39,21 @@ var App = {
         App.showIFrame(Messages.myDeals, Messages.myDealsSrc);
     },
     addSearchItem:function(data){
+        Deals.loadedDeals[data.id] = data;
         var newEl = document.createElement("div");
         var template = T.byId('search-item-template').innerHTML;
         template = template.replace('%TITLE%', data.title);
-        template = template.replace('%DESCRIPTION%', data.description);
-        template = template.replace('%IMG%', '<img src="http://letsdeal-apiimages.s3.amazonaws.com/1181989.jpg" />');
+        template = template.replace('%DESCRIPTION%', data.info);
+        template = template.replace('%IMG%', '<img src="'+data.smallimage+'" />');
+        newEl.onclick=function(){
+            Deals.showDeal(data.id);
+        };
+        //template = template.replace('%IMG%', '<img src="http://letsdeal-apiimages.s3.amazonaws.com/'+data.id+'.jpg" />');
         newEl.className = 'search-item';
         newEl.innerHTML = template;
-        T.query('.search-wrapper')[0].appendChild(newEl);
-        if (T.isIOS && App.searchScroller) {
+        T.initHover(newEl, Styles.searchItem.bgColorHover);
+        T.query('.search-scroller')[0].appendChild(newEl);
+        if (App.searchScroller) {
             App.searchScroller.refresh();
         }
     },
@@ -71,9 +77,19 @@ var App = {
                 hideScrollbarsOnMove:true
             });
         }
-        for (var i=0;i<33;i++){
-            this.addSearchItem({title:'Test item ' + i, description: 'Description with a lot of meaningless words', imgSrc: ''})
-        }
+        T.query('.top-menu-search-input')[0].addEventListener('keyup', function() {
+            T.query('.search-scroller')[0].innerHTML='';
+            if (App.lastSearch != this.value) {
+                App.lastSearch = this.value;
+                T.request('dealsearch', function(data){
+
+                    for (var i in data) {
+                        App.addSearchItem(data[i]);
+                    }
+                }, {text: App.lastSearch}, function(){
+                });
+            }
+        });
     },
     changeHScrollerPage: function (i) {
         i = parseInt(i);

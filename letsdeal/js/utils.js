@@ -115,6 +115,22 @@ var T = {
     },
     formatNumber: function(value){
          return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+    },
+    initHover: function(elements, bgHoverColor, bgColor){
+        if (!elements.length) {
+            elements = [elements];
+        }
+        if (!bgColor) {
+            bgColor = null;
+        }
+        for (var i=0;i<elements.length;i++) {
+            elements[i].addEventListener('touchstart', function() {
+                this.style.backgroundColor = bgHoverColor;
+            });
+            elements[i].addEventListener('touchend', function() {
+                this.style.backgroundColor = bgColor;
+            });
+        }
     }
 };
 
