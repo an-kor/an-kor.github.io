@@ -158,7 +158,7 @@ var Templates = {
         });
         T.updateStyle('.search-item-image', {
             borderRadius: T.px(8),
-            margin: T.px(5) + ' 0',
+            margin: T.px(5) + ' 0 '+T.px(5)+' '+T.px(10),
             width: T.px(80)
         });
         T.updateStyle('.search-item-image img', {
