@@ -67,7 +67,7 @@
                     <ul id="footer-tabs">
                         <li><a href="javascript:" onclick="App.showSearchPage()"  id="footer-tabs-search"></a></li>
                         <li><a href="javascript:" onclick="App.showMyDeals()" id="footer-tabs-mydeals"></a></li>
-                        <li><a href="javascript:" id="footer-tabs-city"></a></li>
+                        <li><a href="javascript:" onclick="App.showChangeCityPage()" id="footer-tabs-city"></a></li>
                         <!--li><a href="javascript:" id="footer-tabs-settings"></a></li-->
                     </ul>
                 </div>
@@ -113,6 +113,22 @@
     <div class="search-item-text">
         <div class="search-item-title">%TITLE%</div>
         <div class="search-item-description">%DESCRIPTION%</div>
+    </div>
+</div>
+
+<div id="changecity-item-template" class="template">
+    <div class="search-item-text">
+        <div class="changecity-item-title">%TITLE%</div>
+    </div>
+</div>
+
+<div id="changecity-page-template" class="template">
+    <div class="changecity-page">
+        <div class="top-menu">
+            <div class="top-menu-back-btn" onclick="App.goBack()"></div>
+            <div class="top-menu-title">%TITLE%</div>
+        </div>
+        <div class="search-wrapper wrapper"><div class="changecity-scroller scroller"></div></div>
     </div>
 </div>
 

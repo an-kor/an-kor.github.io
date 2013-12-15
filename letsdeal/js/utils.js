@@ -96,7 +96,7 @@ var T = {
         T.xhrReq({
             url: url,
             dataType: 'text',
-            type: 'GET',
+            type: 'POST',
             timeout: timeout,
             data: params,
             success: function(data){
@@ -131,6 +131,28 @@ var T = {
                 this.style.backgroundColor = bgColor;
             });
         }
+    },
+    getDistance: function(from, to){
+        to.Lat = parseFloat(to[0]);
+        to.Lon = parseFloat(to[1]);
+        from.Lat = parseFloat(from[0]);
+        from.Lon = parseFloat(from[1]);
+
+        this.R = 6378.137;
+        this.d2r = Math.PI / 180;
+        this.dLat = (to.Lat-from.Lat) * this.d2r;
+        this.dLon = (to.Lon-from.Lon) * this.d2r;
+        this.lat1 = from.Lat * this.d2r;
+        this.lat2 = to.Lat * this.d2r;
+        this.sin1 = Math.sin(this.dLat / 2);
+        this.sin2 = Math.sin(this.dLon / 2);
+
+        this.a = this.sin1 * this.sin1 + this.sin2 * this.sin2 * Math.cos(this.lat1) * Math.cos(this.lat2);
+        this.d = this.R * 2 * Math.atan2(Math.sqrt(this.a), Math.sqrt(1 - this.a))
+
+        if (this.d > 3000) this.d = 0;
+
+        return this.d;
     }
 };
 
@@ -187,7 +209,6 @@ var T = {
         var xhr = $.xhr(), timer, n = 0;
         o.userAgent = "XMLHttpRequest";
         o.lang = "en";
-        o.type = "POST";
         o.dataType = "application/x-www-form-urlencoded";
         if (o.timeout) timer = setTimeout(function () { xhr.abort(); if (o.timeoutFn) o.timeoutFn(o.url); }, o.timeout);
         xhr.onreadystatechange = function () {
@@ -207,7 +228,9 @@ var T = {
         if (!isPost && o.data)  {
             url += "?" + $._formData(o.data);
         } else {
-            url += "?ts=" + nocache;
+            if (!o.cached) {
+                url += "?ts=" + nocache;
+            }
         }
         xhr.open(o.type, url);
 

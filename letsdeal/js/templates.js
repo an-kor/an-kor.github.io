@@ -130,11 +130,11 @@ var Templates = {
             width: T.w() - T.p(60) + 'px'
         });
         T.updateStyle('.top-menu-search input', {
-            margin: T.px(10) +' 0',
+            margin: T.px(13) +' 0 0 0',
             borderRadius: T.px(8),
-            lineHeight: T.px(Styles.topMenu.height - 20),
+            height: T.px(Styles.topMenu.height - 25),
             fontFamily: 'source-sans-pro, sans-serif',
-            padding: '0 ' + T.px(5) +' 0 ' + T.px(50),
+            padding: T.px(0) + ' ' + T.px(5) +' 0 ' + T.px(50),
             fontSize: T.px(35),
             width: T.w() - T.p(100) + 'px',
             backgroundSize:  T.px(40) + ' ' + T.px(40)
@@ -156,6 +156,9 @@ var Templates = {
             backgroundSize:  T.px(18) + ' ' + T.px(27),
             backgroundPosition:  T.w()- T.p(60) + 'px 50%'
         });
+        T.updateStyle('.item-active', {
+            backgroundColor: Styles.searchItem.bgColorHover
+        });
         T.updateStyle('.search-item-image', {
             borderRadius: T.px(8),
             margin: T.px(5) + ' 0 '+T.px(5)+' '+T.px(10),
@@ -173,6 +176,16 @@ var Templates = {
         });
         T.updateStyle('.search-item-description', {
             fontSize: T.px(30)
+        });
+        T.updateStyle('.changecity-item', {
+            width: T.w()+'px',
+            borderBottom: T.px(1,1) + 'solid #aaa',
+            padding: T.px(5) + ' ' + T.px(0) + ' ' + T.px(5) + ' ' + T.px(20)
+        });
+        T.updateStyle('.changecity-item-title', {
+            marginLeft: T.px(40),
+            lineHeight: T.px(90),
+            fontSize: T.px(40)
         });
     },
 
@@ -250,7 +263,6 @@ var Templates = {
         App.mainPageHScroll.on('translate', function(){
             T.query('#top-menu-wrapper li.top-menu-tabs-active').className = '';
             T.query('#top-menu-wrapper li:nth-child('+(this.currentPage.pageX+1)+')').className = 'top-menu-tabs-active';
-            App.mainPageHScroll.currentPageIndex = T.query('#hscroller-scroller-list > li:nth-child('+(App.mainPageHScroll.currentPage.pageX+1)+') > div').id;
         });
         App.mainPageHScroll.scrollActive = 0;
         App.mainPageHScroll.on('scrollStart', function(){

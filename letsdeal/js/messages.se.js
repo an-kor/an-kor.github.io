@@ -3,6 +3,7 @@ var Messages = {
     "searchDeal": "Sök deal",
     "myDeals": "Mina deals",
     "changeCity": "Ändra stad",
+    "selectCity": "Välj stad",
     "settings": "Inställningar",
     "connectionError":"Anslutningsfel",
     "hours": "tim",

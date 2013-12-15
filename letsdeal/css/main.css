@@ -649,6 +649,7 @@ iframe{
     background-image: url(../img/search-item-bg.png);
     background-repeat: no-repeat;
 }
+.item-active {}
 .search-item div{
     float: left;
     font-family: source-sans-pro, sans-serif;
@@ -658,6 +659,7 @@ iframe{
     overflow:hidden;
 }
 .search-item-image img{
+    display:none;
     height: 64px;
 }
 .search-item-text{
@@ -667,6 +669,18 @@ iframe{
     width: 100%;
     overflow: hidden;
     font-weight: bold;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.changecity-item{
+    float: left;
+    width:100%;
+    border-bottom: 1px solid #aaa;
+}
+.changecity-item-title{
+    width: 100%;
+    overflow: hidden;
+    font-family: source-sans-pro, sans-serif;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
