@@ -1,6 +1,6 @@
 var Messages = {
     "loadingDeals": "Laddar deals...",
-    "searchDeal": "Sök deal",
+    "searchDeal": "Sök deals",
     "myDeals": "Mina deals",
     "changeCity": "Ändra stad",
     "selectCity": "Välj stad",

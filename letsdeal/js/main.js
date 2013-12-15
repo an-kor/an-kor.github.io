@@ -12,11 +12,11 @@ var App = {
             var template = T.byId('iframe-page-template').innerHTML;
             template = template.replace('%TITLE%', title);
             template = template.replace('src=""', 'src="'+src+'"');
-            template = template.replace('onload=""', 'onload="T.query(\'.content-loading-iframe\')[0].style.display=\'none\'; this.style.display=\'block\'"');
+            template = template.replace('onload=""', 'onload="T.query(\'.content-loading-iframe\').style.display=\'none\'; this.style.display=\'block\'"');
             newEl.innerHTML = template;
             currentEl.parentNode.appendChild(newEl);
             if (T.isIOS) {
-                var wrapper = T.query('.iframe-wrapper')[0];
+                var wrapper = T.query('.iframe-wrapper');
                 wrapper.scrollTop = 1;
                 wrapper.bottomReached = 0;
                 wrapper.addEventListener("scroll",function(e){
@@ -38,13 +38,21 @@ var App = {
     },
     showMyDeals:function(){
         App.showIFrame(Messages.myDeals, Messages.myDealsSrc);
+        window.location.hash = '/mydeals/';
     },
     addSearchItem:function(data){
         Deals.loadedDeals[data.id] = data;
         var newEl = document.createElement("div");
         var template = T.byId('search-item-template').innerHTML;
+        var section = '';
+        if (T.inArray(data.type, App.sections, 'id')) {
+            section = App.sections[T.inArray(data.type, App.sections, 'id')].name;
+        }
+        if (T.inArray(data.type, App.cities, 'id')) {
+            section = App.cities[T.inArray(data.type, App.cities, 'id')].name;
+        }
         template = template.replace('%TITLE%', data.title);
-        template = template.replace('%DESCRIPTION%', data.info);
+        template = template.replace('%DESCRIPTION%', section+': ' +data.info);
         template = template.replace('%IMG%', '<img src="'+data.smallimage+'" onload="this.style.display=\'block\'"/>');
         newEl.onclick=function(){
             Deals.showDeal(data.id);
@@ -53,10 +61,24 @@ var App = {
         newEl.className = 'search-item';
         newEl.innerHTML = template;
         T.initHover(newEl, Styles.searchItem.bgColorHover);
-        T.query('.search-scroller')[0].appendChild(newEl);
+        T.query('.search-scroller').appendChild(newEl);
         if (App.searchScroller) {
             App.searchScroller.refresh();
         }
+    },
+    searchDeal: function(value){
+        T.query('.search-scroller').innerHTML='';
+        T.query('.top-menu-search-input').value = value;
+        if (App.lastSearch != value) {
+            App.lastSearch = value;
+            T.request('dealsearch', function(data){
+                for (var i in data) {
+                    App.addSearchItem(data[i]);
+                }
+            }, {text: App.lastSearch}, function(){
+            });
+        }
+        window.location.hash = '/search/'+value;
     },
     showSearchPage:function(){
         if (App.addPage()) {
@@ -73,23 +95,15 @@ var App = {
                 if (App.searchScroller) {
                     App.searchScroller.destroy();
                 }
-                App.searchScroller = new IScroll(T.query('.search-wrapper')[0], {
+                App.searchScroller = new IScroll(T.query('.search-wrapper'), {
                     scrollbars: true,
                     hideScrollbarsOnMove:true
                 });
             }
-            T.query('.top-menu-search-input')[0].addEventListener('keyup', function() {
-                T.query('.search-scroller')[0].innerHTML='';
-                if (App.lastSearch != this.value) {
-                    App.lastSearch = this.value;
-                    T.request('dealsearch', function(data){
-                        for (var i in data) {
-                            App.addSearchItem(data[i]);
-                        }
-                    }, {text: App.lastSearch}, function(){
-                    });
-                }
+            T.query('.top-menu-search-input').addEventListener('keyup', function() {
+                App.searchDeal(this.value);
             });
+            window.location.hash = '/search/';
         }
     },
     addChangeCityItem:function(data){
@@ -123,7 +137,7 @@ var App = {
             App.goBack();
         };
         T.initHover(newEl, Styles.searchItem.bgColorHover);
-        T.query('.changecity-scroller')[0].appendChild(newEl);
+        T.query('.changecity-scroller').appendChild(newEl);
         if (App.searchScroller) {
             App.searchScroller.refresh();
         }
@@ -143,7 +157,7 @@ var App = {
                 if (App.cityScroller) {
                     App.cityScroller.destroy();
                 }
-                App.cityScroller = new IScroll(T.query('.search-wrapper')[0], {
+                App.cityScroller = new IScroll(T.query('.search-wrapper'), {
                     scrollbars: true,
                     hideScrollbarsOnMove:true
                 });
@@ -151,6 +165,7 @@ var App = {
             for (var i in App.cities) {
                 App.addChangeCityItem(App.cities[i]);
             }
+            window.location.hash = '/city/';
         }
     },
     changeHScrollerPage: function (i) {
@@ -190,7 +205,66 @@ var App = {
             var currentEl = T.byId('pages-current');
             currentEl.parentNode.removeChild(currentEl.parentNode.lastChild);
             App.pagesNumber--;
+            if (App.pagesNumber == 1) {
+                if (window.location.hash.length>0){
+                    window.location.hash='';
+                }
+            }
         },Styles.transitionTime);
+    },
+    checkLocation: function(){
+        var hash = window.location.hash;
+        if (hash!='') {
+            hash = hash.split('/');
+            switch (hash[1]) {
+                case "deal":
+                    var dealId = hash[2];
+                    if (dealId) {
+                        if (Deals.loadedDeals[dealId]) {
+                            Deals.showDeal(dealId);
+                        } else {
+                            T.request('getdeal', function(data){
+                                Deals.loadedDeals[data.id] = data;
+                                Deals.showDeal(data.id);
+                            }, {
+                                dealId: dealId
+                            });
+                        }
+                    }
+                break;
+                case "buy":
+                    var dealId = hash[2];
+                    if (dealId) {
+                        if (Deals.loadedDeals[dealId]) {
+                            Deals.showBuyPage(dealId);
+                        } else {
+                            T.request('getdeal', function(data){
+                                Deals.loadedDeals[data.id] = data;
+                                Deals.showBuyPage(data.id);
+                            }, {
+                                dealId: dealId
+                            });
+                        }
+                    }
+                break;
+                case "search":
+                    App.showSearchPage();
+                    if (hash[2]){
+                        App.searchDeal(hash[2]);
+                    }
+                break;
+                case "city":
+                    App.showChangeCityPage();
+                break;
+                case "mydeals":
+                    App.showMyDeals();
+                break;
+            }
+        } else {
+            if (App.pagesNumber == 2) {
+                App.goBack();
+            }
+        }
     },
     init: function(){
         FastClick.attach(document.body);
@@ -225,17 +299,24 @@ var App = {
                     type:'GET',
                     timeout: 3000,
                     success: function(ipData){
-                        var minDistance = 99999, minDistanceCityId = 0, dist;
+                        var minDistance = 99999, minDistanceCityId = 0, dist, stockholmId;
                         for (i in App.cities) {
+                            if (App.cities[i].id == 'stockholm') {
+                                stockholmId = i;
+                            }
                             dist = T.getDistance(ipData.loc.split(','), [App.cities[i].latitude, App.cities[i].longitude]);
                             if (minDistance > dist) {
                                 minDistance = dist;
                                 minDistanceCityId = i;
                             }
                         }
+                        if (minDistance > 2000) {
+                            minDistanceCityId = stockholmId;
+                        }
                         App.currentCityId = data.cities[minDistanceCityId].id;
                         window.localStorage.setItem('userCityId', data.cities[minDistanceCityId].id);
                         Deals.addNewList(App.cities[minDistanceCityId], 1);
+                        App.checkLocation();
                     },
                     error: function(){
                         for (i in App.cities) {
@@ -244,6 +325,7 @@ var App = {
                                 Deals.addNewList(data.cities[i], 1);
                             }
                         }
+                        App.checkLocation();
                     }
                 });
             }
@@ -254,6 +336,9 @@ var App = {
             Templates.prepareDealInfo();
             Templates.prepareFooter();
             Templates.prepareSearch();
+            if (userCityId) {
+                App.checkLocation();
+            }
             setTimeout(function(){
                 T.byId('container').style.opacity=1;
                 T.byId('splash').style.display = 'none';

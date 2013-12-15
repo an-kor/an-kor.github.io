@@ -225,7 +225,8 @@ class MobileController {
                     "endtime" => $record['endtime'],
                     "lat" => $record['latitude'],
                     "lon" => $record['longitude'],
-                    "smallimage" => $record['smallimage']
+                    "smallimage" => $record['smallimage'],
+                    "type" => $record['type']
                 );
             }
         } catch (Exception $e){
@@ -234,7 +235,6 @@ class MobileController {
         return $result;
     }
     public function getDeals($type, $from = 0 , $limit = 20, $sort = 'endtime', $sortDirection = 1) {
-
         $result = array();
         try {
             $cursor = $this->dbDeals->find(array("type" => $type, "endtime" => array('$gt' => time())))->sort(array($sort => $sortDirection))->limit($limit)->skip($from);
@@ -252,6 +252,28 @@ class MobileController {
                     "lon" => $record['longitude']
                 );
             }
+        } catch (Exception $e){
+            $this->logException($e);
+        }
+        return $result;
+    }
+
+    public function getDeal($dealId) {
+        $result = array();
+        try {
+            $record = $this->dbDeals->findone(array("id" => $dealId));
+            $result = array(
+                "id" => $record['id'],
+                "title" => $record['shortname'],
+                "price" => round($record['price']),
+                "origPrice" => round($record['origprice']),
+                "bulk" => $record['bulk'],
+                "imageSrc" => $record['image']['url'],
+                "info" => $record['title'],
+                "endtime" => $record['endtime'],
+                "lat" => $record['latitude'],
+                "lon" => $record['longitude']
+            );
         } catch (Exception $e){
             $this->logException($e);
         }
@@ -337,6 +359,12 @@ if(defined('STDIN') ) {
                 break;
             case 'sections':
                 echo json_encode($app->getSections());
+                break;
+            case 'getdeal':
+                if (!isset($_REQUEST['dealId'])) {
+                    $_REQUEST['dealId'] = "0";
+                }
+                echo json_encode($app->getDeal($_REQUEST['dealId']));
                 break;
             case 'dealinfo':
                 if (!isset($_REQUEST['dealId'])) {

@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0, minimal-ui">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0"><!--, minimal-ui-->
     <meta http-equiv="cleartype" content="on">
 
     <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/touch/apple-touch-icon-144x144-precomposed.png">
@@ -33,6 +33,125 @@
     <script type="text/javascript" src="js/vendor/iscroll.js"></script>
     <script type="text/javascript" src="js/vendor/leaflet/leaflet.js"></script>
     <script src="//use.edgefonts.net/source-sans-pro:n3,n6.js"></script>
+
+    <script id="deal-page-template" type="text/x-template">
+        <div class="deal-page">
+            <div class="top-menu">
+                <div class="top-menu-back-btn" onclick="App.goBack()"></div>
+                <div class="top-menu-title">%TITLE%</div>
+                <div class="top-menu-share-btn" onclick="Deals.showSharePage()"></div>
+            </div>
+            <div class="dealinfo-wrapper wrapper">
+                %CONTENT%
+            </div>
+        </div>
+    </script>
+    <script id="dealinfo-content-template" type="text/x-template">
+        <div class="dealinfo-content">
+            <div class="dealinfo-content-image" style="background-image:url(%IMAGESRC%)"></div>
+            <div class="dealinfo-content-wrapper">
+                <div class="dealinfo-content-title">%SHORT_DESCRIPTION%</div>
+                <div class="content-loading"></div>
+                <div class="dealinfo-content-details">
+                    <div class="dealinfo-content-block">
+                        <div class="dealinfo-content-block-title">%HIGHLIGHTS_MSG%</div>
+                        <div class="dealinfo-content-block-content">%HIGHLIGHTS%</div>
+                    </div>
+                    <div class="dealinfo-content-block">
+                        <div class="dealinfo-content-block-title">%TERMS_MSG%</div>
+                        <div class="dealinfo-content-block-content">%TERMS%</div>
+                    </div>
+                    <div class="dealinfo-content-block">
+                        <div class="dealinfo-content-block-title">%ABOUT_MSG%</div>
+                        <div class="dealinfo-content-block-content">%ABOUT%</div>
+                    </div>
+                    %OTHER:<div class="dealinfo-content-block"><div class="dealinfo-content-block-title">%OTHER_MSG%</div><div class="dealinfo-content-loading content-loading"></div><div class="dealinfo-content-block-content dealinfo-content-block-image">%OTHER_IMG%</div></div>:OTHER%
+                    <div class="dealinfo-content-map" id="%MAP_ID%"></div>
+                    <div class="dealinfo-content-contacts">%SELLER_MSG%: %SELLER%</div>
+                    <div class="dealinfo-content-contacts">%CONTACTS%</div>
+
+                </div>
+            </div>
+        </div>
+    </script>
+    <script id="dealinfo-bottom-template" type="text/x-template">
+        <div class="dealinfo-bottom">
+            <div class="dealinfo-bottom-firstline">
+                <div class="dealinfo-bottom-price-old">%OLDPRICE%</div>
+                <div class="dealinfo-bottom-price-new">%NEWPRICE%</div>
+                <div class="spacer"></div>
+                <div class="dealinfo-bottom-buyBtn" onclick="Deals.showBuyPage('%DEAL_ID%')" >%BUY_MSG%</div>
+            </div>
+            <div class="dealinfo-bottom-secondline">
+                <div class="dealinfo-bottom-bought">%BULK%</div>
+                <div class="spacer"></div>
+                <div class="dealinfo-bottom-countdown"></div>
+                <div class="dealinfo-bottom-infoIcon"></div>
+            </div>
+        </div>
+    </script>
+    <script id="dealinfo-share-template" type="text/x-template">
+        <div onclick="Deals.hideSharePage();" ontouchmove="return false;" class="dealinfo-share">
+            <div class="dealinfo-share-block">
+                <div class="dealinfo-share-block-title">%TITLE_MSG%</div>
+                <div onclick="Deals.hideSharePage()" class="dealinfo-share-item dealinfo-share-bordergray">Facebook</div>
+                <div onclick="Deals.hideSharePage()" class="dealinfo-share-item dealinfo-share-bordergray">E-post</div>
+                <div onclick="Deals.hideSharePage()" class="dealinfo-share-item">Twitter</div>
+            </div>
+            <div class="dealinfo-share-block">
+                <div class="dealinfo-share-item" onclick="App.hideSharePage()">%CANCEL_MSG%</div>
+            </div>
+        </div>
+    </script>
+
+    <script id="iframe-page-template" type="text/x-template">
+        <div class="iframe-page">
+            <div class="top-menu">
+                <div class="top-menu-back-btn" onclick="App.goBack()"></div>
+                <div class="top-menu-title">%TITLE%</div>
+            </div>
+            <div class="iframe-wrapper wrapper">
+                <div class="content-loading content-loading-iframe"></div>
+                <iframe src="" frameborder="0" width="100%" height="100%" scrollbars="no" allowtransparency="true" style="background:transparent;display:none;" onload=""></iframe>
+            </div>
+        </div>
+    </script>
+
+    <script id="search-page-template" type="text/x-template">
+        <div class="search-page">
+            <div class="top-menu">
+                <div class="top-menu-back-btn" onclick="App.goBack()"></div>
+                <div class="top-menu-search">
+                    <form onsubmit="T.query('.top-menu-search-input')[0].blur(); return false;">
+                        <input type="text" value="" class="top-menu-search-input" placeholder="%PLACEHOLDER%"/>
+                    </form>
+                </div>
+            </div>
+            <div class="search-wrapper wrapper"><div class="search-scroller scroller"></div></div>
+        </div>
+    </script>
+    <script id="search-item-template" type="text/x-template">
+        <div class="search-item-image">%IMG%</div>
+        <div class="search-item-text">
+            <div class="search-item-title">%TITLE%</div>
+            <div class="search-item-description">%DESCRIPTION%</div>
+        </div>
+    </script>
+
+    <script id="changecity-item-template" type="text/x-template">
+        <div class="search-item-text">
+            <div class="changecity-item-title">%TITLE%</div>
+        </div>
+    </script>
+    <script id="changecity-page-template" type="text/x-template">
+        <div class="changecity-page">
+            <div class="top-menu">
+                <div class="top-menu-back-btn" onclick="App.goBack()"></div>
+                <div class="top-menu-title">%TITLE%</div>
+            </div>
+            <div class="search-wrapper wrapper"><div class="changecity-scroller scroller"></div></div>
+        </div>
+    </script>
 </head>
 <body>
 <div id="splash">
@@ -79,131 +198,6 @@
 </div>
 
 <div id="page-on-top" style="display:none;">
-</div>
-
-<div id="iframe-page-template" class="template">
-    <div class="iframe-page">
-        <div class="top-menu">
-            <div class="top-menu-back-btn" onclick="App.goBack()"></div>
-            <div class="top-menu-title">%TITLE%</div>
-        </div>
-        <div class="iframe-wrapper wrapper">
-            <div class="content-loading content-loading-iframe"></div>
-            <iframe src="" frameborder="0" width="100%" height="100%" scrollbars="no" allowtransparency="true" style="background:transparent;display:none;" onload=""></iframe>
-        </div>
-    </div>
-</div>
-
-<div id="search-page-template" class="template">
-    <div class="search-page">
-        <div class="top-menu">
-            <div class="top-menu-back-btn" onclick="App.goBack()"></div>
-            <div class="top-menu-search">
-                <form onsubmit="T.query('.top-menu-search-input')[0].blur(); return false;">
-                    <input type="text" value="" class="top-menu-search-input" placeholder="%PLACEHOLDER%"/>
-                </form>
-            </div>
-        </div>
-        <div class="search-wrapper wrapper"><div class="search-scroller scroller"></div></div>
-    </div>
-</div>
-
-<div id="search-item-template" class="template">
-    <div class="search-item-image">%IMG%</div>
-    <div class="search-item-text">
-        <div class="search-item-title">%TITLE%</div>
-        <div class="search-item-description">%DESCRIPTION%</div>
-    </div>
-</div>
-
-<div id="changecity-item-template" class="template">
-    <div class="search-item-text">
-        <div class="changecity-item-title">%TITLE%</div>
-    </div>
-</div>
-
-<div id="changecity-page-template" class="template">
-    <div class="changecity-page">
-        <div class="top-menu">
-            <div class="top-menu-back-btn" onclick="App.goBack()"></div>
-            <div class="top-menu-title">%TITLE%</div>
-        </div>
-        <div class="search-wrapper wrapper"><div class="changecity-scroller scroller"></div></div>
-    </div>
-</div>
-
-<div id="deal-page-template" class="template">
-    <div class="deal-page">
-        <div class="top-menu">
-            <div class="top-menu-back-btn" onclick="App.goBack()"></div>
-            <div class="top-menu-title">%TITLE%</div>
-            <div class="top-menu-share-btn" onclick="Deals.showSharePage()"></div>
-        </div>
-        <div class="dealinfo-wrapper wrapper">
-            %CONTENT%
-        </div>
-    </div>
-</div>
-
-<div id="dealinfo-bottom-template" class="template">
-    <div class="dealinfo-bottom">
-        <div class="dealinfo-bottom-firstline">
-            <div class="dealinfo-bottom-price-old">%OLDPRICE%</div>
-            <div class="dealinfo-bottom-price-new">%NEWPRICE%</div>
-            <div class="spacer"></div>
-            <div class="dealinfo-bottom-buyBtn" onclick="Deals.showBuyPage('%DEAL_ID%')" >%BUY_MSG%</div>
-        </div>
-        <div class="dealinfo-bottom-secondline">
-            <div class="dealinfo-bottom-bought">%BULK%</div>
-            <div class="spacer"></div>
-            <div class="dealinfo-bottom-countdown"></div>
-            <div class="dealinfo-bottom-infoIcon"></div>
-        </div>
-    </div>
-</div>
-
-<div id="dealinfo-content-template" class="template">
-    <div class="dealinfo-content">
-        <div class="dealinfo-content-image" style="background-image:url(%IMAGESRC%)"></div>
-        <div class="dealinfo-content-wrapper">
-            <div class="dealinfo-content-title">%SHORT_DESCRIPTION%</div>
-            <div class="content-loading"></div>
-            <div class="dealinfo-content-details">
-                <div class="dealinfo-content-block">
-                    <div class="dealinfo-content-block-title">%HIGHLIGHTS_MSG%</div>
-                    <div class="dealinfo-content-block-content">%HIGHLIGHTS%</div>
-                </div>
-                <div class="dealinfo-content-block">
-                    <div class="dealinfo-content-block-title">%TERMS_MSG%</div>
-                    <div class="dealinfo-content-block-content">%TERMS%</div>
-                </div>
-                <div class="dealinfo-content-block">
-                    <div class="dealinfo-content-block-title">%ABOUT_MSG%</div>
-                    <div class="dealinfo-content-block-content">%ABOUT%</div>
-                </div>
-                %OTHER:<div class="dealinfo-content-block"><div class="dealinfo-content-block-title">%OTHER_MSG%</div><div class="dealinfo-content-block-content dealinfo-content-block-image">%OTHER_IMG%</div></div>:OTHER%
-                <div class="dealinfo-content-map" id="%MAP_ID%"></div>
-                <div class="dealinfo-content-contacts">%SELLER_MSG%: %SELLER%</div>
-                <div class="dealinfo-content-contacts">%CONTACTS%</div>
-
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<div id="dealinfo-share-template" class="template">
-    <div onclick="Deals.hideSharePage();" ontouchmove="return false;" class="dealinfo-share">
-        <div class="dealinfo-share-block">
-            <div class="dealinfo-share-block-title">%TITLE_MSG%</div>
-            <div onclick="Deals.hideSharePage()" class="dealinfo-share-item dealinfo-share-bordergray">Facebook</div>
-            <div onclick="Deals.hideSharePage()" class="dealinfo-share-item dealinfo-share-bordergray">E-post</div>
-            <div onclick="Deals.hideSharePage()" class="dealinfo-share-item">Twitter</div>
-        </div>
-        <div class="dealinfo-share-block">
-            <div class="dealinfo-share-item" onclick="App.hideSharePage()">%CANCEL_MSG%</div>
-        </div>
-    </div>
 </div>
 
 <script type="text/javascript" src="js/messages.se.js"></script>

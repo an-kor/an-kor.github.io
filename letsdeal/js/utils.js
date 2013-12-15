@@ -13,9 +13,9 @@ var T = {
         var el = T.byId(id);
         el.parentElement.removeChild(el);
     },
-    query: function (query){
+    query: function (query, onlyFirst){
         var result = document.querySelectorAll(query);
-        if (result.length == 1) {
+        if (result.length == 1 || onlyFirst) {
             return result[0]
         } else {
             return result
@@ -67,6 +67,17 @@ var T = {
     setH: function (el, v){
         T.byId(el).style.height = v + 'px';
     },
+    inArray: function (needle, haystack, field) {
+        var found = false, key;
+        for (key in haystack) {
+
+            if ((field && haystack[key][field] == needle) || (!field && haystack[key] == needle)) {
+                found = key;
+                break;
+            }
+        }
+        return found;
+    },
     updateStyle: function(selector, obj, value){
         var css = document.styleSheets[1], rules = css.cssRules;
         for (var i in rules) {
@@ -100,13 +111,13 @@ var T = {
             timeout: timeout,
             data: params,
             success: function(data){
-                try {
+               // try {
                     callback(JSON.parse(data));
-                } catch(e) {
+               /* } catch(e) {
                      console.error('error on parsing data', data)
                      console.error(e)
                      errorCallback();
-                }
+                }*/
             },
             error: function(data){
                 errorCallback(data);
@@ -149,8 +160,6 @@ var T = {
 
         this.a = this.sin1 * this.sin1 + this.sin2 * this.sin2 * Math.cos(this.lat1) * Math.cos(this.lat2);
         this.d = this.R * 2 * Math.atan2(Math.sqrt(this.a), Math.sqrt(1 - this.a))
-
-        if (this.d > 3000) this.d = 0;
 
         return this.d;
     }

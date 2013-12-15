@@ -22,7 +22,7 @@ var Styles = {
     },
     searchItem: {
         bgColor: '#edebe6',
-        bgColorHover: '#f8f6f1'
+        bgColorHover: '#f8f5f0'
     },
     dealInfo: {
         bottomHeight: 166,
