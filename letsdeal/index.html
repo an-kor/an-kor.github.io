@@ -122,7 +122,7 @@
             <div class="top-menu">
                 <div class="top-menu-back-btn" onclick="App.goBack()"></div>
                 <div class="top-menu-search">
-                    <form onsubmit="T.query('.top-menu-search-input')[0].blur(); return false;">
+                    <form onsubmit="try{T.query('.top-menu-search-input',1).blur();} catch(e) {} return false;">
                         <input type="text" value="" class="top-menu-search-input" placeholder="%PLACEHOLDER%"/>
                     </form>
                 </div>

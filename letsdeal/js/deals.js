@@ -5,7 +5,7 @@ var Deals = {
         template = template.replace('%TITLE_MSG%', Messages.shareWithFriends);
         template = template.replace('%CANCEL_MSG%', Messages.cancel);
         T.byId('page-on-top').innerHTML = template;
-        T.query('.dealinfo-share-block').style.marginTop = T.h() - 5.5 * T.p(80) + 'px';
+        T.query('.dealinfo-share-block', 1).style.marginTop = T.h() - 5.5 * T.p(80) + 'px';
         T.byId('page-on-top').style.display = 'block';
     },
     hideSharePage: function () {
