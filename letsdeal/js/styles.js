@@ -5,7 +5,7 @@ var Styles = {
         bgColorHover: '#3aa2bc',
         borderTop: '1px solid #55bfda',
         fontSize: 20,
-        height: 105
+        height: 70
     },
     topMenu: {
         bgColor: '#4abad3',

@@ -150,7 +150,9 @@ var Deals = {
                     }
                     App.isDealsLoading = 0;
                 } else {
-                    App.isDealsLoading = 0;
+                    setTimeout(function(){
+                        App.isDealsLoading = 0;
+                    },1000);
                 }
             }, function(){
                 T.byId('hscroller-scroller-loading').style.display='none';
@@ -194,7 +196,6 @@ var Deals = {
                         T.byId('hscroller-scroller-loading').style.display='block';
                     }
                     Deals.appendDeals(T.byId(App.mainPageHScroll.currentPageIndex));
-
                 }
             });
         } else {
@@ -240,10 +241,28 @@ var Deals = {
                 }
             }
         });
-
-        if (data.id=='shopping') {
-            var catDropdown = document.createElement("div");
-            catDropdown.innerHTML = Templates.catDropdown();
+        if (data.categories) {
+            var catDropdown = Templates.catDropdown(data.categories, function(value){
+                var sections = App.sections.concat(App.cities);
+                for (var i in sections) {
+                    if (sections[i].id == data.id) {
+                        sections[i].currentCategory = value;
+                    }
+                }
+                var divs = T.query('#deallist_'+data.id+' > div');
+                if (!divs.length){
+                    divs.parentNode.removeChild(divs);
+                } else {
+                    for (i=0;i<divs.length;i++){
+                        divs[i].parentNode.removeChild(divs[i]);
+                    }
+                }
+                Deals.loadDeals(data.id, 0, Styles.hScroller.numberOfImages, function(result){
+                    if (result) {
+                        T.byId('deallist_'+data.id).appendChild(result)
+                    }
+                });
+            });
             T.byId('deallist_'+data.id).appendChild(catDropdown);
         }
 
@@ -255,7 +274,12 @@ var Deals = {
         Styles.hScroller.numberOfPages++;
     },
     loadDeals: function(section, from, limit, callback, errorCallback){
-        var dealsText = '';
+        var dealsText = '', sections = App.sections.concat(App.cities), category = 0;
+        for (var i in sections) {
+            if (sections[i].id == section && sections[i].currentCategory) {
+                category = sections[i].currentCategory;
+            }
+        }
         T.request('deals', function(data){
             try {
                 if (data.length) {
@@ -275,6 +299,7 @@ var Deals = {
             }
         }, {
             section: section,
+            category: category,
             from: from,
             limit: limit
         }, function(){

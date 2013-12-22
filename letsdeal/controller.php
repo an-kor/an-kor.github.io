@@ -1,7 +1,8 @@
 <?php
+ini_set('display_errors', 1);
 class MobileController {
     const LOG_FILE = '/var/log/letsdeal/ajax.log';
-    const FEED_URL = 'http://letsdeal.se/mfeed.php';
+    const FEED_URL = 'http://letsdeal.se/mfeed_touch_generator.php';
     const DEAL_URL = 'http://letsdeal.se/deal/';
     const FEED_LIFETIME = 3600;
     const DEALINFO_LIFETIME = 43200;
@@ -54,8 +55,7 @@ class MobileController {
             curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
             $this->log('Trying to get data from ' . $url);
-            if(curl_errno($ch))
-            {
+            if (curl_errno($ch)) {
                 $this->logError(curl_error($ch));
             } else {
                 $result = curl_exec($ch);
@@ -175,33 +175,50 @@ class MobileController {
     }
     public function saveFeedToDb($xml) {
         try {
-            $sections = $xml->city;
             $this->dbCities->drop();
             $this->dbSections->drop();
             $this->dbDeals->drop();
             $this->dbSettings->drop();
-            foreach ($sections as $category) {
-                if (floatval($category->longitude) != 0) {
-                    $record = array(
-                        "name" => $category->name,
-                        "link" => $category->link,
-                        "longitude" => $category->longitude,
-                        "latitude" => $category->latitude
-                    );
-                    $this->dbCities->insert($record);
+
+            foreach ($xml->sections->section as $category) {
+                if ($category->type == 'local') {
+                    foreach ($category->cities->city as $city) {
+                        $record = array(
+                            "name" => (string) $city->name,
+                            "link" => (string) $city->link,
+                            "longitude" => (float) $city->longitude,
+                            "latitude" => (float) $city->latitude
+                        );
+                        if ($city->categories) {
+                            $categories = (array) $city->categories;
+                            $record["categories"] = $categories['category'];
+                        }
+                        $this->dbCities->insert($record);
+                        foreach ($city[0]->deals->deal as $deal) {
+                            $deal->type = (string) $city->link;
+                            $deal = (array) $deal;
+                            $deal['endtime'] = strtotime($deal['endtime']);
+                            $this->dbDeals->insert($deal);
+                        }
+                    }
                 } else {
                     $record = array(
-                        "name" => $category->name,
-                        "type" => $category->link,
-                        "parent" => ''
+                        "name" => (string) $category->name,
+                        "type" => (string) $category->type
                     );
+                    if ($category->categories) {
+                        $categories = (array) $category->categories;
+                        $record["categories"] = $categories['category'];
+                    }
                     $this->dbSections->insert($record);
-                }
-                foreach ($category->deals->item as $deal) {
-                    $deal->type = $category->link;
-                    $deal = (array) $deal;
-                    $deal['endtime'] = strtotime($deal['endtime']);
-                    $this->dbDeals->insert($deal);
+                    foreach ($category->deals as $deals) {
+                        foreach ($deals->deal as $deal) {
+                            $deal->type = (string) $category->type;
+                            $deal = (array) $deal;
+                            $deal['endtime'] = strtotime($deal['endtime']);
+                            $this->dbDeals->insert($deal);
+                        }
+                    }
                 }
             }
             $this->dbSettings->insert(array('key'=> 'lastFeedFetchTs', 'value' => time()));
@@ -214,7 +231,7 @@ class MobileController {
         try {
             $cursor = $this->dbDeals->find(array('$or' => array(array("title" => new MongoRegex("/\b".$text."/i")),array("shortname" => new MongoRegex("/\b".$text."/i")))))->limit(30);
             foreach ($cursor as $record) {
-                $result[$record['id']] = array(
+                $r = array(
                     "id" => $record['id'],
                     "title" => $record['shortname'],
                     "price" => round($record['price']),
@@ -228,18 +245,31 @@ class MobileController {
                     "smallimage" => $record['smallimage'],
                     "type" => $record['type']
                 );
+                if (isset($record['categoryId'])) {
+                    $r["categoryId"] = $record['categoryId'];
+                }
+
+                $result[] = $r;
             }
         } catch (Exception $e){
             $this->logException($e);
         }
         return $result;
     }
-    public function getDeals($type, $from = 0 , $limit = 20, $sort = 'endtime', $sortDirection = 1) {
+    public function getDeals($type, $category = null, $from = 0 , $limit = 20, $sort = 'endtime', $sortDirection = 1) {
         $result = array();
         try {
-            $cursor = $this->dbDeals->find(array("type" => $type, "endtime" => array('$gt' => time())))->sort(array($sort => $sortDirection))->limit($limit)->skip($from);
+            $query = array(
+                "type" => $type,
+                "endtime" => array('$gt' => time())
+            );
+            if ($category) {
+                $query["categoryId"] = $category;
+            }
+            $cursor = $this->dbDeals->find($query)->sort(array($sort => $sortDirection))->limit($limit)->skip($from);
+
             foreach ($cursor as $record) {
-                $result[] = array(
+                $r = array(
                     "id" => $record['id'],
                     "title" => $record['shortname'],
                     "price" => round($record['price']),
@@ -251,6 +281,11 @@ class MobileController {
                     "lat" => $record['latitude'],
                     "lon" => $record['longitude']
                 );
+                if (isset($record['categoryId'])) {
+                    $r["categoryId"] = $record['categoryId'];
+                }
+
+                $result[] = $r;
             }
         } catch (Exception $e){
             $this->logException($e);
@@ -267,6 +302,7 @@ class MobileController {
                 "title" => $record['shortname'],
                 "price" => round($record['price']),
                 "origPrice" => round($record['origprice']),
+                "categoryId" => $record['categoryId'],
                 "bulk" => $record['bulk'],
                 "imageSrc" => $record['image']['url'],
                 "info" => $record['title'],
@@ -286,22 +322,30 @@ class MobileController {
             $result->sections = array();
             $cursor = $this->dbSections->find();
             foreach ($cursor as $section) {
-                $result->sections[] = array(
-                    "id" => $section['type'][0],
-                    "name" => $section['name'][0],
-                    "dealsCount" => $this->dbDeals->find(array("type" => $section['type'][0]))->count()
+                $r = array(
+                    "id" => $section['type'],
+                    "name" => $section['name'],
+                    "dealsCount" => $this->dbDeals->find(array("type" => $section['type']))->count()
                 );
+                if (isset($section['categories'])) {
+                    $r["categories"] = $section['categories'];
+                }
+                $result->sections[] = $r;
             }
             $cursor = $this->dbCities->find();
             $result->cities = array();
             foreach ($cursor as $city) {
-                $result->cities[] = array(
-                    "id" => $city['link'][0],
-                    "name" => $city['name'][0],
-                    "longitude" => floatval($city['longitude'][0]),
-                    "latitude" => floatval($city['latitude'][0]),
-                    "dealsCount" => $this->dbDeals->find(array("type" => $city['link'][0]))->count()
+                $r = array(
+                    "id" => $city['link'],
+                    "name" => $city['name'],
+                    "longitude" => floatval($city['longitude']),
+                    "latitude" => floatval($city['latitude']),
+                    "dealsCount" => $this->dbDeals->find(array("type" => $city['link']))->count()
                 );
+                if (isset($city['categories'])) {
+                    $r["categories"] = $city['categories'];
+                }
+                $result->cities[] = $r;
             }
         } catch (Exception $e){
             $this->logException($e);
@@ -348,7 +392,10 @@ if(defined('STDIN') ) {
                 if (!isset($_REQUEST['sortDirection'])) {
                     $_REQUEST['sortDirection'] = 1;
                 }
-                echo json_encode($app->getDeals($_REQUEST['section'], $_REQUEST['from'], $_REQUEST['limit'], $_REQUEST['sort'], $_REQUEST['sortDirection']));
+                if (!isset($_REQUEST['category'])) {
+                    $_REQUEST['category'] = null;
+                }
+                echo json_encode($app->getDeals($_REQUEST['section'], $_REQUEST['category'], $_REQUEST['from'], $_REQUEST['limit'], $_REQUEST['sort'], $_REQUEST['sortDirection']));
                 break;
             case 'dealsearch':
                 if (!isset($_REQUEST['text']) || strlen($_REQUEST['text'])<4) {

@@ -20,15 +20,24 @@ var Templates = {
     dealsPageHeader: function(data){
         return '<a href="javascript:void(0)" id="header_'+data.id+'">'+data.name+' <span class="top-menu-tabs-counter">('+data.dealsCount+')</span></a>';
     },
-    catDropdown: function(){
-        return '<select class="categories-dropdown">' +
-            '<option selected>Visar alla kategorier</option>' +
-            '<option>Test 1 </option>' +
-            '<option>Test 2 </option>' +
-            '<option>Test 3 </option>' +
-            '<option>Test 4 </option>' +
-            '<option>Test 5 </option>' +
-            '</select>';
+    catDropdown: function(categories, callback){
+        var select = document.createElement("select");
+        select.className = "categories-dropdown";
+        var option = document.createElement("option");
+        option.value = "";
+        option.selected = true;
+        option.innerHTML = Messages.seeAllCategories;
+        select.appendChild(option);
+        for (var i in categories) {
+            option = document.createElement("option");
+            option.value = categories[i].id;
+            option.innerHTML = categories[i].name;
+            select.appendChild(option);
+        }
+        select.onchange = function(){
+            callback(this.value);
+        }
+        return select;
     },
     prepareFooter: function(){
         T.updateStyle('#footer',{
@@ -41,16 +50,16 @@ var Templates = {
             borderTop: Styles.footer.borderTop
         });
         T.updateStyle('#footer-tabs a', {
-            paddingTop: T.px(Styles.footer.height - 2*Styles.footer.fontSize),
+            height: T.px(Styles.footer.height, 1),
             fontSize: T.px(Styles.footer.fontSize),
             backgroundSize: T.px(48)+' '+ T.px(48),
             backgroundPosition: '50% '+ T.px(12)
         });
 
-        T.byId('footer-tabs-search').innerHTML = Messages.searchDeal;
+        /*T.byId('footer-tabs-search').innerHTML = Messages.searchDeal;
         T.byId('footer-tabs-mydeals').innerHTML = Messages.myDeals;
         T.byId('footer-tabs-city').innerHTML = Messages.changeCity;
-        /*T.byId('footer-tabs-settings').innerHTML = Messages.settings;*/
+        T.byId('footer-tabs-settings').innerHTML = Messages.settings;*/
         T.initHover(T.query('#footer-tabs li'), Styles.footer.bgColorHover);
     },
     prepareHeader: function(){
