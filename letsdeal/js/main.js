@@ -34,6 +34,7 @@ var App = {
                     }
                 });
             }
+            T.initHover(T.query('.top-menu-back-btn'), Styles.footer.bgColorHover);
         }
     },
     showMyDeals:function(){
@@ -66,14 +67,50 @@ var App = {
             App.searchScroller.refresh();
         }
     },
-    searchDeal: function(value){
+    searchByCategory: function(value){
         T.query('.search-scroller').innerHTML='';
         T.query('.top-menu-search-input').value = value;
+        T.query('.search-noresults').style.display = 'none';
         if (App.lastSearch != value) {
             App.lastSearch = value;
             T.request('dealsearch', function(data){
-                for (var i in data) {
-                    App.addSearchItem(data[i]);
+                if (data.length) {
+                    for (var i in data) {
+                        App.addSearchItem(data[i]);
+                    }
+                } else {
+                    if (value != '') {
+                        T.query('.search-noresults').style.display = 'block';
+                        T.query('.search-noresults-keyword').innerHTML = value;
+                    } else {
+                        T.query('.search-noresults').style.display = 'none';
+                        T.query('.search-scroller').innerHTML = T.byId('search-categories-template').innerHTML;
+                    }
+                }
+            }, {text: App.lastSearch}, function(){
+            });
+        }
+        window.location.hash = '/search/'+value;
+    },
+    searchDeal: function(value){
+        T.query('.search-scroller').innerHTML='';
+        T.query('.top-menu-search-input').value = value;
+        T.query('.search-noresults').style.display = 'none';
+        if (App.lastSearch != value) {
+            App.lastSearch = value;
+            T.request('dealsearch', function(data){
+                if (data.length) {
+                    for (var i in data) {
+                        App.addSearchItem(data[i]);
+                    }
+                } else {
+                    if (value != '') {
+                        T.query('.search-noresults').style.display = 'block';
+                        T.query('.search-noresults-keyword').innerHTML = value;
+                    } else {
+                        T.query('.search-noresults').style.display = 'none';
+                        T.query('.search-scroller').innerHTML = T.byId('search-categories-template').innerHTML;
+                    }
                 }
             }, {text: App.lastSearch}, function(){
             });
@@ -91,6 +128,17 @@ var App = {
             template = template.replace('%PLACEHOLDER%', Messages.searchPlaceholder);
             newEl.innerHTML = template;
             currentEl.parentNode.appendChild(newEl);
+            var searchCatTpl = T.byId('search-categories-template').innerHTML;
+            searchCatTpl = searchCatTpl.replace('%HEADER%', Messages.searchCategories);
+            searchCatTpl = searchCatTpl.replace('%HEALTH%', Messages.catHealth);
+            searchCatTpl = searchCatTpl.replace('%HOME%', Messages.catHome);
+            searchCatTpl = searchCatTpl.replace('%MODE%', Messages.catMode);
+            searchCatTpl = searchCatTpl.replace('%TECH%', Messages.catTech);
+            searchCatTpl = searchCatTpl.replace('%SPORT%', Messages.catSport);
+            searchCatTpl = searchCatTpl.replace('%FAMILY%', Messages.catFamily);
+            T.byId('search-categories-template').innerHTML = searchCatTpl;
+            T.query('.search-scroller').innerHTML = searchCatTpl;
+            T.initHover(T.query('.search-cat'), Styles.searchItem.bgColorHover);
             if (T.isIOS) {
                 if (App.searchScroller) {
                     App.searchScroller.destroy();
@@ -103,6 +151,8 @@ var App = {
             T.query('.top-menu-search-input').addEventListener('keyup', function() {
                 App.searchDeal(this.value);
             });
+            T.query('.search-noresults-title').innerHTML = Messages.noResults;
+            T.query('.search-noresults-description').innerHTML = Messages.noResultsDescription;
             window.location.hash = '/search/';
         }
     },
@@ -165,6 +215,7 @@ var App = {
             for (var i in App.cities) {
                 App.addChangeCityItem(App.cities[i]);
             }
+            T.initHover(T.query('.top-menu-back-btn'), Styles.footer.bgColorHover);
             window.location.hash = '/city/';
         }
     },

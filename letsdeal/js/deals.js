@@ -13,7 +13,7 @@ var Deals = {
     },
     showBuyPage:function(dealId){
         var data = Deals.loadedDeals[dealId];
-        App.showIFrame(Messages.buyAction +' '+ data.title, Messages.buySrc.replace("%DEAL_ID%", data.id));
+        App.showIFrame(data.title, Messages.buySrc.replace("%DEAL_ID%", data.id));
         window.location.hash = '/buy/'+dealId;
     },
     showDeal:function(dealId){
@@ -31,7 +31,8 @@ var Deals = {
             if (dealId) {
                 if(Deals.loadedDeals[dealId]) {
                     var data = Deals.loadedDeals[dealId];
-                    template = template.replace("%TITLE%", data.title);
+                    //template = template.replace("%TITLE%", data.title);
+                    template = template.replace("%SHARE%", Messages.share);
                     template = template.replace("%IMAGESRC%", data.imageSrc);
                     template = template.replace("%MAP_ID%", "dealinfo-map-"+data.id);
                     template = template.replace("%SHORT_DESCRIPTION%", data.info);
@@ -126,6 +127,7 @@ var Deals = {
             bottomEl.innerHTML = bottomTemplate;
             newEl.appendChild(bottomEl);
             T.initHover(T.query('.dealinfo-bottom-buyBtn'),Styles.dealInfo.bottom.buyBtn.bgColorHover);
+            T.initHover(T.query('.top-menu-back-btn, .top-menu-share-btn'), Styles.footer.bgColorHover);
             window.location.hash = '/deal/'+dealId;
         }
     },

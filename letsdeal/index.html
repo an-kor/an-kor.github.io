@@ -32,14 +32,14 @@
     <script type="text/javascript" src="js/vendor/fastclick.js"></script>
     <script type="text/javascript" src="js/vendor/iscroll.js"></script>
     <script type="text/javascript" src="js/vendor/leaflet/leaflet.js"></script>
-    <script src="//use.edgefonts.net/source-sans-pro:n3,n6.js"></script>
+    <script src="//use.edgefonts.net/source-sans-pro:n3,n4,n6.js"></script>
 
     <script id="deal-page-template" type="text/x-template">
         <div class="deal-page">
             <div class="top-menu">
                 <div class="top-menu-back-btn" onclick="App.goBack()"></div>
-                <div class="top-menu-title">%TITLE%</div>
-                <div class="top-menu-share-btn" onclick="Deals.showSharePage()"></div>
+                <div class="top-menu-title"></div>
+                <div class="top-menu-share-btn" onclick="Deals.showSharePage()">%SHARE%</div>
             </div>
             <div class="dealinfo-wrapper wrapper">
                 %CONTENT%
@@ -123,10 +123,11 @@
                 <div class="top-menu-back-btn" onclick="App.goBack()"></div>
                 <div class="top-menu-search">
                     <form onsubmit="try{T.query('.top-menu-search-input',1).blur();} catch(e) {} return false;">
-                        <input type="text" value="" class="top-menu-search-input" placeholder="%PLACEHOLDER%"/>
+                        <input type="text" maxlength="30" value="" class="top-menu-search-input" placeholder="%PLACEHOLDER%"/>
                     </form>
                 </div>
             </div>
+            <div class="search-noresults"><div class="search-noresults-title"></div><div class="search-noresults-description"></div></div>
             <div class="search-wrapper wrapper"><div class="search-scroller scroller"></div></div>
         </div>
     </script>
@@ -135,6 +136,36 @@
         <div class="search-item-text">
             <div class="search-item-title">%TITLE%</div>
             <div class="search-item-description">%DESCRIPTION%</div>
+        </div>
+    </script>
+
+    <script id="search-categories-template" type="text/x-template">
+        <div class="search-categories">
+            <div class="search-cat-header">%HEADER%</div>
+            <div class="search-cat" onclick="App.searchByCategory('health')">
+                <div class="search-cat-image image-health"></div>
+                <div class="search-cat-title">%HEALTH%</div>
+            </div>
+            <div class="search-cat" onclick="App.searchByCategory('home')">
+                <div class="search-cat-image image-home"></div>
+                <div class="search-cat-title">%HOME%</div>
+            </div>
+            <div class="search-cat" onclick="App.searchByCategory('beauty')">
+                <div class="search-cat-image image-mode"></div>
+                <div class="search-cat-title">%MODE%</div>
+            </div>
+            <div class="search-cat" onclick="App.searchByCategory('electronics')">
+                <div class="search-cat-image image-teknik"></div>
+                <div class="search-cat-title">%TECH%</div>
+            </div>
+            <div class="search-cat" onclick="App.searchByCategory('sports')">
+                <div class="search-cat-image image-sport"></div>
+                <div class="search-cat-title">%SPORT%</div>
+            </div>
+            <div class="search-cat" onclick="App.searchByCategory('outdoors')">
+                <div class="search-cat-image image-family"></div>
+                <div class="search-cat-title">%FAMILY%</div>
+            </div>
         </div>
     </script>
 
@@ -166,19 +197,15 @@
                     <div id="main-page-scroller" class="scroller"-->
                 <div id="hscroller-wrapper" class="wrapper">
                     <div id="hscroller-scroller" class="scroller">
-                        <ul id="hscroller-scroller-list">
-                        </ul>
+                        <ul id="hscroller-scroller-list"></ul>
                         <!--div id="hscroller-scroller-background">
                         </div-->
                     </div>
                     <div id="top-menu-wrapper">
-                        <ul id="top-menu-tabs">
-                        </ul>
+                        <ul id="top-menu-tabs"></ul>
                     </div>
-                    <div id="top-menu-triangle">
-                    </div>
-                    <div id="hscroller-scroller-loading" class="loading-icon">
-                    </div>
+                    <div id="top-menu-triangle"></div>
+                    <div id="hscroller-scroller-loading" class="loading-icon"></div>
                 </div>
                     <!--/div>
                 </div-->
@@ -186,7 +213,7 @@
                     <ul id="footer-tabs">
                         <li><a href="javascript:" onclick="App.showSearchPage()"  id="footer-tabs-search"></a></li>
                         <li><a href="javascript:" onclick="App.showMyDeals()" id="footer-tabs-mydeals"></a></li>
-                        <li><a href="javascript:" onclick="App.showChangeCityPage()" id="footer-tabs-settings"></a></li>
+                        <li><a href="javascript:" onclick="App.showChangeCityPage()" id="footer-tabs-city"></a></li>
                         <!--li><a href="javascript:" id="footer-tabs-settings"></a></li-->
                     </ul>
                 </div>

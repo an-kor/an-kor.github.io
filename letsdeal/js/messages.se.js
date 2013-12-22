@@ -10,6 +10,7 @@ var Messages = {
     "minutes": "min",
     "seconds": "sek",
     "left": "kvar",
+    "share": "Dela",
     "shareWithFriends": "Berätta för dina vänner om dealen",
     "cancel": "Avbryt",
     "buy": "Köp",
@@ -24,5 +25,14 @@ var Messages = {
     "searchPlaceholder": "Sök deals",
     "myDealsSrc": "http://letsdeal.se/?mydealsmob",
     "buySrc": "http://www.letsdeal.se/?mobilebuy&deal=%DEAL_ID%&device=app&email=&udid=",
-    "seeAllCategories": "Visar alla kategorier"
+    "seeAllCategories": "Visar alla kategorier",
+    "noResults": "Inga sökträffar",
+    "noResultsDescription": "Ordet <strong class='search-noresults-keyword'></strong> gav ingen träff, vänligen försök med ett annat sökdord.",
+    'searchCategories': 'Eller välj kategori:',
+    'catHealth': 'Skönhet & Hälsa',
+    'catHome': 'Hem',
+    'catSport': 'Sport & Fritid',
+    'catFamily': 'Familj & Barn',
+    'catTech': 'Teknik',
+    'catMode': 'Mode'
 };

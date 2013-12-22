@@ -452,15 +452,17 @@ body {
     white-space: nowrap;
     overflow: hidden;
 }
+.deal-page .top-menu-title {
+    background-image: url(../img/logo-small.png);
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+}
 .top-menu-back-btn{
-    background-image: url(../img/back-btn.png);
+    background-image: url(../img/back-btn-sm.png);
     background-repeat: no-repeat;
     background-position: 50% 50%;
 }
 .top-menu-share-btn{
-    background-image: url(../img/share-btn.png);
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
 }
 .deal-page {
 }
@@ -549,9 +551,10 @@ iframe{
     background-position: 50% 100%;
 }
 .dealinfo-content-title{}
-
+.search-page .top-menu-back-btn {}
 .dealinfo-content-title em{
     font-style: normal;
+    color: #e14426;
     white-space: nowrap;
 }
 .dealinfo-content-block{
@@ -588,7 +591,7 @@ iframe{
 
 .dealinfo-content-block-content ul li:before {
     content: "";
-    border-color: transparent #79d0d7;
+    border-color: transparent #e14426;
     border-style: solid;
     border-width: 0.25em 0 0.25em 0.35em;
     display: block;
@@ -642,6 +645,57 @@ iframe{
     z-index: 1000;
 }
 .search-wrapper{}
+.search-noresults{
+    display:none;
+    position: absolute;
+    top:0;
+    bottom:0;
+    width:100%;
+}
+.search-noresults-title {}
+.search-noresults-description {}
+.search-noresults-description strong {
+    font-style: italic;
+}
+.search-scroller{
+    width:100%;
+}
+.search-cat{
+    float: left;
+    width:100%;
+    border-bottom: 1px solid #aaa;
+    background-image: url(../img/search-item-bg.png);
+    background-repeat: no-repeat;
+}
+.search-cat-image{
+    float: left;
+    background-repeat: no-repeat;
+}
+.search-cat-header{
+    font-family: source-sans-pro,  'avenir', sans-serif;
+}
+.search-cat-title{
+    font-family: source-sans-pro,  'avenir', sans-serif;
+    float: left;
+}
+.image-health{
+    background-image: url(../img/cat-health.png);
+}
+.image-home{
+    background-image: url(../img/cat-home.png);
+}
+.image-family{
+    background-image: url(../img/cat-family.png);
+}
+.image-mode{
+    background-image: url(../img/cat-mode.png);
+}
+.image-teknik{
+    background-image: url(../img/cat-teknik.png);
+}
+.image-sport{
+    background-image: url(../img/cat-sport.png);
+}
 .search-item{
     float: left;
     width:100%;
@@ -686,6 +740,7 @@ iframe{
 }
 .search-item-description{
     width: 100%;
+    font-weight: lighter;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -693,7 +748,11 @@ iframe{
 .top-menu-search {}
 .top-menu-search input {
     background-color: white;
+    font-weight: lighter;
     background-image: url(../img/input-search.png);
     background-repeat: no-repeat;
     background-position: 0% 50%;
+}
+::-webkit-input-placeholder{
+    color: #666
 }

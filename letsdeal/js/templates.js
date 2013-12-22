@@ -47,13 +47,26 @@ var Templates = {
 
         T.updateStyle('#footer-tabs', {
             background: Styles.footer.bgColor,
-            borderTop: Styles.footer.borderTop
+            borderTop: T.px(2) + ' solid ' + Styles.footer.borderTop
         });
         T.updateStyle('#footer-tabs a', {
             height: T.px(Styles.footer.height, 1),
             fontSize: T.px(Styles.footer.fontSize),
             backgroundSize: T.px(48)+' '+ T.px(48),
             backgroundPosition: '50% '+ T.px(12)
+        });
+
+        T.updateStyle('#footer-tabs-search', {
+            borderRight: T.px(2) + ' solid ' + Styles.footer.borderColor1
+        });
+        T.updateStyle('#footer-tabs-mydeals', {
+            borderRight: T.px(2) + ' solid ' + Styles.footer.borderColor1
+        });
+        T.updateStyle('#footer-tabs-mydeals', {
+            borderLeft: T.px(2) + ' solid ' + Styles.footer.borderColor2
+        });
+        T.updateStyle('#footer-tabs-city', {
+            borderLeft: T.px(2) + ' solid ' + Styles.footer.borderColor2
         });
 
         /*T.byId('footer-tabs-search').innerHTML = Messages.searchDeal;
@@ -105,12 +118,21 @@ var Templates = {
 
         T.updateStyle('.top-menu-back-btn', {
             width: T.px(80),
-            backgroundSize: T.px(62) + ' ' + T.px(80)
+            borderRight: T.px(1,1)+ ' solid rgba(0,0,0,0.1)',
+            backgroundSize: T.px(24) + ' ' + T.px(42)
+        });
+        T.updateStyle('.search-page .top-menu-back-btn', {
+            borderRight: 0
         });
 
         T.updateStyle('.top-menu-share-btn', {
-            width: T.px(80),
-            backgroundSize: T.px(80) + ' ' + T.px(80)
+            width: T.px(110),
+            borderLeft: T.px(1,1)+ ' solid rgba(255,255,255,0.2)',
+            backgroundSize: T.px(80) + ' ' + T.px(80),
+            lineHeight: T.px(Styles.topMenu.height),
+            textAlign: 'center',
+            color: 'white',
+            fontSize: T.px(32)
         });
 
         T.updateStyle('.top-menu', {
@@ -120,11 +142,20 @@ var Templates = {
         });
 
         T.updateStyle('.top-menu-title', {
-            width: T.w() - T.p(160) + 'px',
+            width: T.w() - T.p(80) + 'px',
+            borderLeft: T.px(1,1)+ ' solid rgba(255,255,255,0.2)',
+            paddingLeft: T.px(20),
             lineHeight: T.px(Styles.topMenu.height),
             color: Styles.topMenu.color,
             fontSize: T.px(Styles.topMenu.fontSize),
             fontWeight: Styles.topMenu.fontWeight
+        });
+
+        T.updateStyle('.deal-page .top-menu-title', {
+            width: T.w() - T.p(190) + 'px',
+            borderRight: T.px(1,1)+ ' solid rgba(0,0,0,0.1)',
+            borderLeft: T.px(1,1)+ ' solid rgba(255,255,255,0.2)',
+            backgroundSize: 'contain'
         });
 
         T.query('#top-menu-wrapper li:nth-child(1)').className = 'top-menu-tabs-active';
@@ -146,7 +177,7 @@ var Templates = {
             padding: T.px(0) + ' ' + T.px(5) +' 0 ' + T.px(50),
             fontSize: T.px(35),
             width: T.w() - T.p(100) + 'px',
-            backgroundSize:  T.px(40) + ' ' + T.px(40)
+            backgroundSize:  T.px(37) + ' ' + T.px(25)
         });
         T.updateStyle('.search-wrapper', {
             top: T.px(Styles.topMenu.height),
@@ -171,31 +202,82 @@ var Templates = {
         T.updateStyle('.search-item-image', {
             borderRadius: T.px(8),
             margin: T.px(5) + ' 0 '+T.px(5)+' '+T.px(10),
-            width: T.px(80)
+            width: T.px(70)
         });
         T.updateStyle('.search-item-image img', {
-            height: T.px(80)
+            height: T.px(70)
         });
         T.updateStyle('.search-item-text', {
             width: T.w() - T.p(200) + 'px',
             marginLeft: T.px(20)
         });
         T.updateStyle('.search-item-title', {
-            fontSize: T.px(35)
-        });
-        T.updateStyle('.search-item-description', {
             fontSize: T.px(30)
         });
+        T.updateStyle('.search-item-description', {
+            fontSize: T.px(28)
+        });
+
+        T.updateStyle('.search-noresults', {
+            top: T.px(Styles.topMenu.height),
+            bottom: 0
+        });
+        T.updateStyle('.search-noresults-title', {
+            padding: T.px(100) +' 0 ' + T.px(40) + ' 0',
+            textAlign: 'center',
+            fontWeight: 'bold',
+            fontSize: T.px(48),
+            color: '#373737'
+        });
+        T.updateStyle('.search-noresults-description', {
+            width: T.w()+'px',
+            padding: '0 ' + T.px(100),
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            textAlign: 'center',
+            fontSize: T.px(30),
+            color: '#747372'
+        });
+        T.updateStyle('.search-cat-header', {
+            height: T.px(100),
+            fontSize: T.px(36),
+            fontWeight: 'bold',
+            lineHeight: T.px(100),
+            padding: '0 0 0 ' + T.px(80),
+            borderBottom: T.px(1,1) + ' solid #aaa'
+        });
+        T.updateStyle('.search-cat-image', {
+            backgroundPosition:  T.p(60) + 'px 50%',
+            backgroundSize: T.px(48) + ' ' + T.px(48),
+            width: T.px(120),
+            height: T.px(90)
+        });
+        T.updateStyle('.search-cat-title', {
+            width: T.w() - T.p(300) + 'px'
+        });
+        T.updateStyle('.search-cat', {
+            height: T.px(90),
+            fontSize: T.px(36),
+            fontWeight: 'normal',
+            lineHeight: T.px(95),
+            color: 'rgba(0,0,0,0.75)',
+            borderBottom: T.px(1,1) + ' solid #aaa',
+            padding: '0 0 0 ' + T.px(20),
+            backgroundSize:  T.px(18) + ' ' + T.px(27),
+            backgroundPosition:  T.w()- T.p(60) + 'px 50%'
+        });
+
         T.updateStyle('.changecity-item', {
             width: T.w()+'px',
             borderBottom: T.px(1,1) + 'solid #aaa',
             padding: T.px(5) + ' ' + T.px(0) + ' ' + T.px(5) + ' ' + T.px(20)
         });
         T.updateStyle('.changecity-item-title', {
-            marginLeft: T.px(40),
+            marginLeft: T.px(60),
             lineHeight: T.px(90),
             fontSize: T.px(40)
         });
+
     },
 
     prepareSplash: function(){

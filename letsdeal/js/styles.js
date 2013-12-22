@@ -3,14 +3,16 @@ var Styles = {
     footer: {
         bgColor: '#4abad3',
         bgColorHover: '#3aa2bc',
-        borderTop: '1px solid #55bfda',
+        borderTop: '#5bcce9',
+        borderColor1: '#389ab4',
+        borderColor2: '#5bcce9',
         fontSize: 20,
         height: 70
     },
     topMenu: {
         bgColor: '#4abad3',
         borderBottom: '2px solid #e1e1e1',
-        height: 85,
+        height: 82,
         fontSize: 40,
         fontWeight: 'bold',
         color: 'white'
@@ -30,7 +32,7 @@ var Styles = {
             title: {
                 fontSize: 30,
                 fontFamily: "source-sans-pro,  'avenir', sans-serif",
-                fontWeight: 'lighter',
+                fontWeight: 'normal',
                 color: '#333',
                 lineHeight: 1.3,
                 paddingBottom: 10
