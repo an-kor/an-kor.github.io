@@ -239,7 +239,7 @@ var Deals = {
             var childs = this.parentNode.parentNode.childNodes;
             for (var i in childs) {
                 if (childs[i].nodeName == 'LI' && childs[i].firstChild.id == this.id) {
-                    return App.changeHScrollerPage(i-1);
+                    return App.changeHScrollerPage(i);
                 }
             }
         });
