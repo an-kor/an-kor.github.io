@@ -47,7 +47,7 @@ $url = $_SERVER['REQUEST_URI'];
                     </a>
                 </li>
                 <li>
-                    <a href="helper_classes.html">
+                    <a href="print-documents.php" <?=strpos($url, 'print-documents')>-1?'class="current-page"':''?>>
                         <i class="glyph-icon icon-chevron-right"></i>
                         Архив файлов
                     </a>
@@ -61,7 +61,7 @@ $url = $_SERVER['REQUEST_URI'];
             </a>
             <ul>
                 <li>
-                    <a href="grid.html">
+                    <a href="tender-new.php" <?=strpos($url, 'tender-new')>-1?'class="current-page"':''?>>
                         <i class="glyph-icon icon-chevron-right"></i>
                         Создать новый
                     </a>
@@ -135,19 +135,3 @@ $url = $_SERVER['REQUEST_URI'];
                 </div>
             </div>
         </div><!-- #page-header -->
-            <div id="page-breadcrumb-wrapper">
-                <!--div id="page-breadcrumb">
-                    <a href="javascript:;" title="Dashboard">
-                        <i class="glyph-icon icon-dashboard"></i>
-                        Dashboard
-                    </a>
-                    <a href="javascript:;" title="Elements">
-                        <i class="glyph-icon icon-laptop"></i>
-                        Elements
-                    </a>
-                    <span class="current">
-                        Example breadcrumb
-                    </span>
-                </div-->
-            </div>
-        <div id="page-content">

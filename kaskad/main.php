@@ -1,6 +1,14 @@
-<?include('header.php')?>
-<?include('menu.php')?>
-
+<?php include('header.php')?>
+<?php include('menu.php')?>
+    <div id="page-breadcrumb-wrapper">
+        <div id="page-breadcrumb">
+            <span>
+                <i class="glyph-icon icon-dashboard" style="padding-right:5px;"></i>
+                Главная страница
+            </span>
+        </div>
+    </div>
+<div id="page-content">
 <div class="row mrg20B">
 
     <div class="col-md-3">
@@ -86,4 +94,4 @@
     </div>
 
 </div>
-<?include('footer.php')?>
+<?php include('footer.php')?>

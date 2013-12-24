@@ -1,23 +1,31 @@
-<?include('header.php')?>
-<?include('menu.php')?>
-<script type="text/javascript" src="assets/ckeditor/ckeditor.js"></script>
-<script type="text/javascript" src="assets/ckeditor/config.js"></script>
-<script type="text/javascript" src="assets/ckeditor/contents.css"></script>
-<script type="text/javascript" src="assets/ckeditor/styles.js"></script>
+<?php include('header.php')?>
+<?php include('menu.php')?>
+    <div id="page-breadcrumb-wrapper">
+        <div id="page-breadcrumb">
+            <a href="javascript:;">
+                <i class="glyph-icon icon-envelope"></i>
+                Рассылка
+            </a>
+            <span class="current">
+                Список рассылок
+            </span>
+        </div>
+    </div>
+<div id="page-content">
 <div class="row">
     <table class="table">
         <thead>
         <tr>
             <th></th>
             <th width="40%">Название</th>
-            <th>Дата начала</th>
+            <th>Дата активности</th>
             <th>Активность</th>
             <th>Кем создана</th>
-            <th>Actions</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
-        <?
+        <?php
         for ($i=0;$i<10;$i++){
             ?>
             <tr>
@@ -35,11 +43,11 @@
                     </a>
                 </td>
             </tr>
-        <?
+        <?php
         }
         ?>
         </tbody>
     </table>
 </div>
 
-<?include('footer.php')?>
+<?php include('footer.php')?>

@@ -68886,26 +68886,7 @@ notes['warning'] = '<i class="glyph-icon icon-cog mrg5R"></i>This is a warning f
     });
   });
 
-    /* Datatables init */
 
-    $(function() {
-
-      $('#example1').dataTable( {
-          "sScrollY": 300,
-          "bJQueryUI": true,
-          "sPaginationType": "full_numbers"
-      });
-
-      $('.dataTable .ui-icon-carat-2-n').addClass('icon-sort-up');
-      $('.dataTable .ui-icon-carat-2-s').addClass('icon-sort-down');
-      $('.dataTable .ui-icon-carat-2-n-s').addClass('icon-sort');
-
-      $('.dataTables_paginate a.first').html('<i class="icon-caret-left"></i>');
-      $('.dataTables_paginate a.previous').html('<i class="icon-angle-left"></i>');
-      $('.dataTables_paginate a.last').html('<i class="icon-caret-right"></i>');
-      $('.dataTables_paginate a.next').html('<i class="icon-angle-right"></i>');
-
-    });
 
     /* jQuery UI Autocomplete */
 

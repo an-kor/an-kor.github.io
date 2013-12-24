@@ -1,9 +1,18 @@
-<?include('header.php')?>
-<?include('menu.php')?>
+<?php include('header.php')?>
+<?php include('menu.php')?>
+    <div id="page-breadcrumb-wrapper">
+        <div id="page-breadcrumb">
+            <a href="javascript:;">
+                <i class="glyph-icon icon-envelope"></i>
+                Рассылка
+            </a>
+            <span class="current">
+                Создать рассылку
+            </span>
+        </div>
+    </div>
+<div id="page-content">
     <script type="text/javascript" src="assets/ckeditor/ckeditor.js"></script>
-    <script type="text/javascript" src="assets/ckeditor/config.js"></script>
-    <script type="text/javascript" src="assets/ckeditor/contents.css"></script>
-    <script type="text/javascript" src="assets/ckeditor/styles.js"></script>
     <div id="form-wizard" class="form-wizard">
         <ul>
             <li>
@@ -60,9 +69,7 @@
 
         </div>
         <div id="step-2">
-
             <form action="" class="col-md-10 center-margin" method="">
-
                 <div class="form-row">
                     <div class="form-label col-md-12">
                         <label for="">
@@ -88,9 +95,7 @@
                     <div class="form-input col-md-10">
                         <div class="form-row col-lg-3 float-left form-vertical">
                             <div class="form-label">
-                                <label for="from">
-                                    с:
-                                </label>
+                                <label for="from">с:</label>
                             </div>
                             <div class="form-input">
                                 <input type="text" size="10" class="fromDate" name="from">
@@ -99,9 +104,7 @@
 
                         <div class="form-row col-lg-3 float-left form-vertical">
                             <div class="form-label">
-                                <label for="to">
-                                    по:
-                                </label>
+                                <label for="to">по:</label>
                             </div>
                             <div class="form-input">
                                 <input type="text" size="10" class="toDate" name="to">
@@ -139,4 +142,4 @@
         </div>
     </div>
 
-<?include('footer.php')?>
+<?php include('footer.php')?>

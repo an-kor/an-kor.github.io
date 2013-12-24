@@ -59,5 +59,14 @@
 <div id="page-wrapper" class="demo-example">
     <div id="page-sidebar">
         <div id="header-logo">
-            Администрирование
+            Admin
+            <a href="javascript:;" class="tooltip-button" data-placement="bottom" title="Скрыть меню" id="close-sidebar">
+                <i class="glyph-icon icon-align-justify"></i>
+            </a>
+            <a href="javascript:;" class="tooltip-button hidden" data-placement="bottom" title="Показать меню" id="rm-close-sidebar">
+                <i class="glyph-icon icon-align-justify"></i>
+            </a>
+            <a href="javascript:;" class="tooltip-button hidden" title="Navigation Menu" id="responsive-open-menu">
+                <i class="glyph-icon icon-align-justify"></i>
+            </a>
         </div>
