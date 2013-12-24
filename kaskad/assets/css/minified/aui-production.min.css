@@ -8143,7 +8143,7 @@ html {
 
 .hover-blue-alt:hover, .bg-blue-alt {
     color: #fff;
-    background: #65a6ff
+    background: #65a6ff !important;
 }
 
 .hover-azure:hover, .bg-azure {
@@ -12213,4 +12213,18 @@ body > .jGrowl {
 
 .xchart .color9.comp circle, .xchart .color9.comp .pointer {
     fill: #2477ab
+}
+
+.table-inset thead th {
+    background: #eee;
+    color: #624b0f;
+}
+tr.expanded td {
+    background: #ffeec6;
+}
+.input-small {
+    max-width:100px;
+}
+.input-medium {
+    max-width:200px;
 }

@@ -13,21 +13,21 @@
 
     <div class="col-md-3">
 
-        <a href="javascript:;" class="tile-button btn clearfix bg-white mrg30B" title="">
+        <a href="mail-new.php" class="tile-button btn clearfix bg-white mrg30B" title="">
             <div class="tile-header pad10A font-size-13 popover-title">
                 Рассылка
             </div>
             <div class="tile-content-wrapper">
                 <i class="glyph-icon icon-envelope-o"></i>
                 <div class="tile-content">
-                    0
+                    10
                 </div>
                 <small>
                     активных
                 </small>
             </div>
             <div class="tile-footer mrg5A primary-bg">
-                Создать новое
+                Создать новый документ
                 <i class="glyph-icon icon-arrow-right"></i>
             </div>
         </a>
@@ -37,7 +37,7 @@
 
     <div class="col-md-3">
 
-        <a href="javascript:;" class="tile-button btn clearfix bg-white" title="">
+        <a href="print-new.php" class="tile-button btn clearfix bg-white" title="">
             <div class="tile-header pad10A font-size-13 popover-title">
                 Печать
             </div>
@@ -45,7 +45,7 @@
                 <i class="glyph-icon icon-file"></i>
             </div>
             <div class="tile-footer mrg5A primary-bg">
-                Создать новое
+                Создать новый документ
                 <i class="glyph-icon icon-arrow-right"></i>
             </div>
         </a>
@@ -54,21 +54,21 @@
 
     <div class="col-md-3">
 
-        <a href="javascript:;" class="tile-button btn clearfix bg-white mrg30B" title="">
+        <a href="tender-new.php" class="tile-button btn clearfix bg-white mrg30B" title="">
             <div class="tile-header pad10A font-size-13 popover-title">
                 Тендеры
             </div>
             <div class="tile-content-wrapper">
                 <i class="glyph-icon icon-gavel"></i>
                 <div class="tile-content">
-                    0
+                    10
                 </div>
                 <small>
                     новых
                 </small>
             </div>
             <div class="tile-footer mrg5A primary-bg">
-                Создать новое
+                Создать новый документ
                 <i class="glyph-icon icon-arrow-right"></i>
             </div>
         </a>
@@ -78,7 +78,7 @@
 
     <div class="col-md-3">
 
-        <a href="javascript:;" class="tile-button btn clearfix bg-white" title="">
+        <a href="price-new.php" class="tile-button btn clearfix bg-white" title="">
             <div class="tile-header pad10A font-size-13 popover-title">
                 Оценка
             </div>
@@ -86,7 +86,7 @@
                 <i class="glyph-icon icon-money"></i>
             </div>
             <div class="tile-footer mrg5A primary-bg">
-                Создать новое
+                Создать новый документ
                 <i class="glyph-icon icon-arrow-right"></i>
             </div>
         </a>

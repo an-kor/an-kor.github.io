@@ -93,7 +93,7 @@
                                 <div class="form-input col-md-10">
                                     <div class="form-input-icon">
                                         <i class="glyph-icon icon-unlock-alt ui-state-default"></i>
-                                        <input placeholder="Password" data-trigger="keyup" data-rangelength="[3,25]" type="password" name="login_pass" id="login_pass">
+                                        <input placeholder="Пароль" data-trigger="keyup" data-rangelength="[3,25]" type="password" name="login_pass" id="login_pass">
                                     </div>
                                 </div>
                             </div>

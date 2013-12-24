@@ -66,7 +66,6 @@
                     <textarea rows="3"></textarea>
                 </div>
             </div>
-
         </div>
         <div id="step-2">
             <form action="" class="col-md-10 center-margin" method="">

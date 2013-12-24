@@ -51,6 +51,7 @@
 
       $('#print-templates').dataTable( {
           "sScrollY": window.innerHeight-280,
+          "iDisplayLength": 25,
           "bJQueryUI": true,
           "sPaginationType": "full_numbers"
       });

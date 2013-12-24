@@ -67,15 +67,9 @@ $url = $_SERVER['REQUEST_URI'];
                     </a>
                 </li>
                 <li>
-                    <a href="helper_classes.html">
+                    <a href="tender-list.php" <?=strpos($url, 'tender-list')>-1?'class="current-list"':''?>>
                         <i class="glyph-icon icon-chevron-right"></i>
-                        Необработанные сообщения
-                    </a>
-                </li>
-                <li>
-                    <a href="helper_classes.html">
-                        <i class="glyph-icon icon-chevron-right"></i>
-                        Архив тендеров
+                        Список
                     </a>
                 </li>
             </ul>
@@ -87,13 +81,13 @@ $url = $_SERVER['REQUEST_URI'];
             </a>
             <ul>
                 <li>
-                    <a href="grid.html">
+                    <a href="price-new.php" <?=strpos($url, 'price-new')>-1?'class="current-list"':''?>>
                         <i class="glyph-icon icon-chevron-right"></i>
                         Создать документ
                     </a>
                 </li>
                 <li>
-                    <a href="helper_classes.html">
+                    <a href="price-list.php" <?=strpos($url, 'price-list')>-1?'class="current-list"':''?>>
                         <i class="glyph-icon icon-chevron-right"></i>
                         Архив оценок
                     </a>
