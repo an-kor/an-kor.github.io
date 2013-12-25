@@ -2,6 +2,7 @@ var App = {
     pagesNumber: 1,
     isDealsLoading: 0,
     inTransition: 0,
+    hashChanged: 0,
     showIFrame:function(title, src){
         if (App.addPage()) {
             var currentEl, newEl;
@@ -39,7 +40,7 @@ var App = {
     },
     showMyDeals:function(){
         App.showIFrame(Messages.myDeals, Messages.myDealsSrc);
-        window.location.hash = '/mydeals/';
+        App.changeHash('/mydeals/');
     },
     addSearchItem:function(data){
         Deals.loadedDeals[data.id] = data;
@@ -69,7 +70,9 @@ var App = {
     },
     searchByCategory: function(value){
         T.query('.search-scroller').innerHTML='';
-        T.query('.top-menu-search-input').value = value;
+        if (value.indexOf('section:')==-1){
+            T.query('.top-menu-search-input').value = value;
+        }
         T.query('.search-noresults').style.display = 'none';
         if (App.lastSearch != value) {
             App.lastSearch = value;
@@ -90,11 +93,13 @@ var App = {
             }, {text: App.lastSearch}, function(){
             });
         }
-        window.location.hash = '/search/'+value;
+        App.changeHash('/search/'+value);
     },
     searchDeal: function(value){
         T.query('.search-scroller').innerHTML='';
-        T.query('.top-menu-search-input').value = value;
+        if (value.indexOf('section:')==-1){
+            T.query('.top-menu-search-input').value = value;
+        }
         T.query('.search-noresults').style.display = 'none';
         if (App.lastSearch != value) {
             App.lastSearch = value;
@@ -115,7 +120,7 @@ var App = {
             }, {text: App.lastSearch}, function(){
             });
         }
-        window.location.hash = '/search/'+value;
+        App.changeHash('/search/'+value);
     },
     showSearchPage:function(){
         if (App.addPage()) {
@@ -153,7 +158,7 @@ var App = {
             });
             T.query('.search-noresults-title').innerHTML = Messages.noResults;
             T.query('.search-noresults-description').innerHTML = Messages.noResultsDescription;
-            window.location.hash = '/search/';
+            App.changeHash('/search/');
         }
     },
     addChangeCityItem:function(data){
@@ -216,7 +221,7 @@ var App = {
                 App.addChangeCityItem(App.cities[i]);
             }
             T.initHover(T.query('.top-menu-back-btn'), Styles.footer.bgColorHover);
-            window.location.hash = '/city/';
+            App.changeHash('/city/');
         }
     },
     changeHScrollerPage: function (i) {
@@ -250,6 +255,13 @@ var App = {
         }
     },
     goBack: function(){
+        var hash = window.location.hash;
+        if (hash.indexOf('search') > -1) {
+            if (hash.indexOf('section') > -1) {
+                App.searchDeal('');
+                return false;
+            }
+        }
         clearInterval(App.countDownInterval);
         App.pagesScroll.scrollBy(T.w(),0,Styles.transitionTime);
         setTimeout(function(){
@@ -257,19 +269,46 @@ var App = {
             currentEl.parentNode.removeChild(currentEl.parentNode.lastChild);
             App.pagesNumber--;
             if (App.pagesNumber == 1) {
-                if (window.location.hash.length>0){
-                    window.location.hash='';
-                }
+                App.changeHash('');
             }
         },Styles.transitionTime);
+        return true;
+    },
+    changeHash: function(value){
+        App.hashChanged = 1;
+        window.location.hash = value;
+        setTimeout(function(){
+            App.hashChanged = 0;
+        }, 200);
+    },
+    hashChangeEvent: function(e){
+        console.log(e.oldURL)
+        if (!App.hashChanged) {
+            var oldURL = e.oldURL, newURL = e.newURL;
+            oldURL = oldURL.substr(oldURL.indexOf('#'));
+            newURL = newURL.substr(newURL.indexOf('#'));
+            if(oldURL != '#') {
+                oldURL = oldURL.split('/');
+                newURL = newURL.split('/');
+                if (oldURL[1] != "" && oldURL[1] != newURL[1]) {
+                    App.goBack();
+                } else {
+                    if (oldURL[1] == "search" &&  newURL[1] == "search" && oldURL[2] != '') {
+                        App.searchDeal(newURL[2]);
+                    }
+                }
+            } else {
+                App.changeHash('');
+            }
+        }
     },
     checkLocation: function(){
-        var hash = window.location.hash;
+        var hash = window.location.hash, dealId;
         if (hash!='') {
             hash = hash.split('/');
             switch (hash[1]) {
                 case "deal":
-                    var dealId = hash[2];
+                    dealId = hash[2];
                     if (dealId) {
                         if (Deals.loadedDeals[dealId]) {
                             Deals.showDeal(dealId);
@@ -284,7 +323,7 @@ var App = {
                     }
                 break;
                 case "buy":
-                    var dealId = hash[2];
+                    dealId = hash[2];
                     if (dealId) {
                         if (Deals.loadedDeals[dealId]) {
                             Deals.showBuyPage(dealId);
@@ -394,6 +433,7 @@ var App = {
                 T.byId('container').style.opacity=1;
                 T.byId('splash').style.display = 'none';
             },200);
+            window.addEventListener("hashchange", App.hashChangeEvent, false);
         }, null, function(){
             T.byId('splash-loading').style.display = 'none';
             T.byId('splash-message').innerHTML = Messages.connectionError

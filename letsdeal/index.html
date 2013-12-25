@@ -86,7 +86,7 @@
                 <div class="dealinfo-bottom-bought">%BULK%</div>
                 <div class="spacer"></div>
                 <div class="dealinfo-bottom-countdown"></div>
-                <div class="dealinfo-bottom-infoIcon"></div>
+                <div class="dealinfo-bottom-infoIcon" onclick="Deals.showCountdownInfoPage();"></div>
             </div>
         </div>
     </script>
@@ -94,16 +94,23 @@
         <div onclick="Deals.hideSharePage();" ontouchmove="return false;" class="dealinfo-share">
             <div class="dealinfo-share-block">
                 <div class="dealinfo-share-block-title">%TITLE_MSG%</div>
-                <div onclick="Deals.hideSharePage()" class="dealinfo-share-item dealinfo-share-bordergray">Facebook</div>
-                <div onclick="Deals.hideSharePage()" class="dealinfo-share-item dealinfo-share-bordergray">E-post</div>
-                <div onclick="Deals.hideSharePage()" class="dealinfo-share-item">Twitter</div>
+                <a href="%FACEBOOK%" target="_blank" class="dealinfo-share-item dealinfo-share-bordergray">Facebook</a>
+                <a href="%EMAIL%" target="_blank" class="dealinfo-share-item dealinfo-share-bordergray">E-post</a>
+                <a href="%TWITTER%" target="_blank" class="dealinfo-share-item">Twitter</a>
             </div>
             <div class="dealinfo-share-block">
-                <div class="dealinfo-share-item" onclick="App.hideSharePage()">%CANCEL_MSG%</div>
+                <div class="dealinfo-share-item">%CANCEL_MSG%</div>
             </div>
         </div>
     </script>
-
+    <script id="dealinfo-countdowninfo-template" type="text/x-template">
+        <div onclick="Deals.hideSharePage();" ontouchmove="return false;" class="dealinfo-share">
+            <div class="dealinfo-share-block">%INFO%</div>
+            <div class="dealinfo-share-block">
+                <div class="dealinfo-share-item">%CANCEL_MSG%</div>
+            </div>
+        </div>
+    </script>
     <script id="iframe-page-template" type="text/x-template">
         <div class="iframe-page">
             <div class="top-menu">
@@ -142,27 +149,27 @@
     <script id="search-categories-template" type="text/x-template">
         <div class="search-categories">
             <div class="search-cat-header">%HEADER%</div>
-            <div class="search-cat" onclick="App.searchByCategory('health')">
+            <div class="search-cat" onclick="App.searchByCategory('section:health')">
                 <div class="search-cat-image image-health"></div>
                 <div class="search-cat-title">%HEALTH%</div>
             </div>
-            <div class="search-cat" onclick="App.searchByCategory('home')">
+            <div class="search-cat" onclick="App.searchByCategory('section:home')">
                 <div class="search-cat-image image-home"></div>
                 <div class="search-cat-title">%HOME%</div>
             </div>
-            <div class="search-cat" onclick="App.searchByCategory('beauty')">
+            <div class="search-cat" onclick="App.searchByCategory('section:beauty')">
                 <div class="search-cat-image image-mode"></div>
                 <div class="search-cat-title">%MODE%</div>
             </div>
-            <div class="search-cat" onclick="App.searchByCategory('electronics')">
+            <div class="search-cat" onclick="App.searchByCategory('section:electronics')">
                 <div class="search-cat-image image-teknik"></div>
                 <div class="search-cat-title">%TECH%</div>
             </div>
-            <div class="search-cat" onclick="App.searchByCategory('sports')">
+            <div class="search-cat" onclick="App.searchByCategory('section:sports')">
                 <div class="search-cat-image image-sport"></div>
                 <div class="search-cat-title">%SPORT%</div>
             </div>
-            <div class="search-cat" onclick="App.searchByCategory('outdoors')">
+            <div class="search-cat" onclick="App.searchByCategory('section:outdoors')">
                 <div class="search-cat-image image-family"></div>
                 <div class="search-cat-title">%FAMILY%</div>
             </div>

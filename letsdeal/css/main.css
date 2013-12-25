@@ -471,7 +471,7 @@ iframe{
     -webkit-transform: translate3d(0,0,0);
 }
 .iframe-wrapper{
-    overflow-y: scroll;
+    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     -webkit-backface-visibility: hidden;
 }
@@ -568,7 +568,10 @@ iframe{
     -webkit-transform: translateZ(0);
 }
 .dealinfo-content-block-image {
-    text-align: center;
+    display: -webkit-box;
+    display: -webkit-flexbox;
+    display: flex;
+    justify-content: center;
 }
 .dealinfo-content-block-image img {
     max-width:100%;
@@ -619,8 +622,11 @@ iframe{
     overflow-x: hidden;
 }
 
-.dealinfo-share-block div{
+.dealinfo-share-block div, .dealinfo-share-block a{
     width:100%;
+    text-align: center;
+    display: block;
+    text-decoration: none;
     text-align: center;
 }
 .dealinfo-share-block-title {

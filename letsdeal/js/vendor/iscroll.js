@@ -1515,7 +1515,7 @@ function createDefaultScrollbar (direction, interactive, type) {
 
 	if ( type === true ) {
 		scrollbar.style.cssText = 'position:absolute;z-index:9999;opacity:0;-webkit-transition: opacity 0.3s;-webkit-backface-visibility: hidden;';
-		indicator.style.cssText = '-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;position:absolute;background:rgba(0,0,0,0.5);border:1px solid rgba(255,255,255,0.9);border-radius:'+ T.p(5)+'px';
+		indicator.style.cssText = '-webkit-box-sizing:border-box;-moz-box-sizing:border-box;box-sizing:border-box;position:absolute;background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.5);border-radius:'+ T.p(3)+'px';
 	}
 
 	indicator.className = 'iScrollIndicator';
@@ -1528,7 +1528,7 @@ function createDefaultScrollbar (direction, interactive, type) {
 		scrollbar.className = 'iScrollHorizontalScrollbar';
 	} else {
 		if ( type === true ) {
-			scrollbar.style.cssText += ';width:'+ T.p(10)+'px;bottom:'+ T.p(2)+'px;top:'+ T.p(2)+'px;right:'+ T.p(2)+'px';
+			scrollbar.style.cssText += ';width:'+ T.p(5)+'px;bottom:'+ T.p(2)+'px;top:'+ T.p(2)+'px;right:'+ T.p(3)+'px';
 			indicator.style.width = '100%';
 		}
 		scrollbar.className = 'iScrollVerticalScrollbar';

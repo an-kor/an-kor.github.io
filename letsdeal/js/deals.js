@@ -4,6 +4,13 @@ var Deals = {
         var template = T.byId('dealinfo-share-template').innerHTML;
         template = template.replace('%TITLE_MSG%', Messages.shareWithFriends);
         template = template.replace('%CANCEL_MSG%', Messages.cancel);
+        var shareText = encodeURIComponent(Messages.shareText.replace('%NAME%', Deals.loadedDeals[App.currentDeal].title));
+        var shareTitle = encodeURIComponent(Messages.shareTitle);
+        var shareTextWithLink = encodeURIComponent(Messages.shareTextWithLink.replace('%NAME%', Deals.loadedDeals[App.currentDeal].title).replace('%LINK%', location.href));
+        var viaTwitter = encodeURIComponent(Messages.viaTwitter);
+        template = template.replace('%FACEBOOK%', 'http://www.facebook.com/sharer/sharer.php?s=100&p[url]='+encodeURIComponent(location.href)+'&p[title]='+shareTitle+'&p[summary]='+shareText);
+        template = template.replace('%EMAIL%', 'mailto:?subject='+shareTitle+'&body='+shareTextWithLink);
+        template = template.replace('%TWITTER%', 'https://twitter.com/intent/tweet?url='+encodeURIComponent(location.href)+'&text='+shareText+'&via='+viaTwitter);
         T.byId('page-on-top').innerHTML = template;
         T.query('.dealinfo-share-block', 1).style.marginTop = T.h() - 5.5 * T.p(80) + 'px';
         T.byId('page-on-top').style.display = 'block';
@@ -11,10 +18,19 @@ var Deals = {
     hideSharePage: function () {
         T.byId('page-on-top').style.display = 'none';
     },
+    showCountdownInfoPage: function () {
+        var template = T.byId('dealinfo-countdowninfo-template').innerHTML;
+        template = template.replace('%INFO%', Messages.countdownInfo);
+        template = template.replace('%CANCEL_MSG%', Messages.cancel);
+        T.byId('page-on-top').innerHTML = template;
+        T.query('.dealinfo-share-block', 1).style.marginTop = T.h() - T.p(350) + 'px';
+        T.query('.dealinfo-share-block', 1).style.padding = T.px(20);
+        T.byId('page-on-top').style.display = 'block';
+    },
     showBuyPage:function(dealId){
         var data = Deals.loadedDeals[dealId];
         App.showIFrame(data.title, Messages.buySrc.replace("%DEAL_ID%", data.id));
-        window.location.hash = '/buy/'+dealId;
+        App.changeHash('/buy/'+dealId);
     },
     showDeal:function(dealId){
         if (App.addPage()){
@@ -39,7 +55,7 @@ var Deals = {
                     bottomTemplate = bottomTemplate.replace("%BULK%", T.formatNumber(data.bulk) + " " + Messages.bought);
                     bottomTemplate = bottomTemplate.replace("%BUY_MSG%", Messages.buy);
                     bottomTemplate = bottomTemplate.replace("%DEAL_ID%", data.id);
-                    bottomTemplate = bottomTemplate.replace("%OLDPRICE%", T.formatNumber(data.origPrice)+" "+Messages.kr);
+                    bottomTemplate = bottomTemplate.replace("%OLDPRICE%", (data.origPrice!=data.price)?T.formatNumber(data.origPrice)+" "+Messages.kr:"");
                     bottomTemplate = bottomTemplate.replace("%NEWPRICE%", T.formatNumber(data.price)+" "+Messages.kr);
                 } else {
                     return false;
@@ -128,7 +144,8 @@ var Deals = {
             newEl.appendChild(bottomEl);
             T.initHover(T.query('.dealinfo-bottom-buyBtn'),Styles.dealInfo.bottom.buyBtn.bgColorHover);
             T.initHover(T.query('.top-menu-back-btn, .top-menu-share-btn'), Styles.footer.bgColorHover);
-            window.location.hash = '/deal/'+dealId;
+            App.currentDeal = dealId;
+            App.changeHash('/deal/'+dealId);
         }
     },
     appendDeals: function(wrapper){

@@ -135,7 +135,6 @@ class MobileController {
                         $this->dbDealsInfo->insert($record);
                     }
                 }
-
             }
         } catch (Exception $e){
             $this->logException($e);
@@ -183,22 +182,24 @@ class MobileController {
             foreach ($xml->sections->section as $category) {
                 if ($category->type == 'local') {
                     foreach ($category->cities->city as $city) {
-                        $record = array(
-                            "name" => (string) $city->name,
-                            "link" => (string) $city->link,
-                            "longitude" => (float) $city->longitude,
-                            "latitude" => (float) $city->latitude
-                        );
-                        if ($city->categories) {
-                            $categories = (array) $city->categories;
-                            $record["categories"] = $categories['category'];
-                        }
-                        $this->dbCities->insert($record);
-                        foreach ($city[0]->deals->deal as $deal) {
-                            $deal->type = (string) $city->link;
-                            $deal = (array) $deal;
-                            $deal['endtime'] = strtotime($deal['endtime']);
-                            $this->dbDeals->insert($deal);
+                        if ((float) $city->longitude > 0) {
+                            $record = array(
+                                "name" => (string) $city->name,
+                                "link" => (string) $city->link,
+                                "longitude" => (float) $city->longitude,
+                                "latitude" => (float) $city->latitude
+                            );
+                            if ($city->categories) {
+                                $categories = (array) $city->categories;
+                                $record["categories"] = $categories['category'];
+                            }
+                            $this->dbCities->insert($record);
+                            foreach ($city[0]->deals->deal as $deal) {
+                                $deal->type = (string) $city->link;
+                                $deal = (array) $deal;
+                                $deal['endtime'] = strtotime($deal['endtime']);
+                                $this->dbDeals->insert($deal);
+                            }
                         }
                     }
                 } else {
@@ -229,7 +230,12 @@ class MobileController {
     public function searchDeals($text) {
         $result = array();
         try {
-            $cursor = $this->dbDeals->find(array('$or' => array(array("title" => new MongoRegex("/\b".$text."/i")),array("shortname" => new MongoRegex("/\b".$text."/i")))))->limit(30);
+            if (strpos($text,'section:')>-1) {
+                $query = array("categoryId" => substr($text,8));
+            } else {
+                $query = array('$or' => array(array("title" => new MongoRegex("/\b".$text."/i")), array("shortname" => new MongoRegex("/\b".$text."/i"))));
+            }
+            $cursor = $this->dbDeals->find($query)->limit(30);
             foreach ($cursor as $record) {
                 $r = array(
                     "id" => $record['id'],
@@ -322,15 +328,21 @@ class MobileController {
             $result->sections = array();
             $cursor = $this->dbSections->find();
             foreach ($cursor as $section) {
+                $query = array(
+                    "type" => $section['type'],
+                    "endtime" => array('$gt' => time())
+                );
                 $r = array(
                     "id" => $section['type'],
                     "name" => $section['name'],
-                    "dealsCount" => $this->dbDeals->find(array("type" => $section['type']))->count()
+                    "dealsCount" => $this->dbDeals->find($query)->count()
                 );
                 if (isset($section['categories'])) {
                     $r["categories"] = $section['categories'];
                 }
-                $result->sections[] = $r;
+                if ($r["dealsCount"] > 0) {
+                    $result->sections[] = $r;
+                }
             }
             $cursor = $this->dbCities->find();
             $result->cities = array();

@@ -13,7 +13,7 @@ var Templates = {
             '<div class="deallist-item-header">'+data.title+'</div>' +
             '<div class="deallist-item-footer">' +
             '<div class="deallist-item-footer-bought">'+data.bulk+' köpta</div>' +
-            '<div class="deallist-item-footer-price"><div class="deallist-item-footer-price-old">'+ T.formatNumber(data.origPrice)+' kr</div><div class="deallist-item-footer-price-new">'+T.formatNumber(data.price)+' kr</div></div>' +
+            '<div class="deallist-item-footer-price">'+((data.origPrice!=data.price)?'<div class="deallist-item-footer-price-old">'+ T.formatNumber(data.origPrice)+' kr</div>':'')+'<div class="deallist-item-footer-price-new">'+T.formatNumber(data.price)+' kr</div></div>' +
             '</div>' +
             '</div></div></li>';
     },
@@ -46,8 +46,8 @@ var Templates = {
         });
 
         T.updateStyle('#footer-tabs', {
-            background: Styles.footer.bgColor,
-            borderTop: T.px(2) + ' solid ' + Styles.footer.borderTop
+            background: Styles.footer.bgColor
+            ,borderTop: T.px(2) + ' solid ' + Styles.footer.borderTop
         });
         T.updateStyle('#footer-tabs a', {
             height: T.px(Styles.footer.height, 1),
@@ -316,7 +316,7 @@ var Templates = {
         T.setH('hscroller-wrapper', T.h() - T.p(Styles.footer.height, 1)+1);
         T.updateStyle('#hscroller-scroller', {
             top: T.px(Styles.topMenu.height),
-            height: T.h()-T.p(Styles.topMenu.height + Styles.footer.height)+'px',
+            height: T.h()-T.p(Styles.topMenu.height + Styles.footer.height, 1)+1+'px',
             width: T.w()*Styles.hScroller.numberOfPages+'px',
             borderTop: T.px(2) + ' solid ' + Styles.hScroller.bgColor
         });
@@ -538,11 +538,9 @@ var Templates = {
             color: st.countdown.color
         });
         T.updateStyle('.dealinfo-bottom-infoIcon', {
-            marginRight: T.px(st.oldPrice.padding),
-            width: T.px(25),
-            height: T.px(25),
-            backgroundSize: T.px(25) + ' ' + T.px(25),
-            marginTop: T.px((st.height - st.firstLineHeight-24)/2 )
+            width: T.px(60),
+            height: T.px(55),
+            backgroundSize: T.px(25) + ' ' + T.px(25)
         });
 
         //CONTENT 640x430
@@ -630,7 +628,7 @@ var Templates = {
         T.updateStyle('.dealinfo-share', {
             backgroundColor: T.isAndroid ? "rgba(0,0,0,0.75)" : "rgba(0,0,0,0.75)"
         });
-        T.updateStyle('.dealinfo-share-block div', {
+        T.updateStyle('.dealinfo-share-block div, .dealinfo-share-block a', {
             height: T.px(80),
             lineHeight: T.px(80)
         });
