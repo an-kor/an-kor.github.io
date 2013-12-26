@@ -23,9 +23,11 @@ var Deals = {
         template = template.replace('%INFO%', Messages.countdownInfo);
         template = template.replace('%CANCEL_MSG%', Messages.cancel);
         T.byId('page-on-top').innerHTML = template;
-        T.query('.dealinfo-share-block', 1).style.marginTop = T.h() - T.p(350) + 'px';
-        T.query('.dealinfo-share-block', 1).style.padding = T.px(20);
         T.byId('page-on-top').style.display = 'block';
+        T.query('.dealinfo-share-block', 1).style.padding = T.px(20);
+        var h = T.query('.dealinfo-share-block', 1).offsetHeight;
+        T.query('.dealinfo-share-block', 1).style.marginTop = T.h() - (h + T.p(120)) + 'px';
+        T.query('.dealinfo-share-block', 1).style.height = h + 'px';
     },
     showBuyPage:function(dealId){
         var data = Deals.loadedDeals[dealId];

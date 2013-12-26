@@ -12,15 +12,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0"><!--, minimal-ui-->
     <meta http-equiv="cleartype" content="on">
 
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/touch/apple-touch-icon-144x144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/touch/apple-touch-icon-114x114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/touch/apple-touch-icon-72x72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="img/touch/apple-touch-icon-57x57-precomposed.png">
-    <link rel="shortcut icon" href="img/touch/apple-touch-icon.png">
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="img/icons/icon_144x144.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="img/icons/icon_120x120.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="img/icons/icon_72x72.png">
+    <link rel="apple-touch-icon-precomposed" href="img/icons/icon_57x57.png">
+    <link rel="shortcut icon" href="img/icons/icon_57x57.png">
 
-    <!-- Tile icon for Win8 (144x144 + tile color) -->
-    <meta name="msapplication-TileImage" content="img/touch/apple-touch-icon-144x144-precomposed.png">
-    <meta name="msapplication-TileColor" content="#222222">
+    <meta name="msapplication-TileImage" content="img/icons/icon_144x144.png">
+    <meta name="msapplication-TileColor" content="#3cbdd1">
 
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -123,7 +122,6 @@
             </div>
         </div>
     </script>
-
     <script id="search-page-template" type="text/x-template">
         <div class="search-page">
             <div class="top-menu">
@@ -131,6 +129,7 @@
                 <div class="top-menu-search">
                     <form onsubmit="try{T.query('.top-menu-search-input',1).blur();} catch(e) {} return false;">
                         <input type="text" maxlength="30" value="" class="top-menu-search-input" placeholder="%PLACEHOLDER%"/>
+                        <div id="top-menu-search-input-empty"></div>
                     </form>
                 </div>
             </div>
@@ -145,37 +144,35 @@
             <div class="search-item-description">%DESCRIPTION%</div>
         </div>
     </script>
-
     <script id="search-categories-template" type="text/x-template">
         <div class="search-categories">
             <div class="search-cat-header">%HEADER%</div>
-            <div class="search-cat" onclick="App.searchByCategory('section:health')">
+            <div class="search-cat" onclick="App.searchByCategory('section:health', '%HEALTH%')">
                 <div class="search-cat-image image-health"></div>
                 <div class="search-cat-title">%HEALTH%</div>
             </div>
-            <div class="search-cat" onclick="App.searchByCategory('section:home')">
+            <div class="search-cat" onclick="App.searchByCategory('section:home', '%HOME%')">
                 <div class="search-cat-image image-home"></div>
                 <div class="search-cat-title">%HOME%</div>
             </div>
-            <div class="search-cat" onclick="App.searchByCategory('section:beauty')">
+            <div class="search-cat" onclick="App.searchByCategory('section:beauty', '%MODE%')">
                 <div class="search-cat-image image-mode"></div>
                 <div class="search-cat-title">%MODE%</div>
             </div>
-            <div class="search-cat" onclick="App.searchByCategory('section:electronics')">
+            <div class="search-cat" onclick="App.searchByCategory('section:electronics', '%TECH%')">
                 <div class="search-cat-image image-teknik"></div>
                 <div class="search-cat-title">%TECH%</div>
             </div>
-            <div class="search-cat" onclick="App.searchByCategory('section:sports')">
+            <div class="search-cat" onclick="App.searchByCategory('section:sports', '%SPORT%')">
                 <div class="search-cat-image image-sport"></div>
                 <div class="search-cat-title">%SPORT%</div>
             </div>
-            <div class="search-cat" onclick="App.searchByCategory('section:outdoors')">
+            <div class="search-cat" onclick="App.searchByCategory('section:outdoors', '%FAMILY%')">
                 <div class="search-cat-image image-family"></div>
                 <div class="search-cat-title">%FAMILY%</div>
             </div>
         </div>
     </script>
-
     <script id="changecity-item-template" type="text/x-template">
         <div class="search-item-text">
             <div class="changecity-item-title">%TITLE%</div>
@@ -200,13 +197,9 @@
     <div id="pages-wrapper" class="wrapper">
         <div id="pages-scroller" class="scroller">
             <div id="pages-current">
-                <!--div id="main-page-wrapper">
-                    <div id="main-page-scroller" class="scroller"-->
                 <div id="hscroller-wrapper" class="wrapper">
                     <div id="hscroller-scroller" class="scroller">
                         <ul id="hscroller-scroller-list"></ul>
-                        <!--div id="hscroller-scroller-background">
-                        </div-->
                     </div>
                     <div id="top-menu-wrapper">
                         <ul id="top-menu-tabs"></ul>
@@ -214,8 +207,6 @@
                     <div id="top-menu-triangle"></div>
                     <div id="hscroller-scroller-loading" class="loading-icon"></div>
                 </div>
-                    <!--/div>
-                </div-->
                 <div id="footer">
                     <ul id="footer-tabs">
                         <li><a href="javascript:" onclick="App.showSearchPage()"  id="footer-tabs-search"></a></li>

@@ -68,11 +68,9 @@ var App = {
             App.searchScroller.refresh();
         }
     },
-    searchByCategory: function(value){
+    searchByCategory: function(value, title){
         T.query('.search-scroller').innerHTML='';
-        if (value.indexOf('section:')==-1){
-            T.query('.top-menu-search-input').value = value;
-        }
+        App.searchInputSetValue(title);
         T.query('.search-noresults').style.display = 'none';
         if (App.lastSearch != value) {
             App.lastSearch = value;
@@ -95,10 +93,18 @@ var App = {
         }
         App.changeHash('/search/'+value);
     },
+    searchInputSetValue: function(value){
+        T.query('.top-menu-search-input', 1).value = value;
+        if (value!=''){
+            T.query('#top-menu-search-input-empty').style.display = 'block';
+        } else {
+            T.query('#top-menu-search-input-empty').style.display = 'none';
+        }
+    },
     searchDeal: function(value){
         T.query('.search-scroller').innerHTML='';
         if (value.indexOf('section:')==-1){
-            T.query('.top-menu-search-input').value = value;
+            App.searchInputSetValue(value);
         }
         T.query('.search-noresults').style.display = 'none';
         if (App.lastSearch != value) {
@@ -119,6 +125,9 @@ var App = {
                 }
             }, {text: App.lastSearch}, function(){
             });
+        } else {
+            T.query('.search-noresults').style.display = 'none';
+            T.query('.search-scroller').innerHTML = T.byId('search-categories-template').innerHTML;
         }
         App.changeHash('/search/'+value);
     },
@@ -135,12 +144,12 @@ var App = {
             currentEl.parentNode.appendChild(newEl);
             var searchCatTpl = T.byId('search-categories-template').innerHTML;
             searchCatTpl = searchCatTpl.replace('%HEADER%', Messages.searchCategories);
-            searchCatTpl = searchCatTpl.replace('%HEALTH%', Messages.catHealth);
-            searchCatTpl = searchCatTpl.replace('%HOME%', Messages.catHome);
-            searchCatTpl = searchCatTpl.replace('%MODE%', Messages.catMode);
-            searchCatTpl = searchCatTpl.replace('%TECH%', Messages.catTech);
-            searchCatTpl = searchCatTpl.replace('%SPORT%', Messages.catSport);
-            searchCatTpl = searchCatTpl.replace('%FAMILY%', Messages.catFamily);
+            searchCatTpl = searchCatTpl.replace(new RegExp('%HEALTH%', 'g'), Messages.catHealth);
+            searchCatTpl = searchCatTpl.replace(new RegExp('%HOME%', 'g'), Messages.catHome);
+            searchCatTpl = searchCatTpl.replace(new RegExp('%MODE%', 'g'), Messages.catMode);
+            searchCatTpl = searchCatTpl.replace(new RegExp('%TECH%', 'g'), Messages.catTech);
+            searchCatTpl = searchCatTpl.replace(new RegExp('%SPORT%', 'g'), Messages.catSport);
+            searchCatTpl = searchCatTpl.replace(new RegExp('%FAMILY%', 'g'), Messages.catFamily);
             T.byId('search-categories-template').innerHTML = searchCatTpl;
             T.query('.search-scroller').innerHTML = searchCatTpl;
             T.initHover(T.query('.search-cat'), Styles.searchItem.bgColorHover);
@@ -153,9 +162,27 @@ var App = {
                     hideScrollbarsOnMove:true
                 });
             }
-            T.query('.top-menu-search-input').addEventListener('keyup', function() {
+            T.query('.top-menu-search-input').addEventListener('input', function() {
+                if (this.value!=''){
+                    T.query('#top-menu-search-input-empty').style.display = 'block';
+                } else {
+                    T.query('#top-menu-search-input-empty').style.display = 'none';
+                }
                 App.searchDeal(this.value);
             });
+            T.query('#top-menu-search-input-empty').addEventListener('click', function() {
+                 App.searchInputSetValue('');
+                 App.searchDeal('');
+                 T.query('.top-menu-search-input').focus();
+            });
+            T.query('#top-menu-search-input-empty').addEventListener('touchstart', function() {
+                this.style.opacity = 0.5;
+            });
+
+            T.query('#top-menu-search-input-empty').addEventListener('touchend', function() {
+                this.style.opacity = 1;
+            });
+
             T.query('.search-noresults-title').innerHTML = Messages.noResults;
             T.query('.search-noresults-description').innerHTML = Messages.noResultsDescription;
             App.changeHash('/search/');
@@ -254,9 +281,9 @@ var App = {
             return false;
         }
     },
-    goBack: function(){
+    goBack: function(ignoreSearch){
         var hash = window.location.hash;
-        if (hash.indexOf('search') > -1) {
+        if (!ignoreSearch && hash.indexOf('search') > -1) {
             if (hash.indexOf('section') > -1) {
                 App.searchDeal('');
                 return false;
@@ -282,7 +309,6 @@ var App = {
         }, 200);
     },
     hashChangeEvent: function(e){
-        console.log(e.oldURL)
         if (!App.hashChanged) {
             var oldURL = e.oldURL, newURL = e.newURL;
             oldURL = oldURL.substr(oldURL.indexOf('#'));
@@ -291,7 +317,7 @@ var App = {
                 oldURL = oldURL.split('/');
                 newURL = newURL.split('/');
                 if (oldURL[1] != "" && oldURL[1] != newURL[1]) {
-                    App.goBack();
+                    App.goBack(true);
                 } else {
                     if (oldURL[1] == "search" &&  newURL[1] == "search" && oldURL[2] != '') {
                         App.searchDeal(newURL[2]);
@@ -443,6 +469,7 @@ var App = {
 };
 window.addEventListener('load', function() {
     App.init();
+    window.scrollTo( 0, 1 );
 });
 window.addEventListener("orientationchange", function() {
     setTimeout(function(){

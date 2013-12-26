@@ -42,7 +42,7 @@ var Templates = {
     prepareFooter: function(){
         T.updateStyle('#footer',{
             height: T.px(Styles.footer.height, 1),
-            boxShadow: (!T.isAndroid2)? '0px 0px '+T.px(50)+' 1px rgba(0,0,0,0.25)':''
+            boxShadow: (!T.isAndroid2)? '0px 0px '+T.px(50)+' 1px rgba(0,0,0,0.3)':''
         });
 
         T.updateStyle('#footer-tabs', {
@@ -178,6 +178,13 @@ var Templates = {
             fontSize: T.px(35),
             width: T.w() - T.p(100) + 'px',
             backgroundSize:  T.px(37) + ' ' + T.px(25)
+        });
+        T.updateStyle('#top-menu-search-input-empty', {
+            margin: T.px(13) +' 0 0 0',
+            height: T.px(Styles.topMenu.height - 25),
+            right: T.px(35),
+            width: T.px(50),
+            backgroundSize:  T.px(50) + ' ' + T.px(29)
         });
         T.updateStyle('.search-wrapper', {
             top: T.px(Styles.topMenu.height),
