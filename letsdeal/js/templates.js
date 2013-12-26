@@ -57,16 +57,16 @@ var Templates = {
         });
 
         T.updateStyle('#footer-tabs-search', {
-            borderRight: T.px(2,1) + ' solid ' + Styles.footer.borderColor1
+            borderRight: T.px(1,1) + ' solid ' + Styles.footer.borderColor1
         });
         T.updateStyle('#footer-tabs-mydeals', {
-            borderRight: T.px(2,1) + ' solid ' + Styles.footer.borderColor1
+            borderRight: T.px(1,1) + ' solid ' + Styles.footer.borderColor1
         });
         T.updateStyle('#footer-tabs-mydeals', {
-            borderLeft: T.px(2,1) + ' solid ' + Styles.footer.borderColor2
+            borderLeft: T.px(1,1) + ' solid ' + Styles.footer.borderColor2
         });
         T.updateStyle('#footer-tabs-city', {
-            borderLeft: T.px(2,1) + ' solid ' + Styles.footer.borderColor2
+            borderLeft: T.px(1,1) + ' solid ' + Styles.footer.borderColor2
         });
 
         /*T.byId('footer-tabs-search').innerHTML = Messages.searchDeal;
