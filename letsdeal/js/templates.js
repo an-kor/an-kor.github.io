@@ -383,7 +383,7 @@ var Templates = {
         if (T.isDesktop) {
             scrollWidth = 8
         }
-        var itemWidth = T.w() - T.p(40);
+        var itemWidth = T.w() - T.p(30);
         if ((T.w() > 600 && !T.isAndroid) || (Math.abs(window.orientation) == 90)) {
             itemWidth = T.w()/2 - T.p(21.5);
         }
