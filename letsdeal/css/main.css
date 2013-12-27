@@ -570,10 +570,7 @@ iframe{
     -webkit-transform: translateZ(0);
 }
 .dealinfo-content-block-image {
-    /*display: -webkit-box;
-    display: -webkit-flexbox;
-    display: flex;
-    justify-content: center;*/
+    text-align: -webkit-center;
 }
 .dealinfo-content-block-image img {
     max-width:100%;
