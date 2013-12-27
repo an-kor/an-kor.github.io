@@ -432,7 +432,7 @@ var Templates = {
         T.updateStyle('.deallist-item-footer-price-new', {
             color: '#d72e1e',
             fontWeight: 'bold',
-            margin: '0 ' + T.px(10),
+            margin: '0 0 0 ' + T.px(10),
             fontSize: T.px(38)
             ,lineHeight: T.px(60)
         });

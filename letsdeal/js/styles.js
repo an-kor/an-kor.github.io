@@ -50,7 +50,7 @@ var Styles = {
                 color: '#8e8e8e'
             },
             newPrice: {
-                padding: 15,
+                padding: 18,
                 fontSize: 48,
                 fontWeight: 'bold',
                 color: 'rgba(215,46,30,1)'
