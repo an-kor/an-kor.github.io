@@ -372,6 +372,9 @@ body {
     white-space: nowrap;
     overflow: hidden;
     font-family: source-sans-pro,  'avenir', sans-serif;
+    background-image: url(../img/shadow.png);
+    background-position: 0 100%;
+    background-repeat: repeat-x;
 }
 .deallist-item-footer {
     width: 100%;

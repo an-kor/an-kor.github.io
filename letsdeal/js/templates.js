@@ -397,23 +397,22 @@ var Templates = {
             backgroundSize: backgroundSize,
             backgroundPosition: '50% 0'
         });
+        var shadowHeight = itemHeight / 3;
 
         T.updateStyle('.deallist-item-header', {
             //background: 'rgba(0,0,0,0.6)',
-            height: T.px(50),
+            height: T.p(50) + shadowHeight+'px',
             paddingLeft: T.px(15),
+            paddingTop: shadowHeight+'px',
+            backgroundSize: '1px '+ (T.p(50) + shadowHeight + 10) + 'px',
             lineHeight: T.px(50),
             color: 'white',
-            marginTop: itemHeight - T.p(50)+ 'px',
+            marginTop: itemHeight - (T.p(50) + shadowHeight)+ 'px',
             fontSize: T.px(30)
             ,textShadow: (!T.isAndroid2)?'0px 1px 2px rgba(0, 0, 0, 0.5)':''
         });
-        var shadowAlpha = 0.9, shadowHeight = itemHeight/3;
-        if (T.isAndroid) {
-            shadowAlpha = 0.6;
-        }
         T.updateStyle('.deallist-item-footer', {
-            boxShadow: (!T.isAndroid2)? '0 0 '+shadowHeight+'px '+ itemHeight/6+'px rgba(0,0,0,'+shadowAlpha+')':'',
+            //boxShadow: (!T.isAndroid2)? '0 0 '+shadowHeight+'px '+ itemHeight/6+'px rgba(0,0,0,'+shadowAlpha+')':'',
             borderTop: 1+'px solid #cccac5',
             height: T.px(60)
         });
