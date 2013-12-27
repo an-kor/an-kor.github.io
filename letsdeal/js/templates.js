@@ -82,7 +82,13 @@ var Templates = {
         }
 
         T.setH('top-menu-wrapper', T.p(Styles.topMenu.height));
-
+        if (T.isStandalone) {
+            document.body.style.position ='relative';
+            document.body.style.top = '20px';
+            T.updateStyle('.dealinfo-share', {
+                height: T.h() + 'px'
+            });
+        }
         T.updateStyle('#top-menu-background', {
             height: T.p(Styles.topMenu.height) + 'px',
             background: Styles.topMenu.bgColor
@@ -117,16 +123,17 @@ var Templates = {
         });
 
         T.updateStyle('.top-menu-back-btn', {
-            width: T.px(80),
+            width: T.px(Styles.topMenu.backButtonWith),
             borderRight: T.px(1,1)+ ' solid rgba(0,0,0,0.1)',
             backgroundSize: T.px(24) + ' ' + T.px(42)
         });
         T.updateStyle('.search-page .top-menu-back-btn', {
-            borderRight: 0
+            borderRight: 0,
+            width: T.px(Styles.topMenu.backButtonWith - 30)
         });
 
         T.updateStyle('.top-menu-share-btn', {
-            width: T.px(110),
+            width: T.px(Styles.topMenu.shareButtonWith),
             borderLeft: T.px(1,1)+ ' solid rgba(255,255,255,0.2)',
             backgroundSize: T.px(80) + ' ' + T.px(80),
             lineHeight: T.px(Styles.topMenu.height),
@@ -142,7 +149,7 @@ var Templates = {
         });
 
         T.updateStyle('.top-menu-title', {
-            width: T.w() - T.p(80) + 'px',
+            width: T.w() - T.p(Styles.topMenu.backButtonWith) + 'px',
             borderLeft: T.px(1,1)+ ' solid rgba(255,255,255,0.2)',
             paddingLeft: T.px(20),
             lineHeight: T.px(Styles.topMenu.height),
@@ -152,7 +159,7 @@ var Templates = {
         });
 
         T.updateStyle('.deal-page .top-menu-title', {
-            width: T.w() - T.p(190) + 'px',
+            width: T.w() - T.p(Styles.topMenu.backButtonWith + Styles.topMenu.shareButtonWith) + 'px',
             borderRight: T.px(1,1)+ ' solid rgba(0,0,0,0.1)',
             borderLeft: T.px(1,1)+ ' solid rgba(255,255,255,0.2)',
             backgroundSize: 'contain'
@@ -164,6 +171,7 @@ var Templates = {
             top: T.px(Styles.topMenu.height),
             bottom: 0
         });
+        
     },
     prepareSearch: function(){
         T.updateStyle('.top-menu-search', {
@@ -176,13 +184,13 @@ var Templates = {
             fontFamily: 'source-sans-pro, sans-serif',
             padding: T.px(0) + ' ' + T.px(5) +' 0 ' + T.px(50),
             fontSize: T.px(35),
-            width: T.w() - T.p(100) + 'px',
+            width: T.w() - T.p(Styles.topMenu.backButtonWith) + 'px',
             backgroundSize:  T.px(37) + ' ' + T.px(25)
         });
         T.updateStyle('#top-menu-search-input-empty', {
             margin: T.px(13) +' 0 0 0',
             height: T.px(Styles.topMenu.height - 25),
-            left: T.w() - T.p(150) + 'px',
+            left: T.w() - T.p(Styles.topMenu.backButtonWith + 50) + 'px',
             width: T.px(50),
             backgroundSize:  T.px(50) + ' ' + T.px(29)
         });
@@ -250,13 +258,13 @@ var Templates = {
             fontSize: T.px(36),
             fontWeight: 'bold',
             lineHeight: T.px(100),
-            padding: '0 0 0 ' + T.px(80),
+            padding: '0 0 0 ' + T.px(Styles.topMenu.backButtonWith - 30),
             borderBottom: T.px(1,1) + ' solid #aaa'
         });
         T.updateStyle('.search-cat-image', {
             backgroundPosition:  T.p(60) + 'px 50%',
             backgroundSize: T.px(48) + ' ' + T.px(48),
-            width: T.px(120),
+            width: T.px(Styles.topMenu.backButtonWith + 10),
             height: T.px(90)
         });
         T.updateStyle('.search-cat-title', {
@@ -269,7 +277,7 @@ var Templates = {
             lineHeight: T.px(95),
             color: 'rgba(0,0,0,0.75)',
             borderBottom: T.px(1,1) + ' solid #aaa',
-            padding: '0 0 0 ' + T.px(20),
+            padding: '0 0 0 ' + T.px(10),
             backgroundSize:  T.px(18) + ' ' + T.px(27),
             backgroundPosition:  T.w()- T.p(60) + 'px 50%'
         });
@@ -277,10 +285,10 @@ var Templates = {
         T.updateStyle('.changecity-item', {
             width: T.w()+'px',
             borderBottom: T.px(1,1) + 'solid #aaa',
-            padding: T.px(5) + ' ' + T.px(0) + ' ' + T.px(5) + ' ' + T.px(20)
+            padding: T.px(5) + ' ' + T.px(0) + ' ' + T.px(5) + ' ' + T.px(0)
         });
         T.updateStyle('.changecity-item-title', {
-            marginLeft: T.px(60),
+            marginLeft: T.px(20),
             lineHeight: T.px(90),
             fontSize: T.px(40)
         });
@@ -553,7 +561,6 @@ var Templates = {
             backgroundSize: T.px(25) + ' ' + T.px(25)
         });
 
-        //CONTENT 640x430
         var imgHeight = (T.w()/510)*290;
         if (imgHeight > T.h()/2.5) {
             imgHeight = T.h()/2.5
@@ -564,7 +571,7 @@ var Templates = {
             width: T.w(),
             height: imgHeight+'px'
         });
-        /*if (T.w()/510>3) {
+        /*if (T.w()/510>2) {
             T.updateStyle('.dealinfo-content-image', {
                 webkitFilter: 'blur('+ T.px(3)+')'
             });
@@ -587,6 +594,7 @@ var Templates = {
             backgroundSize: 'contain'
         });
         T.updateStyle('.dealinfo-content-block', {
+            font: '-apple-system-body',
             border: T.px(1)+ ' solid #c6c6c6',
             background: 'white',
             boxShadow: (!T.isAndroid2)? '0px 1px '+T.px(1,1)+' '+T.px(1,1)+' rgba(0,0,0,0.05)':'',
@@ -609,6 +617,7 @@ var Templates = {
             lineHeight: T.px(65),
             color: 'white',
             fontSize: T.px(32),
+            fontWeight: 'bold',
             overflow: 'hidden'
         });
         T.updateStyle('.dealinfo-content-block h5', {
@@ -617,7 +626,7 @@ var Templates = {
         });
 
         T.updateStyle('.dealinfo-content-block-content', {
-            padding: T.px(15) + ' ' + T.px(25) + ' ' + T.px(25)+ ' ' + T.px(25),
+            padding: T.px(10) + ' ' + T.px(25) + ' ' + T.px(25)+ ' ' + T.px(25),
             color: '#5b5b59',
             fontSize: T.px(28)
         });
@@ -636,7 +645,7 @@ var Templates = {
         });
 
         T.updateStyle('.dealinfo-share', {
-            backgroundColor: T.isAndroid ? "rgba(0,0,0,0.75)" : "rgba(0,0,0,0.75)"
+            backgroundColor: T.isIOS ? "rgba(37,81,91,0.4)" : "rgba(0,0,0,0.75)"
         });
         T.updateStyle('.dealinfo-share-block div, .dealinfo-share-block a', {
             height: T.px(80),
@@ -653,7 +662,5 @@ var Templates = {
         T.updateStyle('.dealinfo-share-item', {
             fontSize: T.px(35)
         });
-
-
     }
 };

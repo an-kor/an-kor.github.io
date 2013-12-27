@@ -1,5 +1,17 @@
 var Deals = {
     loadedDeals: {},
+    blurBackground: function(){
+        if (T.isIOS) {
+             T.byId('pages-new').style.webkitFilter = 'blur('+ T.px(15)+')';
+             T.byId('top-menu-background').style.webkitFilter = 'blur('+ T.px(15)+')';
+        }
+    },
+    removeBackgroundBlur: function(){
+        if (T.isIOS) {
+            T.byId('pages-new').style.webkitFilter = null;
+            T.byId('top-menu-background').style.webkitFilter = null;
+        }
+    },
     showSharePage: function () {
         var template = T.byId('dealinfo-share-template').innerHTML;
         template = template.replace('%TITLE_MSG%', Messages.shareWithFriends);
@@ -11,11 +23,13 @@ var Deals = {
         template = template.replace('%FACEBOOK%', 'http://www.facebook.com/sharer/sharer.php?s=100&p[url]='+encodeURIComponent(location.href)+'&p[title]='+shareTitle+'&p[summary]='+shareText);
         template = template.replace('%EMAIL%', 'mailto:?subject='+shareTitle+'&body='+shareTextWithLink);
         template = template.replace('%TWITTER%', 'https://twitter.com/intent/tweet?url='+encodeURIComponent(location.href)+'&text='+shareText+'&via='+viaTwitter);
+        this.blurBackground();
         T.byId('page-on-top').innerHTML = template;
         T.query('.dealinfo-share-block', 1).style.marginTop = T.h() - 5.5 * T.p(80) + 'px';
         T.byId('page-on-top').style.display = 'block';
     },
     hideSharePage: function () {
+        this.removeBackgroundBlur();
         T.byId('page-on-top').style.display = 'none';
     },
     showCountdownInfoPage: function () {
@@ -28,6 +42,7 @@ var Deals = {
         var h = T.query('.dealinfo-share-block', 1).offsetHeight;
         T.query('.dealinfo-share-block', 1).style.marginTop = T.h() - (h + T.p(120)) + 'px';
         T.query('.dealinfo-share-block', 1).style.height = h + 'px';
+        this.blurBackground();
     },
     showBuyPage:function(dealId){
         var data = Deals.loadedDeals[dealId];

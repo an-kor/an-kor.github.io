@@ -317,6 +317,11 @@ var App = {
                 oldURL = oldURL.split('/');
                 newURL = newURL.split('/');
                 if (oldURL[1] != "" && oldURL[1] != newURL[1]) {
+                    if (T.isIOS) {
+                        if (oldURL[1] == "deal") {
+                            Deals.hideSharePage();
+                        }
+                    }
                     App.goBack(true);
                 } else {
                     if (oldURL[1] == "search" &&  newURL[1] == "search" && oldURL[2] != '') {
@@ -384,6 +389,7 @@ var App = {
     },
     init: function(){
         FastClick.attach(document.body);
+        T.checkStandalone();
         if (!window.orientation || window.orientation == 180) {
             T.scale = T.h() / 1136;
         } else {
@@ -457,8 +463,11 @@ var App = {
             }
             setTimeout(function(){
                 T.byId('container').style.opacity=1;
+                if (T.isStandalone) {
+                    document.body.style.backgroundColor = '#40a3b9';
+                }
                 T.byId('splash').style.display = 'none';
-            },200);
+            },1000);
             window.addEventListener("hashchange", App.hashChangeEvent, false);
         }, null, function(){
             T.byId('splash-loading').style.display = 'none';

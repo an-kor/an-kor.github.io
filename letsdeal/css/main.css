@@ -506,8 +506,12 @@ iframe{
     display: flex;
 }
 
-.dealinfo-bottom-price-old{}
-.dealinfo-bottom-price-new{}
+.dealinfo-bottom-price-old{
+    /*font-family: source-sans-pro,  'avenir', sans-serif;*/
+}
+.dealinfo-bottom-price-new{
+    /*font-family: source-sans-pro,  'avenir', sans-serif;*/
+}
 .dealinfo-bottom-buyBtn{}
 .dealinfo-bottom-bought{}
 .dealinfo-bottom-countdown{}
@@ -600,7 +604,7 @@ iframe{
     height: 0;
     width: 0;
     left: -0.8em;
-    top: 0.95em;
+    top: 1em;
     position: relative;
 }
 
@@ -612,7 +616,7 @@ iframe{
     top:0;
     bottom:0;
     width:100%;
-    background-color: rgba(0,0,2,0.5);
+    background-color: rgba(0,0,0,0.5);
 }
 #pages-new{}
 

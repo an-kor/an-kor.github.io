@@ -11,6 +11,8 @@ var Styles = {
     },
     topMenu: {
         bgColor: '#4abad3',
+        backButtonWith: 110,
+        shareButtonWith: 110,
         borderBottom: '2px solid #e1e1e1',
         height: 85,
         fontSize: 45,
@@ -42,7 +44,7 @@ var Styles = {
         bottom: {
             height: 166,
             firstLineBgColor: 'white',
-            secondLineBgColor: '#5b5a59',
+            secondLineBgColor: '#6e6d6c',
             firstLineHeight: 112,
             oldPrice: {
                 padding: 20,
@@ -53,7 +55,7 @@ var Styles = {
                 padding: 18,
                 fontSize: 48,
                 fontWeight: 'bold',
-                color: 'rgba(215,46,30,1)'
+                color: '#e14427'
             },
             countdown: {
                 fontSize: 24,
@@ -69,7 +71,7 @@ var Styles = {
                 fontSize: 48,
                 fontWeight: 'bold',
                 borderRadius: 5,
-                bgColor: '#3ebd4a',
+                bgColor: '#48c55c',
                 bgColorHover: '#38aa43',
                 color: 'white'
             }

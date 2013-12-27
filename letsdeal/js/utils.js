@@ -5,6 +5,26 @@ var T = {
     isChrome: /Chrome/.test(navigator.userAgent),
     isAndroid: /Android/.test(navigator.userAgent),
     isAndroid2: /Android 2/.test(navigator.userAgent),
+    isStandalone: false,
+    getIOSVersion: function(){
+        var v = (navigator.appVersion).match(/OS (\d+)_(\d+)_?(\d+)?/);
+        return [parseInt(v[1], 10), parseInt(v[2], 10), parseInt(v[3] || 0, 10)];
+    },
+    checkStandalone: function(){
+        if ( this.isIOS ) {
+            var v = this.getIOSVersion();
+            if (v[0] >= 7) {
+                if (navigator.isStandalone) {
+                    T.isStandalone = true;
+                } else {
+                    var safari = /safari/i.test( navigator.userAgent );
+                    if ( !safari ) {
+                        T.isStandalone = true;
+                    }
+                }
+            }
+        }
+    },
     scale: 1,
     byId: function (id){
         return document.getElementById(id);
@@ -49,7 +69,11 @@ var T = {
                 return (height-window.screenTop)/window.devicePixelRatio
             }
         } else {
-            return window.innerHeight;
+            if (T.isStandalone) {
+                return (window.innerHeight - 20);
+            } else {
+                return window.innerHeight;
+            }
         }
     },
     p: function(v, ceil){
