@@ -1,5 +1,5 @@
 var Styles = {
-    defaultFontSize: 24,
+    defaultFontSize: 25,
     footer: {
         bgColor: '#4abad3',
         bgColorHover: '#3aa2bc',
@@ -7,13 +7,13 @@ var Styles = {
         borderColor1: '#389ab4',
         borderColor2: '#5bcce9',
         fontSize: 20,
-        height: 70
+        height: 80
     },
     topMenu: {
         bgColor: '#4abad3',
         borderBottom: '2px solid #e1e1e1',
-        height: 82,
-        fontSize: 40,
+        height: 85,
+        fontSize: 45,
         fontWeight: 'bold',
         color: 'white'
     },
@@ -30,12 +30,13 @@ var Styles = {
         bottomHeight: 166,
         content: {
             title: {
-                fontSize: 30,
+                fontSize: 40,
                 fontFamily: "source-sans-pro,  'avenir', sans-serif",
                 fontWeight: 'normal',
-                color: '#333',
+                color: '#333333',
                 lineHeight: 1.3,
-                paddingBottom: 10
+                paddingTop: 12,
+                paddingBottom: 12
             }
         },
         bottom: {
@@ -55,11 +56,11 @@ var Styles = {
                 color: 'rgba(215,46,30,1)'
             },
             countdown: {
-                fontSize: 22,
-                color: '#adadac'
+                fontSize: 24,
+                color: 'white'
             },
             bought: {
-                fontSize: 22,
+                fontSize: 24,
                 color: 'white'
             },
             buyBtn: {
@@ -67,7 +68,7 @@ var Styles = {
                 width: 254,
                 fontSize: 48,
                 fontWeight: 'bold',
-                borderRadius: 4,
+                borderRadius: 5,
                 bgColor: '#3ebd4a',
                 bgColorHover: '#38aa43',
                 color: 'white'

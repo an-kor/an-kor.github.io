@@ -18,7 +18,7 @@ var Templates = {
             '</div></div></li>';
     },
     dealsPageHeader: function(data){
-        return '<a href="javascript:void(0)" id="header_'+data.id+'">'+data.name+' <span class="top-menu-tabs-counter">('+data.dealsCount+')</span></a>';
+        return '<a href="javascript:void(0)" id="header_'+data.id+'">'+data.name+'</a>';
     },
     catDropdown: function(categories, callback){
         var select = document.createElement("select");
@@ -53,7 +53,7 @@ var Templates = {
             height: T.px(Styles.footer.height, 1),
             fontSize: T.px(Styles.footer.fontSize),
             backgroundSize: T.px(48)+' '+ T.px(48),
-            backgroundPosition: '50% '+ T.px(12)
+            backgroundPosition: '50% '+ T.px(18)
         });
 
         T.updateStyle('#footer-tabs-search', {
@@ -76,8 +76,8 @@ var Templates = {
         T.initHover(T.query('#footer-tabs li'), Styles.footer.bgColorHover);
     },
     prepareHeader: function(){
-        if (T.p(Styles.topMenu.fontSize)>T.w()/17) {
-            Styles.topMenu.fontSize = T.w()/T.p(17.5);
+        if (T.p(Styles.topMenu.fontSize)>T.w()/15) {
+            Styles.topMenu.fontSize = T.w()/T.p(15);
             Styles.topMenu.height = Styles.topMenu.fontSize*2;
         }
 
@@ -182,7 +182,7 @@ var Templates = {
         T.updateStyle('#top-menu-search-input-empty', {
             margin: T.px(13) +' 0 0 0',
             height: T.px(Styles.topMenu.height - 25),
-            right: T.px(35),
+            left: T.w() - T.p(150) + 'px',
             width: T.px(50),
             backgroundSize:  T.px(50) + ' ' + T.px(29)
         });
@@ -371,47 +371,49 @@ var Templates = {
         });
     },
     prepareDeals: function(){
-        var k = T.p(350) / 290, wk = k, itemWidth = 510, scrollWidth = 0;
+        var scrollWidth = 0, bgPositionY = 0, backgroundSize;
         if (T.isDesktop) {
             scrollWidth = 8
         }
+        var itemWidth = T.w() - T.p(40);
         if ((T.w() > 600 && !T.isAndroid) || (Math.abs(window.orientation) == 90)) {
-            k = (T.w()/2 - T.p(21.5)) / itemWidth;
-            if (wk < k) {
-                wk = k;
-            }
+            itemWidth = T.w()/2 - T.p(21.5);
+        }
+        var itemHeight = 290 / (510 / itemWidth);
+        if (itemWidth / itemHeight < 510 / 290) {
+            backgroundSize = 'auto ' + itemHeight + 'px'
         } else {
-            if (k * itemWidth < (T.w() - T.p(30))) {
-                k = (T.w() - T.p(30)) / itemWidth;
-                wk = k;
-            } else {
-                k = (T.w() - T.p(30)) / itemWidth;
-            }
+            backgroundSize = itemWidth + 'px auto'
         }
 
         T.updateStyle('.deallist-item', {
             margin: T.p(10) + 'px 0 0 ' + T.p(15, 1) + 'px',
-            height: T.p(400) + 'px',
-            width: (k * itemWidth) - scrollWidth + 'px',
+            height: itemHeight + T.px(50) + 'px',
+            width: itemWidth - scrollWidth + 'px',
             border: '1px solid white',
             boxShadow: (!T.isAndroid2)? '0px 1px 1px 1px rgba(204,202,197,1)':'',
             borderRadius: (!T.isAndroid2)? T.px(2*window.devicePixelRatio,1):'',
-            webkitBackgroundSize: (wk * itemWidth) + 'px ' + wk * 290 + 'px',
-            backgroundSize: (wk * itemWidth) + 'px ' + wk * 290 + 'px',
-            backgroundPosition: '0px ' + (T.p(340) - wk * 290) + 'px'
+            webkitBackgroundSize: itemWidth + 'px ' + itemHeight + 'px',
+            backgroundSize: backgroundSize,
+            backgroundPosition: '50% 0'
         });
 
         T.updateStyle('.deallist-item-header', {
-            background: 'rgba(0,0,0,0.6)',
+            //background: 'rgba(0,0,0,0.6)',
             height: T.px(50),
             paddingLeft: T.px(15),
             lineHeight: T.px(50),
             color: 'white',
-            fontSize: T.px(24)
+            marginTop: itemHeight - T.p(50)+ 'px',
+            fontSize: T.px(30)
             ,textShadow: (!T.isAndroid2)?'0px 1px 2px rgba(0, 0, 0, 0.5)':''
         });
+        var shadowAlpha = 0.9, shadowHeight = itemHeight/3;
+        if (T.isAndroid) {
+            shadowAlpha = 0.6;
+        }
         T.updateStyle('.deallist-item-footer', {
-            marginTop: T.px(290),
+            boxShadow: (!T.isAndroid2)? '0 0 '+shadowHeight+'px '+ itemHeight/6+'px rgba(0,0,0,'+shadowAlpha+')':'',
             borderTop: 1+'px solid #cccac5',
             height: T.px(60)
         });
@@ -425,7 +427,7 @@ var Templates = {
             ,lineHeight: T.px(60)
         });
         T.updateStyle('.deallist-item-footer-price', {
-            width: (k * 510) - T.p(140) - (T.isDesktop?16:0) + 'px',
+            width: itemWidth - T.p(140) - (T.isDesktop?16:0) + 'px',
             lineHeight: T.px(60)
         });
         T.updateStyle('.deallist-item-footer-price-new', {
@@ -510,6 +512,7 @@ var Templates = {
         T.updateStyle('.dealinfo-bottom-price-old', {
             paddingLeft: T.px(st.oldPrice.padding),
             fontSize: T.px(st.oldPrice.fontSize),
+            paddingTop: T.px(st.oldPrice.fontSize/5),
             textDecoration: 'line-through',
             color: st.oldPrice.color
         });
@@ -531,7 +534,8 @@ var Templates = {
             fontSize: T.px(st.buyBtn.fontSize),
             lineHeight: T.px(st.buyBtn.height+5),
             fontWeight: st.buyBtn.fontWeight,
-            textTransform: 'uppercase'
+            textTransform: 'uppercase',
+            boxShadow: (!T.isAndroid2)? 'inset 0 '+T.px(-4)+' '+ T.px(2)+' '+ T.px(1)+' #339a3c':''
             //,marginLeft: 'auto'
         });
         T.updateStyle('.dealinfo-bottom-bought', {
@@ -575,6 +579,7 @@ var Templates = {
             fontFamily: st.title.fontFamily,
             fontSize: T.px(st.title.fontSize),
             fontWeight: st.title.fontWeight,
+            paddingTop: T.px(st.title.paddingTop),
             paddingBottom: T.px(st.title.paddingBottom)
         });
 
@@ -583,10 +588,10 @@ var Templates = {
             backgroundSize: 'contain'
         });
         T.updateStyle('.dealinfo-content-block', {
-            border: T.px(1,1)+ ' solid #c6c6c6',
+            border: T.px(1)+ ' solid #c6c6c6',
             background: 'white',
             boxShadow: (!T.isAndroid2)? '0px 1px '+T.px(1,1)+' '+T.px(1,1)+' rgba(0,0,0,0.05)':'',
-            borderRadius: (!T.isAndroid2)? T.px(10,1):'',
+            borderRadius: (!T.isAndroid2)? T.px(4,1):'',
             marginBottom: T.px(10),
             overflow: 'hidden'
         });
@@ -599,29 +604,28 @@ var Templates = {
             overflow: 'hidden'
         });
         T.updateStyle('.dealinfo-content-block-title', {
-            borderBottom: T.px(1,1)+ ' solid #aaa9a4',
             background: '#3eacc8',
             paddingLeft: T.px(15),
             height: T.px(65),
             lineHeight: T.px(65),
             color: 'white',
-            fontSize: T.px(30),
+            fontSize: T.px(32),
             overflow: 'hidden'
         });
         T.updateStyle('.dealinfo-content-block h5', {
             paddingTop: T.px(5),
-            fontSize: T.px(25)
+            fontSize: T.px(28)
         });
 
         T.updateStyle('.dealinfo-content-block-content', {
-            padding: T.px(15) + ' ' + T.px(25),
+            padding: T.px(15) + ' ' + T.px(25) + ' ' + T.px(25)+ ' ' + T.px(25),
             color: '#5b5b59',
-            fontSize: T.px(22)
+            fontSize: T.px(28)
         });
         T.updateStyle('.dealinfo-content-contacts', {
             padding: '0 ' + T.px(10),
             color: '#5b5b59',
-            fontSize: T.px(22)
+            fontSize: T.px(28)
         });
         T.updateStyle('.dealinfo-content-contacts h5', {
             fontSize: T.px(28),
