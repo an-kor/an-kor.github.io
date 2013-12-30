@@ -216,21 +216,23 @@ var Templates = {
         });
         T.updateStyle('.search-item-image', {
             borderRadius: T.px(8),
-            margin: T.px(5) + ' 0 '+T.px(5)+' '+T.px(10),
-            width: T.px(70)
+            margin: T.px(5)+' '+T.px(5)+' '+T.px(5)+' '+T.px(0),
+            width: T.px(100)
         });
         T.updateStyle('.search-item-image img', {
-            height: T.px(70)
+            height: T.px(100)
         });
         T.updateStyle('.search-item-text', {
             width: T.w() - T.p(200) + 'px',
-            marginLeft: T.px(20)
+            marginTop: T.px(5),
+            marginLeft: T.px(10)
         });
         T.updateStyle('.search-item-title', {
-            fontSize: T.px(30)
+            fontSize: T.px(36)
         });
         T.updateStyle('.search-item-description', {
-            fontSize: T.px(28)
+            fontSize: T.px(30),
+            lineHeight: T.px(50)
         });
 
         T.updateStyle('.search-noresults', {

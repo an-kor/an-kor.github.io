@@ -10,7 +10,8 @@
 .leaflet-shadow-pane,
 .leaflet-marker-pane,
 .leaflet-popup-pane,
-.leaflet-overlay-pane svg,
+.leaflet-map-pane svg,
+.leaflet-map-pane canvas,
 .leaflet-zoom-box,
 .leaflet-image-layer,
 .leaflet-layer {
@@ -52,6 +53,8 @@
 .leaflet-zoom-box {
 	width: 0;
 	height: 0;
+	-moz-box-sizing: border-box;
+	     box-sizing: border-box;
 	}
 /* workaround for https://bugzilla.mozilla.org/show_bug.cgi?id=888319 */
 .leaflet-overlay-pane svg {
@@ -59,11 +62,13 @@
 	}
 
 .leaflet-tile-pane    { z-index: 2; }
-.leaflet-objects-pane { z-index: 3; }
 .leaflet-overlay-pane { z-index: 4; }
 .leaflet-shadow-pane  { z-index: 5; }
 .leaflet-marker-pane  { z-index: 6; }
 .leaflet-popup-pane   { z-index: 7; }
+
+.leaflet-map-pane canvas { z-index: 1; }
+.leaflet-map-pane svg    { z-index: 2; }
 
 .leaflet-vml-shape {
 	width: 1px;
@@ -165,6 +170,10 @@
 .leaflet-container {
 	cursor: -webkit-grab;
 	cursor:    -moz-grab;
+	}
+.leaflet-crosshair,
+.leaflet-crosshair .leaflet-clickable {
+	cursor: crosshair;
 	}
 .leaflet-popup-pane,
 .leaflet-control {
@@ -278,12 +287,12 @@
 	border-radius: 5px;
 	}
 .leaflet-control-layers-toggle {
-	background-image: url(../js/vendor/leaflet/images/layers.png);
+	background-image: url(images/layers.png);
 	width: 36px;
 	height: 36px;
 	}
 .leaflet-retina .leaflet-control-layers-toggle {
-	background-image: url(../js/vendor/leaflet/images/layers-2x.png);
+	background-image: url(images/layers-2x.png);
 	background-size: 26px 26px;
 	}
 .leaflet-touch .leaflet-control-layers-toggle {

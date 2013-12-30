@@ -84,32 +84,26 @@ h1,h2,h3,h4,h5,h6,p {
 Let's Deal CSS
    ========================================================================== */
 
-/*
+/*@font-face {
+    font-family: source-sans-pro;
+    src: url('../fonts/source-sans-pro-light.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}*/
+
 @font-face {
-    font-family: 'source_sans_pro';
-    src: url('../fonts/sourcesanspro-regular-webfont.eot');
-    src: url('../fonts/sourcesanspro-regular-webfont.eot?#iefix') format('embedded-opentype'),
-    url('../fonts/sourcesanspro-regular-webfont.woff') format('woff'),
-    url('../fonts/sourcesanspro-regular-webfont.ttf') format('truetype'),
-    url('../fonts/sourcesanspro-regular-webfont.svg#source_sans_proregular') format('svg');
+    font-family: source-sans-pro;
+    src: url('../fonts/source-sans-pro-regular.woff') format('woff');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
-    font-family: 'source_sans_pro';
-    src: url('../fonts/sourcesanspro-bold-webfont.eot');
-    src: url('../fonts/sourcesanspro-bold-webfont.eot?#iefix') format('embedded-opentype'),
-    url('../fonts/sourcesanspro-bold-webfont.woff') format('woff'),
-    url('../fonts/sourcesanspro-bold-webfont.ttf') format('truetype'),
-    url('../fonts/sourcesanspro-bold-webfont.svg#source_sans_probold') format('svg');
+    font-family: source-sans-pro;
+    src: url('../fonts/source-sans-pro-bold.woff') format('woff');
     font-weight: bold;
     font-style: normal;
 }
-
-{
-    font-family: 'source_sans_pro';
-}*/
 
 @font-face {
     font-family: 'avenir';

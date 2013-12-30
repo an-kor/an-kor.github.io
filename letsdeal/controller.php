@@ -303,12 +303,11 @@ class MobileController {
         $result = array();
         try {
             $record = $this->dbDeals->findone(array("id" => $dealId));
-            $result = array(
+            $r = array(
                 "id" => $record['id'],
                 "title" => $record['shortname'],
                 "price" => round($record['price']),
                 "origPrice" => round($record['origprice']),
-                "categoryId" => $record['categoryId'],
                 "bulk" => $record['bulk'],
                 "imageSrc" => $record['image']['url'],
                 "info" => $record['title'],
@@ -316,6 +315,10 @@ class MobileController {
                 "lat" => $record['latitude'],
                 "lon" => $record['longitude']
             );
+            if (isset($record['categoryId'])) {
+                $r["categoryId"] = $record['categoryId'];
+            }
+            $result = $r;
         } catch (Exception $e){
             $this->logException($e);
         }

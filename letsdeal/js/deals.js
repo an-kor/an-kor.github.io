@@ -79,6 +79,7 @@ var Deals = {
                 }
             }
             clearInterval(App.countDownInterval);
+            console.log(data)
             var countdown = parseInt(data.endtime);
             App.countDownInterval = setInterval(function(){
                 var curTime = Math.floor(new Date().getTime() / 1000),
@@ -126,7 +127,9 @@ var Deals = {
                 el.innerHTML = template;
                 el.style.display='block';
                 if (data.lat > 0) {
-                    var map = L.map("dealinfo-map-"+data.id).setView([data.lat, data.lon], 13);
+                    var map = L.map("dealinfo-map-"+data.id, {zoomControl: false});
+                    map.addControl( L.control.zoom({position: 'topright'}) )
+                    map.setView([data.lat, data.lon], 13);
                     var marker = L.marker([data.lat, data.lon]).addTo(map);
                     L.tileLayer('https://mts0.google.com/vt/lyrs=m@240000000&hl=sv&src=app&x={x}&y={y}&z={z}&s=Ga', {
                         attribution: '',
