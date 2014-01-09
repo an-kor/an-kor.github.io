@@ -160,10 +160,10 @@ var T = {
         }
         for (var i=0;i<elements.length;i++) {
             elements[i].addEventListener('touchstart', function() {
-                this.style.backgroundColor = bgHoverColor;
+                this.style.background = bgHoverColor;
             });
             elements[i].addEventListener('touchend', function() {
-                this.style.backgroundColor = bgColor;
+                this.style.background = bgColor;
             });
         }
     },

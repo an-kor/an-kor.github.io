@@ -72,6 +72,7 @@ var Styles = {
                 fontWeight: 'bold',
                 borderRadius: 5,
                 bgColor: '#48c55c',
+                bgColorLight: '#57d86b',
                 bgColorHover: '#38aa43',
                 color: 'white'
             }
