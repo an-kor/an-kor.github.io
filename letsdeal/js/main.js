@@ -391,8 +391,8 @@ var App = {
         FastClick.attach(document.body);
         T.checkStandalone();
         var screenH = 1136, screenW = 640;
-        if (!T.isStandalone && T.isIOS) {
-            screenH = screenH - 96;
+        if (!T.isDesktop && screen.availHeight/window.devicePixelRatio - window.innerHeight >20) {
+            screenH = screenH - (screen.availHeight/window.devicePixelRatio - window.innerHeight + 20);
         }
         if (!window.orientation || window.orientation == 180) {
             T.scale = T.h() / screenH;

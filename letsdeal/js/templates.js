@@ -605,7 +605,7 @@ var Templates = {
             background: 'white',
             boxShadow: (!T.isAndroid2)? '0px 1px '+T.px(1,1)+' '+T.px(1,1)+' rgba(0,0,0,0.05)':'',
             borderRadius: (!T.isAndroid2)? T.px(4,1):'',
-            marginBottom: T.px(10),
+            marginBottom: T.px(20),
             overflow: 'hidden'
         });
         T.updateStyle('.dealinfo-content-map', {
