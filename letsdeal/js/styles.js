@@ -42,33 +42,34 @@ var Styles = {
             }
         },
         bottom: {
-            height: 166,
+            height: 185,
             firstLineBgColor: 'white',
             secondLineBgColor: '#6e6d6c',
-            firstLineHeight: 112,
+            firstLineHeight: 125,
             oldPrice: {
                 padding: 20,
-                fontSize: 30,
+                fontSize: 32,
                 color: '#8e8e8e'
             },
             newPrice: {
                 padding: 18,
-                fontSize: 48,
+                fontFamily: 'avenir',
+                fontSize: 54,
                 fontWeight: 'bold',
                 color: '#e14427'
             },
             countdown: {
-                fontSize: 24,
+                fontSize: 26,
                 color: 'white'
             },
             bought: {
-                fontSize: 24,
+                fontSize: 26,
                 color: 'white'
             },
             buyBtn: {
-                height: 79,
-                width: 254,
-                fontSize: 48,
+                height: 85,
+                width: 270,
+                fontSize: 54,
                 fontWeight: 'bold',
                 borderRadius: 5,
                 bgColor: '#48c55c',

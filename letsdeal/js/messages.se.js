@@ -26,7 +26,7 @@ var Messages = {
     "searchPlaceholder": "Sök deals",
     "myDealsSrc": "http://letsdeal.se/?mydealsmob",
     "buySrc": "http://www.letsdeal.se/?mobilebuy&deal=%DEAL_ID%&device=app&email=&udid=",
-    "seeAllCategories": "Visar alla kategorier",
+    "seeAllCategories": "Välj kategori",
     "noResults": "Inga sökträffar",
     "noResultsDescription": "Ordet <strong class='search-noresults-keyword'></strong> gav ingen träff, vänligen försök med ett annat sökdord.",
     "searchCategories": "Eller välj kategori:",

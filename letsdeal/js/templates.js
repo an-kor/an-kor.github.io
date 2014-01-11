@@ -42,12 +42,12 @@ var Templates = {
     prepareFooter: function(){
         T.updateStyle('#footer',{
             height: T.px(Styles.footer.height, 1),
-            boxShadow: (!T.isAndroid2)? '0px 0px '+T.px(50)+' 1px rgba(0,0,0,0.3)':''
+            boxShadow: (!T.isAndroid2)? '0px 0px '+T.px(50)+' 1px rgba(0,0,0,0.4)':''
         });
 
         T.updateStyle('#footer-tabs', {
             background: Styles.footer.bgColor
-            ,borderTop: T.px(2) + ' solid ' + Styles.footer.borderTop
+            ,borderTop: T.px(2,1) + ' solid ' + Styles.footer.borderTop
         });
         T.updateStyle('#footer-tabs a', {
             height: T.px(Styles.footer.height, 1),
@@ -77,7 +77,7 @@ var Templates = {
     },
     prepareHeader: function(){
         if (T.p(Styles.topMenu.fontSize)>T.w()/15) {
-            Styles.topMenu.fontSize = T.w()/T.p(15);
+            Styles.topMenu.fontSize = T.w()/T.p(17);
             Styles.topMenu.height = Styles.topMenu.fontSize*2;
         }
 
@@ -224,7 +224,7 @@ var Templates = {
         });
         T.updateStyle('.search-item-text', {
             width: T.w() - T.p(200) + 'px',
-            marginTop: T.px(5),
+            marginTop: T.px(10),
             marginLeft: T.px(10)
         });
         T.updateStyle('.search-item-title', {
@@ -397,7 +397,7 @@ var Templates = {
         }
 
         T.updateStyle('.deallist-item', {
-            margin: T.p(10) + 'px 0 0 ' + T.p(15, 1) + 'px',
+            margin: T.p(22) + 'px 0 0 ' + T.p(15, 1) + 'px',
             height: itemHeight + T.px(50) + 'px',
             width: itemWidth - scrollWidth + 'px',
             border: '1px solid white',
@@ -418,7 +418,7 @@ var Templates = {
             lineHeight: T.px(50),
             color: 'white',
             marginTop: itemHeight - (T.p(50) + shadowHeight)+ 'px',
-            fontSize: T.px(30)
+            fontSize: T.px(36)
             ,textShadow: (!T.isAndroid2)?'0px 1px 2px rgba(0, 0, 0, 0.5)':''
         });
         T.updateStyle('.deallist-item-footer', {
@@ -427,23 +427,23 @@ var Templates = {
             height: T.px(60)
         });
         T.updateStyle('.deallist-item-footer-bought', {
-            width: T.p(130) + 'px',
+            width: T.p(140) + 'px',
             background: '#edebe6',
             fontWeight: 'bold',
             color: '#545351',
             textAlign: 'center',
-            fontSize: T.px(21)
+            fontSize: T.px(24)
             ,lineHeight: T.px(60)
         });
         T.updateStyle('.deallist-item-footer-price', {
-            width: itemWidth - T.p(140) - (T.isDesktop?16:0) + 'px',
+            width: itemWidth - T.p(160) - (T.isDesktop?16:0) + 'px',
             lineHeight: T.px(60)
         });
         T.updateStyle('.deallist-item-footer-price-new', {
             color: '#d72e1e',
             fontWeight: 'bold',
             margin: '0 0 0 ' + T.px(10),
-            fontSize: T.px(38)
+            fontSize: T.px(45)
             ,lineHeight: T.px(60)
         });
         T.updateStyle('.deallist-item-footer-price-old', {
@@ -462,15 +462,17 @@ var Templates = {
         });
 
         T.updateStyle('.categories-dropdown', {
-            width: T.w() - T.p(26) - (T.isDesktop?16:0) + 'px',
+            width: T.w() - T.p(24) - (T.isDesktop?16:0) + 'px',
             fontSize: T.px(30),
+            fontWeight: 'lighter',
             padding: '0 '+T.px(40)+' 0 '+T.px(20),
-            margin: T.px(10)+' '+T.px(5)+' 0 '+T.px(15),
+            margin: T.px(18)+' '+T.px(5)+' 0 '+T.px(15),
             lineHeight: T.px(70),
-            color: '#878787',
-            border:  T.p(1,1)+'px solid '+'#d4d2cf',
+            color: '#555',
+            border:  T.p(1)+'px solid '+'#d4d2cf',
             borderRadius:  T.px(2*window.devicePixelRatio,1),
-            backgroundSize:  T.px(40)
+            backgroundSize:  T.px(40),
+            boxShadow: (!T.isAndroid2)? '0px 1px 1px 1px rgba(204,202,197,1)':''
         });
 
     },
@@ -528,6 +530,7 @@ var Templates = {
         T.updateStyle('.dealinfo-bottom-price-new', {
             paddingLeft: T.px(st.newPrice.padding),
             fontSize: T.px(st.newPrice.fontSize),
+            fontFamily: st.newPrice.fontFamily,
             fontWeight: st.newPrice.fontWeight,
             color: st.newPrice.color
         });
@@ -559,7 +562,7 @@ var Templates = {
         });
         T.updateStyle('.dealinfo-bottom-infoIcon', {
             width: T.px(60),
-            height: T.px(55),
+            height: T.px(60),
             backgroundSize: T.px(25) + ' ' + T.px(25)
         });
 
