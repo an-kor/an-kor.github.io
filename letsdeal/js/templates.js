@@ -542,12 +542,13 @@ var Templates = {
             color: st.buyBtn.color,
             borderRadius: T.p(st.buyBtn.borderRadius)+'px',
             textAlign: 'center',
-            backgroundColor: st.buyBtn.bgColor,
+            background: '-webkit-linear-gradient(top, '+st.buyBtn.bgColorLight+' 0%, '+st.buyBtn.bgColor+' 100%)',
+            //backgroundColor: st.buyBtn.bgColor,
             fontSize: T.px(st.buyBtn.fontSize),
             lineHeight: T.px(st.buyBtn.height+5),
             fontWeight: st.buyBtn.fontWeight,
             textTransform: 'uppercase',
-            boxShadow: (!T.isAndroid2)? 'inset 0 '+T.px(-4)+' '+ T.px(2)+' '+ T.px(1)+' #339a3c':''
+            boxShadow: (!T.isAndroid2)? 'inset 0 '+T.px(-4)+' '+ T.px(1)+' '+ T.px(1)+' #339a3c':''
             //,marginLeft: 'auto'
         });
         T.updateStyle('.dealinfo-bottom-bought', {

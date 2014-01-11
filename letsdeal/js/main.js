@@ -390,10 +390,14 @@ var App = {
     init: function(){
         FastClick.attach(document.body);
         T.checkStandalone();
+        var screenH = 1136, screenW = 640;
+        if (!T.isStandalone && T.isIOS) {
+            screenH = screenH - 96;
+        }
         if (!window.orientation || window.orientation == 180) {
-            T.scale = T.h() / 1136;
+            T.scale = T.h() / screenH;
         } else {
-            T.scale = T.h() / 640;
+            T.scale = T.h() / screenW;
         }
         document.body.style['font-size'] = T.p(Styles.defaultFontSize) + 'px';
         T.setH('container', T.h());
