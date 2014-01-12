@@ -383,12 +383,13 @@ var Templates = {
         });
     },
     prepareDeals: function(){
-        var scrollWidth = 0, bgPositionY = 0, backgroundSize;
+        var scrollWidth = 0, bgPositionY = 0, backgroundSize, is2Columns = false;
         if (T.isDesktop) {
             scrollWidth = 8
         }
         var itemWidth = T.w() - T.p(30);
         if ((T.w() > 600 && !T.isAndroid) || (Math.abs(window.orientation) == 90)) {
+            is2Columns = true;
             itemWidth = T.w()/2 - T.p(21.5);
         }
         var itemHeight = 290 / (510 / itemWidth);
@@ -445,7 +446,7 @@ var Templates = {
             color: '#d72e1e',
             fontWeight: 'bold',
             margin: '0 0 0 ' + T.px(10),
-            fontSize: T.px(45)
+            fontSize: (!is2Columns)?T.px(45) : T.px(30)
             ,lineHeight: T.px(60)
         });
         T.updateStyle('.deallist-item-footer-price-old', {
