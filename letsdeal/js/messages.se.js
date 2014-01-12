@@ -12,7 +12,7 @@ var Messages = {
     "left": "kvar",
     "countdownInfo": "En deal avslutas när klockan räknat ned till noll under förutsättning att den inte blir slutsåld. Populära deals kan komma att förlängas så att fler får möjligheten att köpa dealen. För mer information, se våra allmänna villkor.",
     "share": "Dela",
-    "shareWithFriends": "Berätta för dina vänner om dealen",
+    "shareWithFriends": "Tipsa om dealen",
     "cancel": "Avbryt",
     "buy": "Köp",
     "buyAction": "Köp av",

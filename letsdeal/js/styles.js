@@ -7,7 +7,7 @@ var Styles = {
         borderColor1: '#389ab4',
         borderColor2: '#5bcce9',
         fontSize: 20,
-        height: 80
+        height: 85
     },
     topMenu: {
         bgColor: 'rgba(62,172,200,0.95)',

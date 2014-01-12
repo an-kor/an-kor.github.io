@@ -52,7 +52,7 @@ var Templates = {
         T.updateStyle('#footer-tabs a', {
             height: T.px(Styles.footer.height, 1),
             fontSize: T.px(Styles.footer.fontSize),
-            backgroundSize: T.px(48)+' '+ T.px(48),
+            backgroundSize: T.px(52)+' '+ T.px(52),
             backgroundPosition: '50% '+ T.px(18)
         });
 
@@ -665,7 +665,7 @@ var Templates = {
         });
 
         T.updateStyle('.dealinfo-share', {
-            backgroundColor: T.isIOS ? "rgba(37,81,91,0.4)" : "rgba(0,0,0,0.75)"
+            backgroundColor: T.isIOS ? "rgba(27,71,81,0.33)" : "rgba(0,0,0,0.75)"
         });
         T.updateStyle('.dealinfo-share-block div, .dealinfo-share-block a', {
             height: T.px(80),
