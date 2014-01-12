@@ -261,7 +261,12 @@ body {
     background-image: url(../img/gear.png);
 }
 
+div.top-menu {
+    background-color: rgba(62,172,200,1);
+}
 #top-menu-background {
+    position:absolute;
+    z-index: 1;
     width: 100%;
 }
 #top-menu-triangle {
@@ -278,6 +283,7 @@ body {
     position: absolute;
     top: 0;
     left: 0;
+    z-index: 2;
     overflow: hidden;
     -webkit-backface-visibility: hidden;
 }
@@ -290,7 +296,7 @@ body {
     overflow: hidden;
 }
 #top-menu-wrapper li.top-menu-tabs-active{
-    background: #3aa2bc;
+    background: rgba(58, 162, 188, 0.75);
 }
 #top-menu-wrapper li a {
     padding:0;

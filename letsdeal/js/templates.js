@@ -112,7 +112,7 @@ var Templates = {
         T.updateStyle('#top-menu-wrapper li', {
             width: T.w()/2 + 'px',
             height: T.px(Styles.topMenu.height),
-            background: Styles.topMenu.bgColor,
+            //background: Styles.topMenu.bgColor,
             fontSize: T.px(Styles.topMenu.fontSize),
             fontWeight: Styles.topMenu.fontWeight,
             lineHeight: T.px(Styles.topMenu.height)
@@ -332,8 +332,10 @@ var Templates = {
     prepareHScroller: function(){
         T.setH('hscroller-wrapper', T.h() - T.p(Styles.footer.height, 1)+1);
         T.updateStyle('#hscroller-scroller', {
-            top: T.px(Styles.topMenu.height),
-            height: T.h()-T.p(Styles.topMenu.height + Styles.footer.height, 1)+1+'px',
+            //top: T.px(Styles.topMenu.height),
+            //height: T.h()-T.p(Styles.topMenu.height + Styles.footer.height, 1)+1+'px',
+            top:0,
+            height: T.h()-T.p(Styles.footer.height, 1)+1+'px',
             width: T.w()*Styles.hScroller.numberOfPages+'px',
             borderTop: T.px(2) + ' solid ' + Styles.hScroller.bgColor
         });
@@ -466,7 +468,7 @@ var Templates = {
             fontSize: T.px(30),
             fontWeight: 'lighter',
             padding: '0 '+T.px(40)+' 0 '+T.px(20),
-            margin: T.px(18)+' '+T.px(5)+' 0 '+T.px(15),
+            margin: T.px(Styles.topMenu.height + 18)+' '+T.px(5)+' 0 '+T.px(15),
             lineHeight: T.px(70),
             color: '#555',
             border:  T.p(1)+'px solid '+'#d4d2cf',

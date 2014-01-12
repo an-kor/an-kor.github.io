@@ -303,6 +303,10 @@ var Deals = {
                 });
             });
             T.byId('deallist_'+data.id).appendChild(catDropdown);
+        } else {
+            var catPadding = document.createElement("div");
+            catPadding.style.height = T.px(Styles.topMenu.height);
+            T.byId('deallist_'+data.id).appendChild(catPadding);
         }
 
         Deals.loadDeals(data.id, 0, Styles.hScroller.numberOfImages, function(result){

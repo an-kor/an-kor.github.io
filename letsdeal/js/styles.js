@@ -10,7 +10,7 @@ var Styles = {
         height: 80
     },
     topMenu: {
-        bgColor: '#4abad3',
+        bgColor: 'rgba(62,172,200,0.95)',
         backButtonWith: 110,
         shareButtonWith: 110,
         borderBottom: '2px solid #e1e1e1',
