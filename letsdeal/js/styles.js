@@ -49,27 +49,28 @@ var Styles = {
             oldPrice: {
                 padding: 20,
                 fontSize: 32,
+                fontFamily: 'source-sans-pro',
                 color: '#8e8e8e'
             },
             newPrice: {
                 padding: 18,
-                fontFamily: 'avenir',
+                fontFamily: 'source-sans-pro',
                 fontSize: 54,
                 fontWeight: 'bold',
                 color: '#e14427'
             },
             countdown: {
-                fontSize: 26,
+                fontSize: 28,
                 color: 'white'
             },
             bought: {
-                fontSize: 26,
+                fontSize: 28,
                 color: 'white'
             },
             buyBtn: {
                 height: 85,
                 width: 270,
-                fontSize: 54,
+                fontSize: 52,
                 fontWeight: 'bold',
                 borderRadius: 5,
                 bgColor: '#48c55c',

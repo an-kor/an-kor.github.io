@@ -390,14 +390,20 @@ var App = {
     init: function(){
         FastClick.attach(document.body);
         T.checkStandalone();
-        var screenH = 1136, screenW = 640;
-        if (!T.isDesktop && screen.availHeight/window.devicePixelRatio - window.innerHeight >20) {
-            screenH = screenH - (screen.availHeight/window.devicePixelRatio - window.innerHeight + 20);
+        var windowH = 1136, windowW = 640, screenH = 1136;
+        //alert(screen.availHeight + " " + window.innerHeight)
+        if (T.isAndroid) {
+            screenH = screen.availHeight/window.devicePixelRatio;
+        } else {
+            screenH = screen.availHeight;
+        }
+        if (!T.isDesktop && (screenH - window.innerHeight > 20)) {
+            windowH = windowH - (screenH - window.innerHeight)*2.5;
         }
         if (!window.orientation || window.orientation == 180) {
-            T.scale = T.h() / screenH;
+            T.scale = T.h() / windowH;
         } else {
-            T.scale = T.h() / screenW;
+            T.scale = T.h() / windowW;
         }
         document.body.style['font-size'] = T.p(Styles.defaultFontSize) + 'px';
         T.setH('container', T.h());

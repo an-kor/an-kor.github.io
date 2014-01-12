@@ -47,7 +47,7 @@ var Templates = {
 
         T.updateStyle('#footer-tabs', {
             background: Styles.footer.bgColor
-            ,borderTop: T.px(2,1) + ' solid ' + Styles.footer.borderTop
+            ,borderTop: T.px(1,1) + ' solid ' + Styles.footer.borderTop
         });
         T.updateStyle('#footer-tabs a', {
             height: T.px(Styles.footer.height, 1),
@@ -403,9 +403,9 @@ var Templates = {
             margin: T.p(22) + 'px 0 0 ' + T.p(15, 1) + 'px',
             height: itemHeight + T.px(50) + 'px',
             width: itemWidth - scrollWidth + 'px',
-            border: '1px solid white',
-            boxShadow: (!T.isAndroid2)? '0px 1px 1px 1px rgba(204,202,197,1)':'',
-            borderRadius: (!T.isAndroid2)? T.px(2*window.devicePixelRatio,1):'',
+            border: T.px(1,1) + ' solid white',
+            boxShadow: (!T.isAndroid2)? '0px 1px 1px 1px rgba(204,202,197,0.75)':'',
+            borderRadius: (!T.isAndroid2)? T.px((T.isAndroid)?2*window.devicePixelRatio:2,1):'',
             webkitBackgroundSize: itemWidth + 'px ' + itemHeight + 'px',
             backgroundSize: backgroundSize,
             backgroundPosition: '50% 0'
@@ -432,11 +432,12 @@ var Templates = {
         T.updateStyle('.deallist-item-footer-bought', {
             width: T.p(140) + 'px',
             background: '#edebe6',
-            fontWeight: 'bold',
+            //fontWeight: 'bold',
             color: '#545351',
             textAlign: 'center',
-            fontSize: T.px(24)
-            ,lineHeight: T.px(60)
+            fontFamily: 'source-sans-pro',
+            fontSize: T.px(26)
+            ,lineHeight: T.px(65)
         });
         T.updateStyle('.deallist-item-footer-price', {
             width: itemWidth - T.p(160) - (T.isDesktop?16:0) + 'px',
@@ -445,14 +446,17 @@ var Templates = {
         T.updateStyle('.deallist-item-footer-price-new', {
             color: '#d72e1e',
             fontWeight: 'bold',
+            fontFamily: 'source-sans-pro',
             margin: '0 0 0 ' + T.px(10),
             fontSize: (!is2Columns)?T.px(45) : T.px(30)
             ,lineHeight: T.px(60)
         });
         T.updateStyle('.deallist-item-footer-price-old', {
             color: '#8f8f8f',
-            fontSize: T.px(24),
+            fontSize: T.px(26),
+            fontFamily: 'source-sans-pro',
             textDecoration: 'line-through'
+            ,lineHeight: T.px(65)
         });
         T.updateStyle('.deallist > ul', {
             paddingBottom: T.px(80)
@@ -465,7 +469,7 @@ var Templates = {
         });
 
         T.updateStyle('.categories-dropdown', {
-            width: T.w() - T.p(24) - (T.isDesktop?16:0) + 'px',
+            width: T.w() - T.p(28) - (T.isDesktop?16:0) + 'px',
             fontSize: T.px(30),
             fontWeight: 'lighter',
             padding: '0 '+T.px(40)+' 0 '+T.px(20),
@@ -473,9 +477,9 @@ var Templates = {
             lineHeight: T.px(70),
             color: '#555',
             border:  T.p(1)+'px solid '+'#d4d2cf',
-            borderRadius:  T.px(2*window.devicePixelRatio,1),
+            borderRadius: (!T.isAndroid2)? T.px((T.isAndroid)?2*window.devicePixelRatio:2,1):'',
             backgroundSize:  T.px(40),
-            boxShadow: (!T.isAndroid2)? '0px 1px 1px 1px rgba(204,202,197,1)':''
+            boxShadow: (!T.isAndroid2)? '0px 1px 1px 1px rgba(204,202,197,0.75)':''
         });
 
     },
@@ -496,9 +500,13 @@ var Templates = {
     prepareDealInfo: function(){
         var st = Styles.dealInfo.bottom;
         T.updateStyle('.dealinfo-wrapper', {
-            top: T.px(Styles.topMenu.height),
+            //top: T.px(Styles.topMenu.height),
+            top: 0,
             bottom: T.px(st.height)
             //borderTop: T.px(2) + ' solid ' + Styles.hScroller.bgColor
+        });
+        T.updateStyle('.dealinfo-content-padding', {
+            height: T.px(Styles.topMenu.height)
         });
         if (!T.isIOS) {
             T.updateStyle('.dealinfo-wrapper', {
@@ -527,6 +535,7 @@ var Templates = {
             paddingLeft: T.px(st.oldPrice.padding),
             fontSize: T.px(st.oldPrice.fontSize),
             paddingTop: T.px(st.oldPrice.fontSize/5),
+            fontFamily: st.newPrice.fontFamily,
             textDecoration: 'line-through',
             color: st.oldPrice.color
         });
@@ -557,11 +566,13 @@ var Templates = {
         T.updateStyle('.dealinfo-bottom-bought', {
             paddingLeft: T.px(st.oldPrice.padding),
             fontSize: T.px(st.bought.fontSize),
+            fontFamily: st.newPrice.fontFamily,
             color: st.bought.color
         });
         T.updateStyle('.dealinfo-bottom-countdown', {
             paddingRight: T.px(st.newPrice.padding),
             fontSize: T.px(st.countdown.fontSize),
+            fontFamily: st.newPrice.fontFamily,
             color: st.countdown.color
         });
         T.updateStyle('.dealinfo-bottom-infoIcon', {

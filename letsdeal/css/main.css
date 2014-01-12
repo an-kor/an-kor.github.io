@@ -262,7 +262,7 @@ body {
 }
 
 div.top-menu {
-    background-color: rgba(62,172,200,1);
+    background-color: rgba(62,172,200,0.95);
 }
 #top-menu-background {
     position:absolute;
@@ -483,6 +483,9 @@ iframe{
 .dealinfo-wrapper {
     /*overflow-y: scroll;
     -webkit-overflow-scrolling: touch;*/
+}
+.dealinfo-content-padding {
+    width: 100%;
 }
 
 .dealinfo-scroller{
