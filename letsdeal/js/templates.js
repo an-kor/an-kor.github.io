@@ -13,7 +13,7 @@ var Templates = {
             '<div class="deallist-item-header">'+data.title+'</div>' +
             '<div class="deallist-item-footer">' +
             '<div class="deallist-item-footer-bought">'+data.bulk+' köpta</div>' +
-            '<div class="deallist-item-footer-price">'+((data.origPrice!=data.price)?'<div class="deallist-item-footer-price-old">'+ T.formatNumber(data.origPrice)+' kr</div>':'')+'<div class="deallist-item-footer-price-new">'+T.formatNumber(data.price)+' kr</div></div>' +
+            '<div class="deallist-item-footer-price">'+((data.origPrice!=data.price && data.origPrice>0)?'<div class="deallist-item-footer-price-old">'+ T.formatNumber(data.origPrice)+' kr</div>':'')+'<div class="deallist-item-footer-price-new">'+T.formatNumber(data.price)+' kr</div></div>' +
             '</div>' +
             '</div></div></li>';
     },
@@ -36,7 +36,7 @@ var Templates = {
         }
         select.onchange = function(){
             callback(this.value);
-        }
+        };
         return select;
     },
     prepareFooter: function(){
@@ -77,7 +77,7 @@ var Templates = {
     },
     prepareHeader: function(){
         if (T.p(Styles.topMenu.fontSize)>T.w()/15) {
-            Styles.topMenu.fontSize = T.w()/T.p(17);
+            Styles.topMenu.fontSize = T.w()/T.p(15);
             Styles.topMenu.height = Styles.topMenu.fontSize*2;
         }
 
@@ -136,7 +136,7 @@ var Templates = {
             width: T.px(Styles.topMenu.shareButtonWith),
             borderLeft: T.px(1,1)+ ' solid rgba(255,255,255,0.2)',
             backgroundSize: T.px(80) + ' ' + T.px(80),
-            lineHeight: T.px(Styles.topMenu.height),
+            lineHeight: T.px(Styles.topMenu.height+5),
             textAlign: 'center',
             color: 'white',
             fontSize: T.px(32)
@@ -383,7 +383,7 @@ var Templates = {
         });
     },
     prepareDeals: function(){
-        var scrollWidth = 0, bgPositionY = 0, backgroundSize, is2Columns = false;
+        var scrollWidth = 0, backgroundSize, is2Columns = false;
         if (T.isDesktop) {
             scrollWidth = 8
         }
@@ -405,7 +405,7 @@ var Templates = {
             width: itemWidth - scrollWidth + 'px',
             border: T.px(1,1) + ' solid white',
             boxShadow: (!T.isAndroid2)? '0px 1px 1px 1px rgba(204,202,197,0.75)':'',
-            borderRadius: (!T.isAndroid2)? T.px((T.isAndroid)?2*window.devicePixelRatio:2,1):'',
+            borderRadius: (!T.isAndroid2)? T.px(2,1):'',
             webkitBackgroundSize: itemWidth + 'px ' + itemHeight + 'px',
             backgroundSize: backgroundSize,
             backgroundPosition: '50% 0'
@@ -436,8 +436,8 @@ var Templates = {
             color: '#545351',
             textAlign: 'center',
             fontFamily: 'source-sans-pro',
-            fontSize: T.px(26)
-            ,lineHeight: T.px(65)
+            fontSize: (!is2Columns)?T.px(26) : T.px(22)
+            ,lineHeight: (!is2Columns)? T.px(65) : T.px(60)
         });
         T.updateStyle('.deallist-item-footer-price', {
             width: itemWidth - T.p(160) - (T.isDesktop?16:0) + 'px',
@@ -453,10 +453,10 @@ var Templates = {
         });
         T.updateStyle('.deallist-item-footer-price-old', {
             color: '#8f8f8f',
-            fontSize: T.px(26),
+            fontSize: (!is2Columns)?T.px(26) : T.px(22),
             fontFamily: 'source-sans-pro',
             textDecoration: 'line-through'
-            ,lineHeight: T.px(65)
+            ,lineHeight: (!is2Columns)? T.px(65) : T.px(60)
         });
         T.updateStyle('.deallist > ul', {
             paddingBottom: T.px(80)
@@ -477,7 +477,7 @@ var Templates = {
             lineHeight: T.px(70),
             color: '#555',
             border:  T.p(1)+'px solid '+'#d4d2cf',
-            borderRadius: (!T.isAndroid2)? T.px((T.isAndroid)?2*window.devicePixelRatio:2,1):'',
+            borderRadius: (!T.isAndroid2)? T.px(2,1):'',
             backgroundSize:  T.px(40),
             boxShadow: (!T.isAndroid2)? '0px 1px 1px 1px rgba(204,202,197,0.75)':''
         });
@@ -586,7 +586,7 @@ var Templates = {
             imgHeight = T.h()/2.5
         }
 
-        var st = Styles.dealInfo.content;
+        st = Styles.dealInfo.content;
         T.updateStyle('.dealinfo-content-image', {
             width: T.w(),
             height: imgHeight+'px'
@@ -608,7 +608,6 @@ var Templates = {
             paddingTop: T.px(st.title.paddingTop),
             paddingBottom: T.px(st.title.paddingBottom)
         });
-
         T.updateStyle('.content-loading', {
             height: T.px(48),
             backgroundSize: 'contain'

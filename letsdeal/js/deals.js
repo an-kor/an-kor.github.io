@@ -72,7 +72,7 @@ var Deals = {
                     bottomTemplate = bottomTemplate.replace("%BULK%", T.formatNumber(data.bulk) + " " + Messages.bought);
                     bottomTemplate = bottomTemplate.replace("%BUY_MSG%", Messages.buy);
                     bottomTemplate = bottomTemplate.replace("%DEAL_ID%", data.id);
-                    bottomTemplate = bottomTemplate.replace("%OLDPRICE%", (data.origPrice!=data.price)?T.formatNumber(data.origPrice)+" "+Messages.kr:"");
+                    bottomTemplate = bottomTemplate.replace("%OLDPRICE%", (data.origPrice!=data.price && data.origPrice>0)?T.formatNumber(data.origPrice)+" "+Messages.kr:"");
                     bottomTemplate = bottomTemplate.replace("%NEWPRICE%", T.formatNumber(data.price)+" "+Messages.kr);
                 } else {
                     return false;

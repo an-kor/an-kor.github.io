@@ -390,7 +390,7 @@ var App = {
     init: function(){
         FastClick.attach(document.body);
         T.checkStandalone();
-        var windowH = 1136, windowW = 640, screenH = 1136;
+        var windowH = 1136, windowW = 800, screenH = 1136;
         //alert(screen.availHeight + " " + window.innerHeight)
         if (T.isAndroid) {
             screenH = screen.availHeight/window.devicePixelRatio;
