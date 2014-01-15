@@ -79,7 +79,6 @@ var Deals = {
                 }
             }
             clearInterval(App.countDownInterval);
-            console.log(data)
             var countdown = parseInt(data.endtime);
             App.countDownInterval = setInterval(function(){
                 var curTime = Math.floor(new Date().getTime() / 1000),
@@ -139,7 +138,7 @@ var Deals = {
                     T.byId("dealinfo-map-"+data.id).style.display = 'none';
                 }
                 T.query('.content-loading',1).style.display = 'none';
-                if (T.isIOS) {
+                if (1 || T.isIOS) {
                     if (App.dealInfoScroller) {
                         App.dealInfoScroller.destroy();
                     }

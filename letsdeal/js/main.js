@@ -477,6 +477,11 @@ var App = {
                     document.body.style.backgroundColor = '#40a3b9';
                 }
                 T.byId('splash').style.display = 'none';
+                if (navigator.splashscreen) {
+                    setTimeout(function(){
+                        navigator.splashscreen.hide();
+                    },500);
+                }
             },1000);
             window.addEventListener("hashchange", App.hashChangeEvent, false);
         }, null, function(){

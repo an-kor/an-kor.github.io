@@ -68,6 +68,9 @@ var Templates = {
         T.updateStyle('#footer-tabs-city', {
             borderLeft: T.px(1,1) + ' solid ' + Styles.footer.borderColor2
         });
+        T.updateStyle('#footer-tabs-settings', {
+            borderLeft: T.px(1,1) + ' solid ' + Styles.footer.borderColor2
+        });
 
         /*T.byId('footer-tabs-search').innerHTML = Messages.searchDeal;
         T.byId('footer-tabs-mydeals').innerHTML = Messages.myDeals;
@@ -508,7 +511,7 @@ var Templates = {
         T.updateStyle('.dealinfo-content-padding', {
             height: T.px(Styles.topMenu.height)
         });
-        if (!T.isIOS) {
+        if (0&& !T.isIOS) {
             T.updateStyle('.dealinfo-wrapper', {
                 overflowY: 'scroll',
                 webkitOverflowScrolling: 'touch'
