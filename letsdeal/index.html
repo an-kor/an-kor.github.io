@@ -106,6 +106,24 @@
             </div>
         </div>
     </script>
+    <script id="noconnection-template" type="text/x-template">
+        <div onclick="App.checkConnection();" ontouchmove="return false;" class="noconnection-page">
+            <div class="noconnection-tag"></div>
+            <div class="noconnection-msg">
+                <div class="noconnection-title">%TITLE%</div>
+                %MSG%
+            </div>
+        </div>
+    </script>
+    <script id="instructions-template" type="text/x-template">
+        <div onclick="App.hideInstructions();" ontouchmove="return false;" class="instructions-page">
+            <div class="instructions-title">%TITLE%</div>
+            <div class="instructions-msg">%MSG_H%</div>
+            <div class="instructions-img-h"></div>
+            <div class="instructions-msg">%MSG_V%</div>
+            <div class="instructions-img-v"></div>
+        </div>
+    </script>
     <script id="dealinfo-countdowninfo-template" type="text/x-template">
         <div onclick="Deals.hideSharePage();" ontouchmove="return false;" class="dealinfo-share">
             <div class="dealinfo-share-block">%INFO%</div>

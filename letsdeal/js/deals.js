@@ -138,6 +138,8 @@ var Deals = {
                     T.byId("dealinfo-map-"+data.id).style.display = 'none';
                 }
                 T.query('.content-loading',1).style.display = 'none';
+
+                // dealinfo scroller
                 if (1 || T.isIOS) {
                     if (App.dealInfoScroller) {
                         App.dealInfoScroller.destroy();

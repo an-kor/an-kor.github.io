@@ -23,11 +23,11 @@ var app = {
             showError(noConnectionMsg);
         }
         var checkHost = function(url){
-            var xmlhttp = new XMLHttpRequest();
             //navigator.splashscreen.show();
             document.getElementById('splash-loading').style.display = 'block';
             document.getElementById('splash-tag').style.display = 'none';
             document.getElementById('splash-message').style.display = 'none';
+            var xmlhttp = new XMLHttpRequest();
             xmlhttp.open('GET', url, true);
             xmlhttp.onreadystatechange = function() {
               if (xmlhttp.readyState == 4) {

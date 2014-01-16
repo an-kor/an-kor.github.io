@@ -38,9 +38,61 @@ var App = {
             T.initHover(T.query('.top-menu-back-btn'), Styles.footer.bgColorHover);
         }
     },
+    checkConnection: function(){
+        if (navigator.connection) {
+            if (navigator.connection.type == Connection.NONE) {
+                App.showNoConnection();
+            }
+        } else {
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.open('GET', T.url +"?" +  new Date().getTime());
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState == 4) {
+                    if(xmlhttp.status == 200) {
+                        if (App.isOffline) {
+                            App.hideNoConnection();
+                        }
+                    } else {
+                        App.showNoConnection();
+                    }
+                    clearTimeout(xmlhttp.timeout);
+                }
+            };
+            xmlhttp.send(null);
+            xmlhttp.timeout = setTimeout(function () { xmlhttp.abort(); App.showNoConnection(); }, 4000);
+        }
+    },
+    hideNoConnection: function(){
+        App.isOffline = false;
+        T.byId('page-on-top').innerHTML = '';
+        T.byId('page-on-top').style.display = 'none';
+    },
+    showNoConnection: function(){
+        App.isOffline = true;
+        var template = T.byId('noconnection-template').innerHTML;
+        template = template.replace('%TITLE%', Messages.noConnectionTitle);
+        template = template.replace('%MSG%', Messages.noConnectionMsg);
+        T.byId('page-on-top').innerHTML = template;
+        T.byId('page-on-top').style.display = 'block';
+    },
     showMyDeals:function(){
         App.showIFrame(Messages.myDeals, Messages.myDealsSrc);
         App.changeHash('/mydeals/');
+    },
+    showInstructions: function(){
+        if (!window.localStorage.getItem("instructionsShown")){
+            var template = T.byId('instructions-template').innerHTML;
+            template = template.replace('%TITLE%', Messages.instructionsTitle);
+            template = template.replace('%MSG_H%', Messages.instructionsHorizontal);
+            template = template.replace('%MSG_V%', Messages.instructionsVertical);
+            T.byId('page-on-top').innerHTML = template;
+            T.byId('page-on-top').style.display = 'block';
+        }
+    },
+    hideInstructions: function(){
+        window.localStorage.setItem("instructionsShown", 1);
+        T.byId('page-on-top').innerHTML = '';
+        T.byId('page-on-top').style.display = 'none';
     },
     addSearchItem:function(data){
         Deals.loadedDeals[data.id] = data;
@@ -468,6 +520,7 @@ var App = {
             Templates.prepareDealInfo();
             Templates.prepareFooter();
             Templates.prepareSearch();
+            Templates.prepareModalPages();
             if (userCityId) {
                 App.checkLocation();
             }
@@ -482,8 +535,11 @@ var App = {
                         navigator.splashscreen.hide();
                     },500);
                 }
+                App.showInstructions();
             },1000);
             window.addEventListener("hashchange", App.hashChangeEvent, false);
+            setInterval(App.checkConnection, 5000)
+
         }, null, function(){
             T.byId('splash-loading').style.display = 'none';
             T.byId('splash-message').innerHTML = Messages.connectionError
@@ -492,6 +548,7 @@ var App = {
     }
 };
 window.addEventListener('load', function() {
+    setTimeout(T.preloadImages, 0);
     App.init();
     window.scrollTo( 0, 1 );
 });

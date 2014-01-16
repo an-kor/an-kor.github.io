@@ -117,8 +117,8 @@ var T = {
             }
         }
     },
+    url: './controller.php',
     request: function(action, callback, params, errorCallback, timeout) {
-        var url = './controller.php';
         if (!timeout) {
             timeout = 8000;
         }
@@ -129,7 +129,7 @@ var T = {
         }
         params.apikey = "a4Gsm";
         T.xhrReq({
-            url: url,
+            url: T.url,
             dataType: 'text',
             type: 'POST',
             timeout: timeout,
@@ -144,6 +144,7 @@ var T = {
                 }*/
             },
             error: function(data){
+                App.showNoConnection();
                 errorCallback(data);
             }
         })
@@ -165,6 +166,15 @@ var T = {
             elements[i].addEventListener('touchend', function() {
                 this.style.background = bgColor;
             });
+        }
+    },
+    preloadImages: function() {
+        var imagestList = ['img/broken-tag.png', 'img/loadinfo-blue.gif', 'img/loadinfo.gif', 'img/share-btn.png', 'img/gesture-h.png', 'img/gesture-v.png', 'img/logo-small.png', 'img/back-btn.png'];
+        for (var i in imagestList) {
+            try {
+                var img = new Image();
+                img.src = imagestList[i];
+            } catch (e) { }
         }
     },
     getDistance: function(from, to){
