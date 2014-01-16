@@ -39,28 +39,22 @@ var App = {
         }
     },
     checkConnection: function(){
-        if (navigator.connection) {
-            if (navigator.connection.type == Connection.NONE) {
-                App.showNoConnection();
-            }
-        } else {
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.open('GET', T.url +"?" +  new Date().getTime());
-            xmlhttp.onreadystatechange = function() {
-                if (xmlhttp.readyState == 4) {
-                    if(xmlhttp.status == 200) {
-                        if (App.isOffline) {
-                            App.hideNoConnection();
-                        }
-                    } else {
-                        App.showNoConnection();
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open('GET', T.url +"?" +  new Date().getTime());
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState == 4) {
+                if(xmlhttp.status == 200) {
+                    if (App.isOffline) {
+                        App.hideNoConnection();
                     }
-                    clearTimeout(xmlhttp.timeout);
+                } else {
+                    App.showNoConnection();
                 }
-            };
-            xmlhttp.send(null);
-            xmlhttp.timeout = setTimeout(function () { xmlhttp.abort(); App.showNoConnection(); }, 4000);
-        }
+                clearTimeout(xmlhttp.timeout);
+            }
+        };
+        xmlhttp.send(null);
+        xmlhttp.timeout = setTimeout(function () { xmlhttp.abort(); App.showNoConnection(); }, 4000);
     },
     hideNoConnection: function(){
         App.isOffline = false;
