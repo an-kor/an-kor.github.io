@@ -152,7 +152,7 @@ var T = {
     formatNumber: function(value){
          return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
     },
-    initHover: function(elements, bgHoverColor, bgColor){
+    initHover: function(elements, bgHoverColor, bgColor, useBackground){
         if (!elements.length) {
             elements = [elements];
         }
@@ -161,10 +161,14 @@ var T = {
         }
         for (var i=0;i<elements.length;i++) {
             elements[i].addEventListener('touchstart', function() {
-                this.style.background = bgHoverColor;
+                if (useBackground) {
+                    this.style.background = bgHoverColor;
+                } else {
+                    this.style.backgroundColor = bgHoverColor;
+                }
             });
             elements[i].addEventListener('touchend', function() {
-                this.style.background = bgColor;
+                this.style.backgroundColor = bgColor;H
             });
         }
     },

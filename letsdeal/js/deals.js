@@ -163,7 +163,7 @@ var Deals = {
             var bottomEl = document.createElement("div");
             bottomEl.innerHTML = bottomTemplate;
             newEl.appendChild(bottomEl);
-            T.initHover(T.query('.dealinfo-bottom-buyBtn'),Styles.dealInfo.bottom.buyBtn.bgColorHover);
+            T.initHover(T.query('.dealinfo-bottom-buyBtn'),Styles.dealInfo.bottom.buyBtn.bgColorHover, Styles.dealInfo.bottom.buyBtn.bgColor, 1);
             T.initHover(T.query('.top-menu-back-btn, .top-menu-share-btn'), Styles.footer.bgColorHover);
             App.currentDeal = dealId;
             App.changeHash('/deal/'+dealId);

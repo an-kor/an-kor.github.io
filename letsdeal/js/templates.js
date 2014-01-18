@@ -424,7 +424,7 @@ var Templates = {
             lineHeight: T.px(50),
             color: 'white',
             marginTop: itemHeight - (T.p(50) + shadowHeight)+ 'px',
-            fontSize: T.px(36)
+            fontSize: (!is2Columns)?T.px(36) : T.px(30)
             ,textShadow: (!T.isAndroid2)?'0px 1px 2px rgba(0, 0, 0, 0.5)':''
         });
         T.updateStyle('.deallist-item-footer', {
@@ -688,6 +688,9 @@ var Templates = {
         });
     },
     prepareModalPages: function(){
+        T.updateStyle('.noconnection-page', {
+            height: T.h() + 'px'
+        });
         T.updateStyle('.noconnection-tag', {
             marginTop: T.px(140),
             height: T.px(160),
@@ -695,10 +698,14 @@ var Templates = {
         });
         T.updateStyle('.noconnection-msg', {
             marginTop: T.px(30),
-            fontSize: T.px(40)
+            fontSize: T.px(35)
         });
         T.updateStyle('.noconnection-title', {
-            fontSize: T.px(45)
+            fontSize: T.px(40)
+        });
+
+        T.updateStyle('.instructions-page', {
+            height: T.h() + 'px'
         });
         T.updateStyle('.instructions-img-h', {
             height: T.px(250),
