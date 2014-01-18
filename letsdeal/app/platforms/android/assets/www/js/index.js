@@ -45,8 +45,8 @@ var app = {
             noConnection();
             setInterval(app.checkConnection, 5000);
         } else {
-            var url = 'http://217.14.196.170:8102';
-        	// var url = 'http://192.168.0.78/an-kor.github.io/letsdeal/';
+            // var url = 'http://217.14.196.170:8102';
+        	var url = 'http://192.168.0.78/an-kor.github.io/letsdeal/';
             checkHost(url);
         }
     }

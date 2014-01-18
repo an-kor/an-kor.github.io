@@ -19,14 +19,6 @@
  under the License.
 */
 ;(function() {
-var isApp = window._cordovaNative || /droid 2/.test(navigator.userAgent);
-if (!isApp){
-    window.cordova = {disabled: true}
-    cordova.exec = function(){
-        console.log(arguments)
-        arguments[1]();
-    }
-} else {
 var CORDOVA_JS_BUILD_LABEL = '3.3.0';
 // file: lib/scripts/require.js
 
@@ -1517,7 +1509,7 @@ function handlePluginsObject(path, moduleList, finishPluginLoading) {
 }
 
 function injectPluginScript(pathPrefix, finishPluginLoading) {
-    injectScript(pathPrefix + 'cordova_plugins.js', function(){
+    injectScript(pathPrefix + 'cordova_plugins-android.js', function(){
         try {
             var moduleList = require("cordova/plugin_list");
             handlePluginsObject(pathPrefix, moduleList, finishPluginLoading);
@@ -1749,6 +1741,5 @@ window.cordova = require('cordova');
 // file: lib/scripts/bootstrap.js
 
 require('cordova/init');
-}
 
 })();

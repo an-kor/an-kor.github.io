@@ -33,7 +33,27 @@
     <script type="text/javascript" src="js/vendor/iscroll.js"></script>
     <script type="text/javascript" src="js/vendor/trmix.min.js"></script>
     <script type="text/javascript" src="js/vendor/leaflet/leaflet-custom.js"></script>
-    <script type="text/javascript" src="js/vendor/phonegap.js"></script>
+    <script type="text/javascript">
+        if (("ontouchstart" in document.documentElement)) {
+            if (/iP(ad|hone|od)/.test(navigator.userAgent)) {
+                var xhrObj = new XMLHttpRequest();
+                xhrObj.open('GET', "cordova-ios.js", false);
+                xhrObj.send('');
+                var se = document.createElement('script');
+                se.type = "text/javascript";
+                se.text = xhrObj.responseText;
+                document.getElementsByTagName('head')[0].appendChild(se);
+            } else {
+                var xhrObj = new XMLHttpRequest();
+                xhrObj.open('GET', "cordova-android.js", false);
+                xhrObj.send('');
+                var se = document.createElement('script');
+                se.type = "text/javascript";
+                se.text = xhrObj.responseText;
+                document.getElementsByTagName('head')[0].appendChild(se);
+            }
+        }
+    </script>
     <!--script src="//use.edgefonts.net/source-sans-pro:n3,n4,n6.js"></script-->
 
     <script id="deal-page-template" type="text/x-template">
@@ -251,6 +271,6 @@
 <script type="text/javascript" src="js/styles.js"></script>
 <script type="text/javascript" src="js/deals.js"></script>
 <script type="text/javascript" src="js/templates.js"></script>
-<script type="text/javascript" src="js/main.js?1"></script>
+<script type="text/javascript" src="js/main.js"></script>
 </body>
 </html>
