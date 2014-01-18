@@ -54,7 +54,7 @@ var App = {
             }
         };
         xmlhttp.send(null);
-        xmlhttp.timeout = setTimeout(function () { xmlhttp.abort(); App.showNoConnection(); }, 4000);
+        xmlhttp.timeout = setTimeout(function () { xmlhttp.abort(); App.showNoConnection(); }, 15000);
     },
     hideNoConnection: function(){
         App.isOffline = false;
