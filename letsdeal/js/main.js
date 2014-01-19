@@ -50,11 +50,11 @@ var App = {
                 } else {
                     App.showNoConnection();
                 }
-                clearTimeout(xmlhttp.timeout);
+                // clearTimeout(xmlhttp.timeout);
             }
         };
         xmlhttp.send(null);
-        xmlhttp.timeout = setTimeout(function () { xmlhttp.abort(); App.showNoConnection(); }, 15000);
+        //xmlhttp.timeout = setTimeout(function () { xmlhttp.abort(); App.showNoConnection(); }, 15000);
     },
     hideNoConnection: function(){
         App.isOffline = false;
@@ -532,7 +532,7 @@ var App = {
                 App.showInstructions();
             },1000);
             window.addEventListener("hashchange", App.hashChangeEvent, false);
-            setInterval(App.checkConnection, 5000)
+            //setInterval(App.checkConnection, 5000)
 
         }, null, function(){
             T.byId('splash-loading').style.display = 'none';

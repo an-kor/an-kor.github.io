@@ -9,7 +9,7 @@ var Templates = {
             '</div>';
     },
     dealsItem: function(data){
-        return '<li onclick="Deals.showDeal('+data.id+')"><div class="deallist-item" style="background-image: url('+data.imageSrc+');"><div>' +
+        return '<li onclick="Deals.showDeal('+data.id+')" class="needsclick"><div class="deallist-item" style="background-image: url('+data.imageSrc+');"><div>' +
             '<div class="deallist-item-header">'+data.title+'</div>' +
             '<div class="deallist-item-footer">' +
             '<div class="deallist-item-footer-bought">'+data.bulk+' köpta</div>' +
