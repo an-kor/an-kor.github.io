@@ -725,7 +725,9 @@ iframe{
     width:100%;
     z-index: 1000;
 }
-.search-wrapper{}
+.search-wrapper{
+    background: #edebe6;
+}
 .search-noresults{
     display:none;
     position: absolute;

@@ -602,7 +602,8 @@ var Templates = {
             });
         }*/
         T.updateStyle('.dealinfo-content-wrapper', {
-            padding: T.px(10) + ' ' + T.px(20)
+            padding: T.px(10) + ' ' + T.px(20),
+            background: '#edebe6'
         });
         T.updateStyle('.dealinfo-content-title', {
             color: st.title.color,
