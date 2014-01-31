@@ -168,7 +168,7 @@ var T = {
                 }
             });
             elements[i].addEventListener('touchend', function() {
-                this.style.backgroundColor = bgColor;H
+                this.style.backgroundColor = bgColor;
             });
         }
     },

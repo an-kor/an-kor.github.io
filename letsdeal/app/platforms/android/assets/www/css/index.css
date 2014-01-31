@@ -68,11 +68,11 @@ body {
     padding: 0 5%;
     text-align: center;
     color: white;
-    font-size: 3.5em;
+    font-size: 20px;
     font-weight: lighter;
 }
 #splash-message strong{
-    font-size: 1.2em;
+    font-size: 22px;
     font-weight: bold;
     text-transform: uppercase;
 }
