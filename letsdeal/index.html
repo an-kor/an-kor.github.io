@@ -33,8 +33,9 @@
     <script type="text/javascript" src="js/vendor/iscroll.js"></script>
     <script type="text/javascript" src="js/vendor/trmix.min.js"></script>
     <script type="text/javascript" src="js/vendor/leaflet/leaflet-custom.js"></script>
+    <script type='text/javascript' src='js/vendor/ftscroller.js'></script>
     <script type="text/javascript">
-        if ((window._cordovaNative && /Android/.test(navigator.userAgent)) || ("ontouchstart" in document.documentElement)) {
+        if ((window._cordovaNative && /Android/.test(navigator.userAgent)) && ("ontouchstart" in document.documentElement)) {
             if (/iP(ad|hone|od)/.test(navigator.userAgent)) {
                 var xhrObj = new XMLHttpRequest();
                 xhrObj.open('GET', "cordova-ios.js", false);

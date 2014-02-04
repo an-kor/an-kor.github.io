@@ -39,7 +39,7 @@
  *
  * @copyright The Financial Times Ltd [All rights reserved]
  * @codingstandard ftlabs-jslint
- * @version 0.3.0
+ * @version 0.3.2
  */
 /**
  * @license FTScroller is (c) 2012 The Financial Times Ltd [All rights reserved] and licensed under the MIT license.
@@ -112,10 +112,10 @@ var FTScroller, CubicBezier;
 
 	// Constants.  Note that the bezier curve should be changed along with the friction!
 	var _kFriction = 0.998;
-	var _kMinimumSpeed = 0.01;
+	var _kMinimumSpeed = 0.5;
 
 	// Create a global stylesheet to set up stylesheet rules and track dynamic entries
-	(function () {
+	/*(function () {
 		var stylesheetContainerNode = document.getElementsByTagName('head')[0] || document.documentElement;
 		var newStyleNode = document.createElement('style');
 		var hardwareAccelerationRule;
@@ -135,11 +135,11 @@ var FTScroller, CubicBezier;
 			'.ftscroller_hwaccelerated { ' + hardwareAccelerationRule  + ' }',
 			'.ftscroller_x, .ftscroller_y { position: relative; min-width: 100%; min-height: 100%; overflow: hidden }',
 			'.ftscroller_x { display: inline-block }',
-			'.ftscroller_scrollbar { pointer-events: none; position: absolute; width: 5px; height: 5px; border: 1px solid rgba(255, 255, 255, 0.15); -webkit-border-radius: 3px; border-radius: 6px; opacity: 0; ' + _vendorCSSPrefix + 'transition: opacity 350ms; z-index: 10; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box }',
+			'.ftscroller_scrollbar { pointer-events: none; position: absolute; width: 5px; height: 5px; border: 1px solid rgba(255, 255, 255, 0.3); -webkit-border-radius: 3px; border-radius: 6px; opacity: 0; ' + _vendorCSSPrefix + 'transition: opacity 350ms; z-index: 10; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box }',
 			'.ftscroller_scrollbarx { bottom: 2px; left: 2px }',
 			'.ftscroller_scrollbary { right: 2px; top: 2px }',
-			'.ftscroller_scrollbarinner { height: 100%; background: rgba(0,0,0,0.5); -webkit-border-radius: 2px; border-radius: 4px / 6px }',
-			'.ftscroller_scrollbar.active { opacity: 1; ' + _vendorCSSPrefix + 'transition: none; -o-transition: all 0 none }'
+			'.ftscroller_scrollbarinner { height: 100%; background: #000; -webkit-border-radius: 2px; border-radius: 4px / 6px }',
+			'.ftscroller_scrollbar.active { opacity: 0.5; ' + _vendorCSSPrefix + 'transition: none; -o-transition: all 0 none }'
 		];
 
 		if (newStyleNode.styleSheet) {
@@ -150,7 +150,7 @@ var FTScroller, CubicBezier;
 
 		// Add the stylesheet
 		stylesheetContainerNode.insertBefore(newStyleNode, stylesheetContainerNode.firstChild);
-	}());
+	}());*/
 
 	/**
 	 * Master constructor for the scrolling function, including which element to
@@ -160,7 +160,7 @@ var FTScroller, CubicBezier;
 	 */
 	FTScroller = function (domNode, options) {
 		var key;
-		var destroy, setSnapSize, scrollTo, scrollBy, updateDimensions, addEventListener, removeEventListener, _startScroll, _updateScroll, _endScroll, _finalizeScroll, _interruptScroll, _flingScroll, _snapScroll, _getSnapPositionForIndexes, _getSnapIndexForPosition, _limitToBounds, _initializeDOM, _existingDOMValid, _domChanged, _updateDimensions, _updateScrollbarDimensions, _updateElementPosition, _updateSegments, _setAxisPosition, _getPosition, _scheduleAxisPosition, _fireEvent, _childFocused, _modifyDistanceBeyondBounds, _distancesBeyondBounds, _startAnimation, _scheduleRender, _cancelAnimation, _toggleEventHandlers, _onTouchStart, _onTouchMove, _onTouchEnd, _onMouseDown, _onMouseMove, _onMouseUp, _onPointerDown, _onPointerMove, _onPointerUp, _onPointerCancel, _onPointerCaptureEnd, _onClick, _onMouseScroll, _captureInput, _releaseInputCapture, _getBoundingRect;
+		var destroy, setSnapSize, scrollTo, scrollBy, updateDimensions, addEventListener, removeEventListener, _startScroll, _updateScroll, _endScroll, _finalizeScroll, _interruptScroll, _flingScroll, _snapScroll, _getSnapPositionForIndexes, _getSnapIndexForPosition, _constrainAndRenderTargetScrollPosition, _limitToBounds, _initializeDOM, _existingDOMValid, _domChanged, _updateDimensions, _updateScrollbarDimensions, _updateElementPosition, _updateSegments, _setAxisPosition, _getPosition, _scheduleAxisPosition, _fireEvent, _childFocused, _modifyDistanceBeyondBounds, _distancesBeyondBounds, _startAnimation, _scheduleRender, _cancelAnimation, _toggleEventHandlers, _onTouchStart, _onTouchMove, _onTouchEnd, _onMouseDown, _onMouseMove, _onMouseUp, _onPointerDown, _onPointerMove, _onPointerUp, _onPointerCancel, _onPointerCaptureEnd, _onClick, _onMouseScroll, _captureInput, _releaseInputCapture, _getBoundingRect;
 
 
 		/* Note that actual object instantiation occurs at the end of the closure to avoid jslint errors */
@@ -169,7 +169,7 @@ var FTScroller, CubicBezier;
 		/*                         Options                       */
 
 		var _instanceOptions = {
-
+            index: '',
 			// Whether to display scrollbars as appropriate
 			scrollbars: true,
 
@@ -275,9 +275,9 @@ var FTScroller, CubicBezier;
 			// Bezier curves defining the feel of the fling (momentum) deceleration,
 			// the bounce decleration deceleration (as a fling exceeds the bounds),
 			// and the bounce bezier (used for bouncing back).
-			flingBezier: new CubicBezier(0.103, 0.389, 0.307, 0.966),
-			bounceDecelerationBezier: new CubicBezier(0, 0.5, 0.5, 1),
-			bounceBezier: new CubicBezier(0.7, 0, 0.9, 0.6)
+			flingBezier: new CubicBezier(0.0, 0.5, 0.5, 1.0),
+			bounceDecelerationBezier: new CubicBezier(0, 0.0, 0.0, 0.9),
+			bounceBezier: new CubicBezier(0.0, 0, 0.0, 0.0)
 		};
 
 
@@ -491,7 +491,7 @@ var FTScroller, CubicBezier;
 		 * dynamic duration).  The inputs will be constrained to bounds and snapped.
 		 * If false is supplied for a position, that axis will not be scrolled.
 		 */
-		scrollTo = function scrollTo(left, top, animationDuration, preventSnapping) {
+		scrollTo = function scrollTo(left, top, animationDuration) {
 			var targetPosition, duration, positions, axis, maxDuration = 0, scrollPositionsToApply = {};
 
 			// If a manual scroll is in progress, cancel it
@@ -515,7 +515,7 @@ var FTScroller, CubicBezier;
 					targetPosition = Math.min(0, Math.max(_metrics.scrollEnd[axis], targetPosition));
 
 					// Snap if appropriate
-					if (_instanceOptions.snapping && _snapGridSize[axis] && !preventSnapping) {
+					if (_instanceOptions.snapping && _snapGridSize[axis]) {
 						targetPosition = Math.round(targetPosition / _snapGridSize[axis]) * _snapGridSize[axis];
 					}
 
@@ -702,8 +702,8 @@ var FTScroller, CubicBezier;
 
 				// If another scroller was active, clean up and stop processing.
 				if (otherScrollerActive) {
-					_inputIdentifier = false;
 					_releaseInputCapture();
+					_inputIdentifier = false;
 					if (_isDisplayingScroll) {
 						_cancelAnimation();
 						if (!_snapScroll(true)) {
@@ -772,26 +772,18 @@ var FTScroller, CubicBezier;
 				}
 			}
 
+			// Recapture pointer if necessary
+			if (_isScrolling) {
+				_captureInput();
+			}
+
 			// Cancel text selections while dragging a cursor
 			if (_canClearSelection) {
 				window.getSelection().removeAllRanges();
 			}
 
-			// Update axes target positions if beyond bounds
-			for (axis in _scrollableAxes) {
-				if (_scrollableAxes.hasOwnProperty(axis)) {
-					if (_targetScrollPosition[axis] > 0) {
-						_targetScrollPosition[axis] = _modifyDistanceBeyondBounds(_targetScrollPosition[axis], axis);
-					} else if (_targetScrollPosition[axis] < _metrics.scrollEnd[axis]) {
-						_targetScrollPosition[axis] = _metrics.scrollEnd[axis] + _modifyDistanceBeyondBounds(_targetScrollPosition[axis] - _metrics.scrollEnd[axis], axis);
-					}
-				}
-			}
-
-			// Trigger a scroll position update for platforms not using requestAnimationFrames
-			if (!_reqAnimationFrame) {
-				_scheduleRender();
-			}
+			// Ensure the target scroll position is affected by bounds and render if needed
+			_constrainAndRenderTargetScrollPosition();
 
 			// To aid render/draw coalescing, perform other one-off actions here
 			if (initialScroll) {
@@ -820,8 +812,8 @@ var FTScroller, CubicBezier;
 		 * with a fling and/or bounceback depending on options.
 		 */
 		_endScroll = function _endScroll(inputTime, rawEvent) {
-			_inputIdentifier = false;
 			_releaseInputCapture();
+			_inputIdentifier = false;
 			_cancelAnimation();
 
 			_fireEvent('scrollinteractionend', {});
@@ -1222,9 +1214,10 @@ var FTScroller, CubicBezier;
 
 			// Get the current position and see if a snap is required
 			if (_instanceOptions.snapping) {
+
 				// Store current snap index
 				_snapIndex = _getSnapIndexForPosition(targetPosition);
-				targetPosition = _getSnapPositionForIndexes(_snapIndex, targetPosition)
+				targetPosition = _getSnapPositionForIndexes(_snapIndex, targetPosition);
 			}
 			targetPosition = _limitToBounds(targetPosition);
 
@@ -1239,12 +1232,14 @@ var FTScroller, CubicBezier;
 			if (!snapRequired) {
 				return false;
 			}
+
 			// Perform the snap
 			for (axis in _baseScrollableAxes) {
 				if (_baseScrollableAxes.hasOwnProperty(axis)) {
 					_setAxisPosition(axis, targetPosition[axis], snapDuration);
 				}
 			}
+
 			_timeouts.push(setTimeout(function () {
 
 				// Update the stored scroll position ready for finalizing
@@ -1285,6 +1280,31 @@ var FTScroller, CubicBezier;
 				}
 			}
 			return coordinatesToReturn;
+		};
+
+		/**
+		 * Update the scroll position while scrolling is active, checking the position
+		 * within bounds and rubberbanding/constraining as appropriate; also triggers a
+		 * scroll position render if a requestAnimationFrame loop isn't active
+		 */
+		_constrainAndRenderTargetScrollPosition = function _constrainAndRenderTargetScrollPosition() {
+			var axis;
+
+			// Update axes target positions if beyond bounds
+			for (axis in _scrollableAxes) {
+				if (_scrollableAxes.hasOwnProperty(axis)) {
+					if (_targetScrollPosition[axis] > 0) {
+						_targetScrollPosition[axis] = _modifyDistanceBeyondBounds(_targetScrollPosition[axis], axis);
+					} else if (_targetScrollPosition[axis] < _metrics.scrollEnd[axis]) {
+						_targetScrollPosition[axis] = _metrics.scrollEnd[axis] + _modifyDistanceBeyondBounds(_targetScrollPosition[axis] - _metrics.scrollEnd[axis], axis);
+					}
+				}
+			}
+
+			// Trigger a scroll position update for platforms not using requestAnimationFrames
+			if (!_reqAnimationFrame) {
+				_scheduleRender();
+			}
 		};
 
 		/**
@@ -1489,9 +1509,6 @@ var FTScroller, CubicBezier;
 			}
 			var containerWidth, containerHeight, startAlignments;
 
-			// If a manual scroll is in progress, cancel it
-			_endScroll(Date.now());
-
 			// Calculate the starting alignment for comparison later
 			startAlignments = { x: false, y: false };
 			for (axis in startAlignments) {
@@ -1555,45 +1572,53 @@ var FTScroller, CubicBezier;
 
 			_updateScrollbarDimensions();
 
-			if (!ignoreSnapScroll && _instanceOptions.snapping) {
+			// If scrolling is in progress, trigger a scroll update
+			if (_isScrolling) {
+				_lastScrollPosition.x--;
+				_lastScrollPosition.y--;
+				_constrainAndRenderTargetScrollPosition();
 
-		        // Ensure bounds are correct
-				_updateSegments();
-				targetPosition = _getSnapPositionForIndexes(_snapIndex, _lastScrollPosition);
-			}
+			// If scrolling *isn't* in progress, snap and realign.
+			} else {
+				if (!ignoreSnapScroll && _instanceOptions.snapping) {
 
-			// Apply base alignment if appropriate
-			for (axis in targetPosition) {
-				if (targetPosition.hasOwnProperty(axis)) {
+			        // Ensure bounds are correct
+					_updateSegments();
+					targetPosition = _getSnapPositionForIndexes(_snapIndex, _lastScrollPosition);
+				}
 
-					// If the container is smaller than the content, determine whether to apply the
-					// alignment.  This occurs if a scroll has never taken place, or if the position
-					// was previously at the correct "end" and can be maintained.
-					if (_metrics.container[axis] < _metrics.content[axis]) {
-						if (_hasBeenScrolled && _instanceOptions.baseAlignments[axis] !== startAlignments[axis]) {
-							continue;
+				// Apply base alignment if appropriate
+				for (axis in targetPosition) {
+					if (targetPosition.hasOwnProperty(axis)) {
+
+						// If the container is smaller than the content, determine whether to apply the
+						// alignment.  This occurs if a scroll has never taken place, or if the position
+						// was previously at the correct "end" and can be maintained.
+						if (_metrics.container[axis] < _metrics.content[axis]) {
+							if (_hasBeenScrolled && _instanceOptions.baseAlignments[axis] !== startAlignments[axis]) {
+								continue;
+							}
+						}
+
+						// Apply the alignment
+						if (_instanceOptions.baseAlignments[axis] === 1) {
+							targetPosition[axis] = _metrics.scrollEnd[axis];
+						} else if (_instanceOptions.baseAlignments[axis] === 0) {
+							targetPosition[axis] = Math.floor(_metrics.scrollEnd[axis] / 2);
+						} else if (_instanceOptions.baseAlignments[axis] === -1) {
+							targetPosition[axis] = 0;
 						}
 					}
-
-					// Apply the alignment
-					if (_instanceOptions.baseAlignments[axis] === 1) {
-						targetPosition[axis] = _metrics.scrollEnd[axis];
-					} else if (_instanceOptions.baseAlignments[axis] === 0) {
-						targetPosition[axis] = Math.floor(_metrics.scrollEnd[axis] / 2);
-					} else if (_instanceOptions.baseAlignments[axis] === -1) {
-						targetPosition[axis] = 0;
-					}
+				}
+				if (_instanceOptions.scrollingX && targetPosition.x !== false) {
+					_setAxisPosition('x', targetPosition.x, 0);
+					_baseScrollPosition.x = targetPosition.x;
+				}
+				if (_instanceOptions.scrollingY && targetPosition.y !== false) {
+					_setAxisPosition('y', targetPosition.y, 0);
+					_baseScrollPosition.y = targetPosition.y;
 				}
 			}
-			if (_instanceOptions.scrollingX && targetPosition.x !== false) {
-				_setAxisPosition('x', targetPosition.x, 0);
-				_baseScrollPosition.x = targetPosition.x;
-			}
-			if (_instanceOptions.scrollingY && targetPosition.y !== false) {
-				_setAxisPosition('y', targetPosition.y, 0);
-				_baseScrollPosition.y = targetPosition.y;
-			}
-
 		};
 
 		_updateScrollbarDimensions = function _updateScrollbarDimensions() {
@@ -1719,10 +1744,10 @@ var FTScroller, CubicBezier;
 				if (newPositionAtExtremity !== null) {
 					if (animationDuration) {
 						_timeouts.push(setTimeout(function() {
-							_fireEvent('reached' + newPositionAtExtremity, { axis: axis });
+							_fireEvent('reached' + newPositionAtExtremity, { axis: axis, index: _instanceOptions.index });
 						}, boundsCrossDelay || animationDuration));
 					} else {
-						_fireEvent('reached' + newPositionAtExtremity, { axis: axis });
+						_fireEvent('reached' + newPositionAtExtremity, { axis: axis, index: _instanceOptions.index });
 					}
 				}
 				_scrollAtExtremity[axis] = newPositionAtExtremity;
@@ -2157,7 +2182,13 @@ var FTScroller, CubicBezier;
 			_endScroll(endEvent.timeStamp, endEvent);
 		};
 		_onPointerCaptureEnd = function _onPointerCaptureEnd(event) {
-			_endScroll(event.timeStamp, event);
+
+			// On pointer capture end - which can happen because of another element
+			// releasing pointer capture - don't end scrolling, but do track that
+			// input capture has been lost.  This will result in pointers leaving
+			// the window possibly being lost, but further interactions will fix
+			// the tracking again.
+			_inputCaptured = false;
 		};
 
 
@@ -2238,8 +2269,8 @@ var FTScroller, CubicBezier;
 				clearTimeout(_scrollWheelEndDebouncer);
 			}
 			_scrollWheelEndDebouncer = setTimeout(function () {
-				_inputIdentifier = false;
 				_releaseInputCapture();
+				_inputIdentifier = false;
 				_isScrolling = false;
 				_isDisplayingScroll = false;
 				_ftscrollerMoving = false;
@@ -2255,7 +2286,8 @@ var FTScroller, CubicBezier;
 
 		/**
 		 * Capture and release input support, particularly allowing tracking
-		 * of Metro pointers outside the docked view.
+		 * of Metro pointers outside the docked view.  Note that _releaseInputCapture
+		 * should be called before the input identifier is cleared.
 		 */
 		_captureInput = function _captureInput() {
 			if (_inputCaptured || _inputIdentifier === false || _inputIdentifier === 'scrollwheel') {
@@ -2318,7 +2350,6 @@ var FTScroller, CubicBezier;
 			removeEventListener: removeEventListener,
 			get scrollHeight () { return _metrics.content.y; },
 			set scrollHeight (value) { throw new SyntaxError('scrollHeight is currently read-only - ignoring ' + value); },
-			get gestureStart () { return _gestureStart; },
 			get scrollLeft () { return -_lastScrollPosition.x; },
 			set scrollLeft (value) { scrollTo(value, false, false); return -_lastScrollPosition.x; },
 			get scrollTop () { return -_lastScrollPosition.y; },

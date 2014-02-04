@@ -1,4 +1,7 @@
-
+/*ontouchstart="if (App.isScrolling) {setTimeout(function(){App.isScrolling=0;},100)}" ' +
+            'onscroll="if (!App.isScrolling) {App.isScrolling=1;if (App.scrollingTimeout) {clearTimeout(App.scrollingTimeout);}; App.scrollingTimeout = setTimeout(function(){App.isScrolling=0;},2000)}"*/
+ /*ontouchmove="T.checkScrolling(event, this)" ontouchstart="App.scrollStartEvent={x: event.touches[0].pageX, y: event.touches[0].pageY};if (App.isScrolling) {var el = this; setTimeout(function(){' +
+            'if (Math.abs(event.touches[0].pageY - App.scrollStartEvent.y) < 10) {T.stopScrolling(el)} else {T.checkScrolling(event, el)}}, 100)}">'+*/
 var Templates = {
     dealsPage: function(pageId){
         return '<div class="main-v-wrapper" id="wrapper_'+pageId+'">'+
@@ -9,7 +12,7 @@ var Templates = {
             '</div>';
     },
     dealsItem: function(data){
-        return '<li onclick="Deals.showDeal('+data.id+')" class="needsclick"><div class="deallist-item" style="background-image: url('+data.imageSrc+');"><div>' +
+        return '<li onclick="Deals.showDeal('+data.id+')"><div class="deallist-item" style="background-image: url('+data.imageSrc+');"><div>' + // ontouchend="Deals.showDeal('+data.id+')"
             '<div class="deallist-item-header">'+data.title+'</div>' +
             '<div class="deallist-item-footer">' +
             '<div class="deallist-item-footer-bought">'+data.bulk+' köpta</div>' +
@@ -386,6 +389,15 @@ var Templates = {
         });
     },
     prepareDeals: function(){
+
+
+        if (!T.isIOS) {
+            T.updateStyle('.main-v-wrapper', {
+                overflowY: 'scroll',
+                webkitOverflowScrolling: 'touch'
+            });
+        }
+
         var scrollWidth = 0, backgroundSize, is2Columns = false;
         if (T.isDesktop) {
             scrollWidth = 8

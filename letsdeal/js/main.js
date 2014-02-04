@@ -84,7 +84,9 @@ var App = {
         }
     },
     hideInstructions: function(){
-        window.localStorage.setItem("instructionsShown", 1);
+        try{
+            window.localStorage.setItem("instructionsShown", 1);
+        } catch(e) {}
         T.byId('page-on-top').innerHTML = '';
         T.byId('page-on-top').style.display = 'none';
     },

@@ -197,9 +197,37 @@ var T = {
         this.sin2 = Math.sin(this.dLon / 2);
 
         this.a = this.sin1 * this.sin1 + this.sin2 * this.sin2 * Math.cos(this.lat1) * Math.cos(this.lat2);
-        this.d = this.R * 2 * Math.atan2(Math.sqrt(this.a), Math.sqrt(1 - this.a))
+        this.d = this.R * 2 * Math.atan2(Math.sqrt(this.a), Math.sqrt(1 - this.a));
 
         return this.d;
+    },
+    stopScrolling: function(el){
+        clearInterval(App.scrollInterval);
+        App.scrollInterval = 0;
+        App.isScrolling = 0;
+        App.scrollCounter = 0;
+        T.byId('footer').innerHTML = 'not scrolling';
+    },
+    checkScrolling: function(event, el){
+        //T.byId('footer').innerHTML = Math.abs(event.touches[0].pageX - App.scrollStartEvent.x)+ ' ' + Math.abs(event.touches[0].pageY - App.scrollStartEvent.y);
+        if (!App.isScrolling && (Math.abs(event.touches[0].pageX - App.scrollStartEvent.x) > 10 || Math.abs(event.touches[0].pageY - App.scrollStartEvent.y) > 10)) {
+            App.isScrolling = 1;
+            App.currentTop = el.scrollTop;
+            App.scrollCounter = 0;
+            if (!App.scrollInterval) {
+                App.scrollInterval = setInterval(function () {
+                    T.byId('footer').innerHTML = 'scrolling' + el.scrollTop + ' ' + App.currentTop + ' ' + App.scrollCounter;
+                    if (Math.abs(el.scrollTop - App.currentTop) < 10) {
+                        App.scrollCounter++;
+                    }
+                    if ((App.scrollCounter > 3 && (el.scrollTop != App.currentTop)) || App.scrollCounter > 10) {
+                        T.stopScrolling(el);
+                    } else {
+                        App.currentTop = el.scrollTop;
+                    }
+                }, 250);
+            }
+        }
     }
 };
 

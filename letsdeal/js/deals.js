@@ -219,10 +219,10 @@ var Deals = {
         var wrapper = newPage.firstChild;
         wrapper.index = data.id;
 
-        if (!T.isAndroid2) {
-            if (T.isIOS) {
+        if (!(T.isAndroid2 || T.isIOS)) {
+            /*if (T.isIOS) {
                 wrapper.scrollTop = 1
-            }
+            }*/
             wrapper.addEventListener("scroll",function(e){
                 //var el = T.byId(App.mainPageHScroll.currentPageIndex);
                 var el = e.target;
@@ -239,7 +239,23 @@ var Deals = {
                 }
             });
         } else {
-            var scrollerOptions = {
+
+            var scroller = new FTScroller(wrapper, {
+                index: wrapper.index,
+                scrollingX: false,
+                //bouncing:false,
+                scrollResponseBoundary: 100,
+                scrollBoundary: 30
+            });
+
+            scroller.addEventListener('reachedend', function (response) {
+                if(!App.isDealsLoading) {
+                    T.byId('hscroller-scroller-loading').style.display='block';
+                    var wrapper = T.byId('wrapper_' + response.index);
+                    Deals.appendDeals(wrapper);
+                }
+            });
+            /*var scrollerOptions = {
                 index: wrapper.index,
                 startX: 0,
                 startY: 0,
@@ -248,14 +264,14 @@ var Deals = {
                 scrollbars: true,
                 lockDirection: true
             };
-            var scroller = new IScroll(wrapper, scrollerOptions);
+
             scroller.on('translate', function(){
                 if(!App.isDealsLoading && Math.abs(this.y) > Math.abs(this.maxScrollY)) {
                     T.byId('hscroller-scroller-loading').style.display='block';
                     var wrapper = T.byId('wrapper_' + this.options.index);
                     Deals.appendDeals(wrapper);
                 }
-            });
+            });*/
         }
 
         if (previousPage.length === 0) {
