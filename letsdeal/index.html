@@ -35,24 +35,24 @@
     <script type="text/javascript" src="js/vendor/leaflet/leaflet-custom.js"></script>
     <script type='text/javascript' src='js/vendor/ftscroller.js'></script>
     <script type="text/javascript">
+        if (/iP(ad|hone|od)/.test(navigator.userAgent)) {
+            var xhrObj = new XMLHttpRequest();
+            xhrObj.open('GET', "cordova-ios.js", false);
+            xhrObj.send('');
+            var se = document.createElement('script');
+            se.type = "text/javascript";
+            se.text = xhrObj.responseText;
+            document.getElementsByTagName('head')[0].appendChild(se);
+        }
+
         if ((window._cordovaNative && /Android/.test(navigator.userAgent)) && ("ontouchstart" in document.documentElement)) {
-            if (/iP(ad|hone|od)/.test(navigator.userAgent)) {
-                var xhrObj = new XMLHttpRequest();
-                xhrObj.open('GET', "cordova-ios.js", false);
-                xhrObj.send('');
-                var se = document.createElement('script');
-                se.type = "text/javascript";
-                se.text = xhrObj.responseText;
-                document.getElementsByTagName('head')[0].appendChild(se);
-            } else {
-                var xhrObj = new XMLHttpRequest();
-                xhrObj.open('GET', "cordova-android.js", false);
-                xhrObj.send('');
-                var se = document.createElement('script');
-                se.type = "text/javascript";
-                se.text = xhrObj.responseText;
-                document.getElementsByTagName('head')[0].appendChild(se);
-            }
+            var xhrObj = new XMLHttpRequest();
+            xhrObj.open('GET', "cordova-android.js", false);
+            xhrObj.send('');
+            var se = document.createElement('script');
+            se.type = "text/javascript";
+            se.text = xhrObj.responseText;
+            document.getElementsByTagName('head')[0].appendChild(se);
         }
     </script>
     <!--script src="//use.edgefonts.net/source-sans-pro:n3,n4,n6.js"></script-->

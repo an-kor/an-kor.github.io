@@ -332,6 +332,12 @@ var Deals = {
             }
         });
         Styles.hScroller.numberOfPages++;
+        T.updateStyle('#hscroller-scroller', {
+            width: T.w()*Styles.hScroller.numberOfPages+'px'
+        });
+        if (App.mainPageHScroll) {
+            App.mainPageHScroll.refresh()
+        }
     },
     loadDeals: function(section, from, limit, callback, errorCallback){
         var dealsText = '', sections = App.sections.concat(App.cities), category = 0;

@@ -45,7 +45,7 @@ var app = {
             noConnection();
             setInterval(app.checkConnection, 5000);
         } else {
-            var url = 'http://ankor.dev.taxamobile.ru';
+            var url = 'http://144.76.56.236';
         	// var url = 'http://192.168.0.78/an-kor.github.io/letsdeal/';
             checkHost(url);
         }

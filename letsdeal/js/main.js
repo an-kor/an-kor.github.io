@@ -479,6 +479,7 @@ var App = {
                     type:'GET',
                     timeout: 3000,
                     success: function(ipData){
+                        console.log(ipData);
                         var minDistance = 99999, minDistanceCityId = 0, dist, stockholmId;
                         for (i in App.cities) {
                             if (App.cities[i].id == 'stockholm') {

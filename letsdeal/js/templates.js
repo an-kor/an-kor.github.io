@@ -356,6 +356,10 @@ var Templates = {
         });
         T.updateStyle('#hscroller-scroller-list > li', 'width', T.w() + 'px');
 
+        T.updateStyle('.ftscroller_scrollbary', {
+            top: T.px(Styles.topMenu.height)
+        });
+
         App.mainPageHScroll = new IScroll(T.byId('hscroller-wrapper'), {
             scrollX: true,
             scrollY: 0,
