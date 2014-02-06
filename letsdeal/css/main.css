@@ -265,8 +265,6 @@ div.top-menu {
     background-color: rgba(62,172,200,0.95);
 }
 #top-menu-background {
-    position:absolute;
-    z-index: 1;
     width: 100%;
 }
 #top-menu-triangle {
@@ -278,6 +276,8 @@ div.top-menu {
     background-size: contain;
     background-position: 50% 100%;
     background-repeat: no-repeat;
+}
+#top-menu-tabs{
 }
 #top-menu-wrapper {
     position: absolute;

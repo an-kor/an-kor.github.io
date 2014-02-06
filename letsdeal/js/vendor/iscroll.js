@@ -816,7 +816,7 @@ IScroll.prototype = {
 	},
 
 	_translate: function (x, y) {
-		if ( this.options.useTransform ) {
+		if (this.options.useTransform ) {
 
 /* REPLACE START: _translate */
 			this.scrollerStyle[utils.style.transform] = 'translate(' + x + 'px,' + y + 'px)' + this.translateZ;
@@ -1814,7 +1814,7 @@ Indicator.prototype = {
 		this.x = x;
 		this.y = y;
 
-		if ( this.scroller.options.useTransform ) {
+		if (this.scroller.options.useTransform && !this.scroller.options.indicators[0].notUseTransform) {
 			this.indicatorStyle[utils.style.transform] = 'translate(' + x + 'px,' + y + 'px)' + this.scroller.translateZ;
 		} else {
 			this.indicatorStyle.left = x + 'px';

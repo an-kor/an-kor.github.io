@@ -106,6 +106,10 @@ var Templates = {
             top:  T.p(Styles.topMenu.height) - trHeight + 'px'
         });
 
+        T.updateStyle('#hscroller-wrapper', {
+            webkitClipPath: 'polygon(500px 0px, 510px 20px, 520px 0, 100% 0, 100% 100%, 0 0)'
+        });
+
         T.updateStyle('#top-menu-wrapper', {
             width: T.w() + 'px'
         });
@@ -372,6 +376,7 @@ var Templates = {
             eventPassthrough: 'vertical',
             preventDefault: true,
             indicators: [{
+                notUseTransform:1,
                 el: T.byId('top-menu-wrapper'),
                 resize: 0,
                 ignoreBoundaries: true,
