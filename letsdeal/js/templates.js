@@ -533,12 +533,12 @@ var Templates = {
         });
 
         // dealinfo scroller
-        if (0 && !T.isIOS) {
+        /*if (0 && !T.isIOS) {
             T.updateStyle('.dealinfo-wrapper', {
                 overflowY: 'scroll',
                 webkitOverflowScrolling: 'touch'
             });
-        }
+        }*/
 
         //BOTTOM
         T.updateStyle('.dealinfo-bottom', {
@@ -607,8 +607,8 @@ var Templates = {
         });
 
         var imgHeight = (T.w()/510)*290;
-        if (imgHeight > T.h()/2.5) {
-            imgHeight = T.h()/2.5
+        if (imgHeight > T.h()/2.1) {
+            imgHeight = T.h()/2.1
         }
 
         st = Styles.dealInfo.content;

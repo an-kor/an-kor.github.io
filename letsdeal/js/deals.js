@@ -140,7 +140,7 @@ var Deals = {
                 T.query('.content-loading',1).style.display = 'none';
 
                 // dealinfo scroller
-                if (1 || T.isIOS) {
+                //if (1 || T.isIOS) {
                     if (App.dealInfoScroller) {
                         App.dealInfoScroller.destroy();
                     }
@@ -151,7 +151,7 @@ var Deals = {
                     setTimeout(function(){
                         App.dealInfoScroller.refresh();
                     },500);
-                }
+                //}
             }, {dealId: data.id}, function(){
                 T.query('.content-loading', 1).style.display = 'none';
                 var scroller = new IScroll(T.query('.dealinfo-wrapper'));
