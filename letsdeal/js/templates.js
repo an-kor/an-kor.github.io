@@ -101,13 +101,12 @@ var Templates = {
         });
 
         var trHeight = Math.ceil(T.p(Styles.topMenu.height)/5.66);
-        T.updateStyle('#top-menu-triangle', {
+        /*T.updateStyle('#top-menu-triangle', {
             height: trHeight + 'px',
             top:  T.p(Styles.topMenu.height) - trHeight + 'px'
-        });
-
-        T.updateStyle('#hscroller-wrapper', {
-            webkitClipPath: 'polygon(500px 0px, 510px 20px, 520px 0, 100% 0, 100% 100%, 0 0)'
+        });*/
+        T.updateStyle('#top-menu-wrapper', {
+            webkitClipPath: 'polygon(0 0, 100% 0px, 100% '+T.px(Styles.topMenu.height)+', '+ (T.w()/2 + trHeight) +'px '+T.px(Styles.topMenu.height)+', ' + (T.w()/2) +'px ' + T.px(Styles.topMenu.height-trHeight)+', '+ (T.w()/2 - trHeight) +'px '+T.px(Styles.topMenu.height)+', 0 '+T.px(Styles.topMenu.height)+')'
         });
 
         T.updateStyle('#top-menu-wrapper', {

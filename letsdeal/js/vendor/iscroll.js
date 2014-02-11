@@ -1817,8 +1817,11 @@ Indicator.prototype = {
 		if (this.scroller.options.useTransform && !this.scroller.options.indicators[0].notUseTransform) {
 			this.indicatorStyle[utils.style.transform] = 'translate(' + x + 'px,' + y + 'px)' + this.scroller.translateZ;
 		} else {
+            this.indicatorStyle.webkitTransition = '';
 			this.indicatorStyle.left = x + 'px';
 			this.indicatorStyle.top = y + 'px';
+            this.indicatorStyle.position = 'relative';
+			//this.indicatorStyle.webkitTransition = null;
 		}
 	},
 

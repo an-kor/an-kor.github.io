@@ -1,0 +1,8 @@
+{% if wp.have_posts() %}
+    {% for post in posts %}
+        {{ wp_query.the_post() }}
+        {{ wp.get_template_part('content', wp.get_post_format()) }}
+    {% endfor %}
+{% else %}
+    {{ wp.get_template_part('content', 'none') }}
+{% endif %}

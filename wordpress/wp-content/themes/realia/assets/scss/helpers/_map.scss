@@ -1,0 +1,247 @@
+.marker { @include transition(margin-top .2s linear, padding-bottom .2s linear, opacity .2s linear); background-image: url('../img/markers/marker-blue.png'); background-position: center top; background-repeat: no-repeat; background-size: 42px 57px; height: 57px; opacity: 0.7; width: 42px;
+  &:hover {
+    margin-top: -10px; padding-bottom: 10px; opacity: .99;
+  }
+  @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+    background-image: url('../img/markers/marker-blue@2x.png');
+  }
+
+  .marker-inner { background-image: url('../img/markers/other.png'); background-position: center bottom; background-repeat: no-repeat; background-size: 28px 28px; height: 28px; margin-left: 7px; padding-top: 6px; width: 28px;
+    @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+      background-image: url('../img/markers/other@2x.png');
+    }
+  }
+
+  &.aparment {
+    .marker-inner { background-image: url('../img/markers/apartment.png');
+      @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+        background-image: url('../img/markers/apartment@2x.png');
+      }
+    }
+  }
+
+  &.single-house {
+    .marker-inner { background-image: url('../img/markers/single-house.png');
+      @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+        background-image: url('../img/markers/single-house@2x.png');
+      }
+    }
+  }
+
+  &.family-house {
+    .marker-inner { background-image: url('../img/markers/family-house.png');
+      @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+        background-image: url('../img/markers/family-house@2x.png');
+      }
+    }
+  }
+
+  &.building-area {
+    .marker-inner { background-image: url('../img/markers/building-area.png');
+      @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+        background-image: url('../img/markers/building-area@2x.png');
+      }
+    }
+  }
+
+  &.villa {
+    .marker-inner { background-image: url('../img/markers/villa.png');
+      @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+        background-image: url('../img/markers/villa@2x.png');
+      }
+    }
+  }
+
+  &.condo {
+    .marker-inner { background-image: url('../img/markers/condo.png');
+      @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+        background-image: url('../img/markers/condo@2x.png');
+      }
+    }
+  }
+}
+
+.clusterer { @include transition(opacity .2s ease-in); background-image: url('../img/markers/cluster.png'); background-position: center center; background-repeat: no-repeat; background-size: 42px 42px; height: 42px; opacity: .7; width: 42px;
+  .clusterer-inner { color: $blue-dark; font-size: 12px; font-weight: bold; height: 42px; line-height: 42px; text-align: center; width: 42px; }
+  &:hover { opacity: 0.99; }
+
+  @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+    background-image: url('../img/markers/cluster@2x.png');
+  }
+}
+
+body.color-green, body.color-gray-green {
+  .clusterer { background-image: url('../img/markers/cluster-green.png');
+    @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+      background-image: url('../img/markers/cluster-green@2x.png');
+    }
+  }
+
+  .marker {
+    background-image: url('../img/markers/marker-green.png');
+    @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+      background-image: url('../img/markers/marker-green@2x.png');
+    }
+  }
+}
+
+body.color-green-light, body.color-gray-green-light {
+  .clusterer { background-image: url('../img/markers/cluster-green-light.png');
+    @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+      background-image: url('../img/markers/cluster-green-light@2x.png');
+    }
+  }
+
+  .marker {
+    background-image: url('../img/markers/marker-green-light.png');
+    @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+      background-image: url('../img/markers/marker-green-light@2x.png');
+    }
+  }
+}
+
+body.color-brown, body.color-gray-brown {
+  .clusterer { background-image: url('../img/markers/cluster-brown.png');
+    @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+      background-image: url('../img/markers/cluster-brown@2x.png');
+    }
+  }
+
+  .marker {
+    background-image: url('../img/markers/marker-brown.png');
+    @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+      background-image: url('../img/markers/marker-brown@2x.png');
+    }
+  }
+}
+
+body.color-brown-dark, body.color-gray-brown-dark {
+  .clusterer { background-image: url('../img/markers/cluster-brown-dark.png');
+    @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+      background-image: url('../img/markers/cluster-brown-dark@2x.png');
+    }
+  }
+
+  .marker {
+    background-image: url('../img/markers/marker-brown-dark.png');
+    @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+      background-image: url('../img/markers/marker-brown-dark@2x.png');
+    }
+  }
+}
+
+body.color-turquiose, body.color-gray-turquiose {
+  .clusterer { background-image: url('../img/markers/cluster-turquiose.png');
+    @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+      background-image: url('../img/markers/cluster-turquiose@2x.png');
+    }
+  }
+
+  .marker {
+    background-image: url('../img/markers/marker-turquiose.png');
+    @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+      background-image: url('../img/markers/marker-turquiose@2x.png');
+    }
+  }
+}
+
+body.color-orange, body.color-gray-orange {
+  .clusterer { background-image: url('../img/markers/cluster-orange.png');
+    @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+      background-image: url('../img/markers/cluster-orange@2x.png');
+    }
+  }
+
+  .marker {
+    background-image: url('../img/markers/marker-orange.png');
+    @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+      background-image: url('../img/markers/marker-orange@2x.png');
+    }
+  }
+}
+
+body.color-magenta, body.color-gray-magenta {
+  .clusterer { background-image: url('../img/markers/cluster-magenta.png');
+    @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+      background-image: url('../img/markers/cluster-magenta@2x.png');
+    }
+  }
+
+  .marker {
+    background-image: url('../img/markers/marker-magenta.png');
+    @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+      background-image: url('../img/markers/marker-magenta@2x.png');
+    }
+  }
+}
+
+body.color-red, body.color-gray-red {
+  .clusterer { background-image: url('../img/markers/cluster-red.png');
+    @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+      background-image: url('../img/markers/cluster-red@2x.png');
+    }
+  }
+
+  .marker {
+    background-image: url('../img/markers/marker-red.png');
+    @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+      background-image: url('../img/markers/marker-red@2x.png');
+    }
+  }
+}
+
+body.color-violet, body.color-gray-violet {
+  .clusterer { background-image: url('../img/markers/cluster-violet.png');
+    @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+      background-image: url('../img/markers/cluster-violet@2x.png');
+    }
+  }
+
+  .marker {
+    background-image: url('../img/markers/marker-violet.png');
+    @media (-webkit-min-device-pixel-ratio: 2), (-moz-min-device-pixel-ratio: 2) {
+      background-image: url('../img/markers/marker-violet@2x.png');
+    }
+  }
+}
+
+.infobox { @include clearfix-normal; background-color: $map-infobox-background-color; padding: 10px; position: relative; width: 270px; z-index: 9999;
+  &:before { bottom: -16px; border: 8px solid transparent; border-top-color: $map-infobox-background-color; content: ''; height: 0px; margin-left: -8px; left: 50%; position: absolute; width: 0px; z-index: 100; }
+  .close { right: 10px; margin-top: -5px; opacity: 1; }
+  .image { float: left; margin-bottom: 10px; margin-right: 10px; }
+  .title {
+    a { font-size: 18px;
+      &:href { text-decoration: none; }
+    }
+  }
+  .area { color: $map-infobox-area-color; margin-top: 5px;
+    .key { float: left; font-size: 14px; font-weight: bold; }
+    .value { font-size: 14px; }
+  }
+  .price { clear: left; color: $map-infobox-price-color; float: left; font-size: 18px; margin-top: 8px; }
+  .link {
+    a { @include buttonize; clear: right; float: right; font-size: 14px;
+      &:hover { text-decoration: none; }
+    }
+  }
+}
+
+#map { height: 485px; width: 100%;
+  img { max-width: inherit; }
+}
+
+.map-wrapper, .map { position: relative;
+  .row { position: relative;
+    .span3 { margin-top: 20px; position: absolute; right: 0px; z-index: 2;
+      h2 { display: none; }
+      .property-filter { margin: 0px; }
+    }
+  }
+}
+
+
+@media (max-width: 767px) {
+  .map-wrapper, .map {
+    .span3 { position: relative !important; float: none; margin-top: 30px; margin-bottom: 25px !important;  }
+  }
+}
