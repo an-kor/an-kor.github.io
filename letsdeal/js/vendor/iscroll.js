@@ -1813,8 +1813,11 @@ Indicator.prototype = {
 
 		this.x = x;
 		this.y = y;
-
-		if (this.scroller.options.useTransform && !this.scroller.options.indicators[0].notUseTransform) {
+        var notUseTransform = false;
+        if (this.scroller.options.indicators) {
+            notUseTransform = this.scroller.options.indicators[0].notUseTransform
+        }
+		if (this.scroller.options.useTransform && !notUseTransform) {
 			this.indicatorStyle[utils.style.transform] = 'translate(' + x + 'px,' + y + 'px)' + this.scroller.translateZ;
 		} else {
             this.indicatorStyle.webkitTransition = '';
