@@ -3,6 +3,7 @@ ini_set('display_errors', 1);
 class MobileController {
     const LOG_FILE = '/var/log/letsdeal/ajax.log';
     const FEED_URL = 'http://letsdeal.se/mfeed_touch_generator.php';
+    const DEAL_INFO_URL = 'http://letsdeal.se/mdealinfo.php';
     const DEAL_URL = 'http://letsdeal.se/deal/';
     const FEED_LIFETIME = 3600;
     const DEALINFO_LIFETIME = 43200;
@@ -128,6 +129,43 @@ class MobileController {
                         "seller" => $seller,
                         "contacts" => $contacts,
                         "otherImg" => $otherImg
+                    );
+                    if ($cursor) {
+                        $this->dbDealsInfo->update(array("id" => $cursor['id']), array('$set' => $record));
+                    } else {
+                        $this->dbDealsInfo->insert($record);
+                    }
+                }
+            }
+        } catch (Exception $e){
+            $this->logException($e);
+        }
+        return $record;
+    }
+
+    public function getDealInfoFromXmlFeed($dealId) {
+        $xml = null; $record = null;
+        try {
+            $cursor = $this->dbDealsInfo->findone(array("id" => $dealId));
+
+            if ($cursor && $cursor['ts'] > time() - $this::DEALINFO_LIFETIME ) {
+                $record = $cursor;
+            } else {
+                $url = $this::DEAL_INFO_URL . '?dealid=' . $dealId;
+                $result = $this->getPageContent($url);
+
+                $xml = simplexml_load_string($result, 'SimpleXMLElement', LIBXML_NOCDATA);
+                $this->log('Successful XML parsing of the document from ' . $url);
+                if ($result != '') {
+                    $record = array(
+                        "id" => $xml->deal->id,
+                        "ts" => time(),
+                        "about" => $xml->deal->about,
+                        "highlights" => $xml->deal->highlights,
+                        "terms" => $xml->deal->terms,
+                        "seller" => $xml->deal->seller,
+                        "contacts" => $xml->deal->contacts,
+                        "otherImg" => $xml->deal->img
                     );
                     if ($cursor) {
                         $this->dbDealsInfo->update(array("id" => $cursor['id']), array('$set' => $record));
