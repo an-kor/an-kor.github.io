@@ -331,6 +331,7 @@ var Deals = {
                 T.byId('deallist_'+data.id).appendChild(result)
             }
         });
+
         Styles.hScroller.numberOfPages++;
         T.updateStyle('#hscroller-scroller', {
             width: T.w()*Styles.hScroller.numberOfPages+'px'

@@ -257,11 +257,16 @@ var App = {
                     }
                     el.parentNode.removeChild(el);
                     Deals.addNewList(App.cities[i], 1);
+                    Styles.hScroller.numberOfPages--;
+                    T.updateStyle('#hscroller-scroller', {
+                        width: T.w()*Styles.hScroller.numberOfPages+'px'
+                    });
                     window.localStorage.setItem('userCityId', App.cities[i].id);
                     if (setActive) {
                         T.query('#top-menu-tabs > li:nth-child(2)').className = 'top-menu-tabs-active';
                     }
                     App.mainPageHScroll.goToPage(1, 0, 0);
+                    App.mainPageHScroll.refresh();
                 }
             }
             App.goBack();
