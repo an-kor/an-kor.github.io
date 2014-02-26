@@ -393,6 +393,7 @@ var Templates = {
         App.mainPageHScroll.on('translate', function(){
             T.query('#top-menu-wrapper li.top-menu-tabs-active').className = '';
             T.query('#top-menu-wrapper li:nth-child('+(this.currentPage.pageX+1)+')').className = 'top-menu-tabs-active';
+            App.mainPageHScroll.currentPageIndex = T.query('#hscroller-scroller-list > li:nth-child('+(this.currentPage.pageX+1)+') > div').id;
         });
         App.mainPageHScroll.scrollActive = 0;
         App.mainPageHScroll.on('scrollStart', function(){

@@ -35,7 +35,7 @@ var T = {
     },
     query: function (query, onlyFirst){
         var result = document.querySelectorAll(query);
-        if (result.length == 1 || onlyFirst) {
+        if ((result.length == 1 || onlyFirst) && onlyFirst !== false) {
             return result[0]
         } else {
             return result

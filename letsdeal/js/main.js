@@ -38,8 +38,26 @@ var App = {
             T.initHover(T.query('.top-menu-back-btn'), Styles.footer.bgColorHover);
         }
     },
+    lastCheckConnectionTs: new Date().getTime(),
+    checkConnectionInterval: 5000,
     checkConnection: function(){
-        var xmlhttp = new XMLHttpRequest();
+        if (new Date().getTime() - App.lastCheckConnectionTs > 180*App.checkConnectionInterval) {
+            var id = App.mainPageHScroll.currentPageIndex.substr(8);
+            var divs = T.query('#deallist_'+id+' > div', false);
+            var length = divs.length;
+            for (var i=0; i<length; i++){
+                divs[i].parentNode.removeChild(divs[i]);
+            }
+            T.byId('hscroller-scroller-loading').style.display='block';
+            Deals.loadDeals(id, 0, Styles.hScroller.numberOfImages*length, function(result){
+                if (result) {
+                    T.byId('deallist_'+id).appendChild(result);
+                    T.byId('hscroller-scroller-loading').style.display='none';
+                }
+            });
+        }
+        App.lastCheckConnectionTs = new Date().getTime();
+        /*var xmlhttp = new XMLHttpRequest();
         xmlhttp.open('GET', T.url +"?" +  new Date().getTime());
         xmlhttp.onreadystatechange = function() {
             if (xmlhttp.readyState == 4) {
@@ -54,6 +72,7 @@ var App = {
             }
         };
         xmlhttp.send(null);
+        */
         //xmlhttp.timeout = setTimeout(function () { xmlhttp.abort(); App.showNoConnection(); }, 15000);
     },
     hideNoConnection: function(){
@@ -461,7 +480,6 @@ var App = {
         document.body.style['font-size'] = T.p(Styles.defaultFontSize) + 'px';
         T.setH('container', T.h());
         Templates.prepareSplash();
-
         T.request('sections', function(data){
             App.sections = data.sections;
             App.cities = data.cities;
@@ -469,7 +487,10 @@ var App = {
                 Deals.addNewList(data.sections[i]);
             }
             var userCityId = window.localStorage.getItem('userCityId');
-            if (userCityId) {
+            if (userCityId || location.hash.length>3) {
+                if (!userCityId) {
+                    userCityId = 'stockholm';
+                }
                 App.currentCityId = userCityId;
                 for (i in App.cities) {
                     if (App.cities[i].id == userCityId) {
@@ -477,20 +498,54 @@ var App = {
                     }
                 }
             } else {
-                T.xhrReq({
-                    url: "http://ipinfo.io/json",
-                    dataType: 'json',
-                    cached:1,
-                    type:'GET',
-                    timeout: 3000,
-                    success: function(ipData){
-                        console.log(ipData);
+                var checkByIp = function(){
+                    T.xhrReq({
+                        url: "http://ipinfo.io/json",
+                        dataType: 'json',
+                        cached:1,
+                        type:'GET',
+                        timeout: 3000,
+                        success: function(ipData){
+                            var minDistance = 99999, minDistanceCityId = 0, dist, stockholmId;
+                            for (i in App.cities) {
+                                if (App.cities[i].id == 'stockholm') {
+                                    stockholmId = i;
+                                }
+                                dist = T.getDistance(ipData.loc.split(','), [App.cities[i].latitude, App.cities[i].longitude]);
+                                if (minDistance > dist) {
+                                    minDistance = dist;
+                                    minDistanceCityId = i;
+                                }
+                            }
+                            if (minDistance > 2000) {
+                                minDistanceCityId = stockholmId;
+                            }
+                            App.currentCityId = data.cities[minDistanceCityId].id;
+                            window.localStorage.setItem('userCityId', data.cities[minDistanceCityId].id);
+                            Deals.addNewList(App.cities[minDistanceCityId], 1);
+                            App.checkLocation();
+                        },
+                        error: function(){
+                            for (i in App.cities) {
+                                if (App.cities[i].id == 'stockholm') {
+                                    App.currentCityId = data.cities[i].id;
+                                    Deals.addNewList(data.cities[i], 1);
+                                }
+                            }
+                            App.checkLocation();
+                        }
+                    });
+                };
+
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(function(pos){
                         var minDistance = 99999, minDistanceCityId = 0, dist, stockholmId;
+                        var crd = pos.coords;
                         for (i in App.cities) {
                             if (App.cities[i].id == 'stockholm') {
                                 stockholmId = i;
                             }
-                            dist = T.getDistance(ipData.loc.split(','), [App.cities[i].latitude, App.cities[i].longitude]);
+                            dist = T.getDistance([crd.latitude, crd.longitude], [App.cities[i].latitude, App.cities[i].longitude]);
                             if (minDistance > dist) {
                                 minDistance = dist;
                                 minDistanceCityId = i;
@@ -503,17 +558,10 @@ var App = {
                         window.localStorage.setItem('userCityId', data.cities[minDistanceCityId].id);
                         Deals.addNewList(App.cities[minDistanceCityId], 1);
                         App.checkLocation();
-                    },
-                    error: function(){
-                        for (i in App.cities) {
-                            if (App.cities[i].id == 'stockholm') {
-                                App.currentCityId = data.cities[i].id;
-                                Deals.addNewList(data.cities[i], 1);
-                            }
-                        }
-                        App.checkLocation();
-                    }
-                });
+                    }, checkByIp);
+                } else {
+                    checkByIp();
+                }
             }
             Templates.preparePages();
             Templates.prepareHeader();
@@ -540,7 +588,7 @@ var App = {
                 App.showInstructions();
             },1000);
             window.addEventListener("hashchange", App.hashChangeEvent, false);
-            //setInterval(App.checkConnection, 5000)
+            setInterval(App.checkConnection, App.checkConnectionInterval)
 
         }, null, function(){
             T.byId('splash-loading').style.display = 'none';
