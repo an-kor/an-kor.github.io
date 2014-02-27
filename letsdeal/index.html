@@ -118,9 +118,9 @@
         <div onclick="Deals.hideSharePage();" ontouchmove="return false;" class="dealinfo-share">
             <div class="dealinfo-share-block">
                 <div class="dealinfo-share-block-title">%TITLE_MSG%</div>
-                <a href="%FACEBOOK%" target="_blank" class="dealinfo-share-item dealinfo-share-bordergray">Facebook</a>
-                <a href="%EMAIL%" target="_blank" class="dealinfo-share-item dealinfo-share-bordergray">E-post</a>
-                <a href="%TWITTER%" target="_blank" class="dealinfo-share-item">Twitter</a>
+                <a href="#" class="dealinfo-share-item dealinfo-share-bordergray" onclick='window.open("%FACEBOOK%", "_blank", "location=no"); return false;'>Facebook</a>
+                <a href="%EMAIL%" class="dealinfo-share-item dealinfo-share-bordergray">E-post</a>
+                <a href="#" class="dealinfo-share-item" onclick='window.open("%TWITTER%", "_blank", "location=no"); return false;'>Twitter</a>
             </div>
             <div class="dealinfo-share-block">
                 <div class="dealinfo-share-item">%CANCEL_MSG%</div>
