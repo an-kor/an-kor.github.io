@@ -268,14 +268,25 @@ var App = {
             App.currentCityId = data.id;
             for (var i in App.cities) {
                 if (App.cities[i].id == data.id) {
-                    var el = T.query('#hscroller-scroller-list > li:nth-child(2)'), setActive = 0;
+                    var el = T.query('#hscroller-scroller-list > li:nth-child(1)'), setActive = 0;
                     el.parentNode.removeChild(el);
-                    el = T.query('#top-menu-tabs > li:nth-child(2)');
+                    el = T.query('#top-menu-tabs > li:nth-child(1)');
                     if (el.className == 'top-menu-tabs-active') {
                         setActive = 1;
                     }
                     el.parentNode.removeChild(el);
-                    Deals.addNewList(App.cities[i], 1);
+
+                    var el = T.query('#hscroller-scroller-list > li:nth-child(1)'), setActive = 0;
+                    el.parentNode.removeChild(el);
+                    el = T.query('#top-menu-tabs > li:nth-child(1)');
+                    if (el.className == 'top-menu-tabs-active') {
+                        setActive = 1;
+                    }
+                    el.parentNode.removeChild(el);
+
+                    Deals.addNewList(App.cities[i], 0);
+                    Deals.addNewList(App.startCities[i], 0);
+                    Styles.hScroller.numberOfPages--;
                     Styles.hScroller.numberOfPages--;
                     T.updateStyle('#hscroller-scroller', {
                         width: T.w()*Styles.hScroller.numberOfPages+'px'
@@ -284,7 +295,7 @@ var App = {
                     if (setActive) {
                         T.query('#top-menu-tabs > li:nth-child(2)').className = 'top-menu-tabs-active';
                     }
-                    App.mainPageHScroll.goToPage(1, 0, 0);
+                    App.mainPageHScroll.goToPage(0, 0, 0);
                     App.mainPageHScroll.refresh();
                 }
             }
@@ -483,9 +494,7 @@ var App = {
         T.request('sections', function(data){
             App.sections = data.sections;
             App.cities = data.cities;
-            for (var i in data.sections) {
-                Deals.addNewList(data.sections[i]);
-            }
+            App.startCities = data.startCities;
             var userCityId = window.localStorage.getItem('userCityId');
             if (userCityId || location.hash.length>3) {
                 if (!userCityId) {
@@ -494,7 +503,8 @@ var App = {
                 App.currentCityId = userCityId;
                 for (i in App.cities) {
                     if (App.cities[i].id == userCityId) {
-                        Deals.addNewList(App.cities[i], 1);
+                        Deals.addNewList(App.startCities[i]);
+                        Deals.addNewList(App.cities[i]);
                     }
                 }
             } else {
@@ -522,14 +532,16 @@ var App = {
                             }
                             App.currentCityId = data.cities[minDistanceCityId].id;
                             window.localStorage.setItem('userCityId', data.cities[minDistanceCityId].id);
-                            Deals.addNewList(App.cities[minDistanceCityId], 1);
+                            Deals.addNewList(App.startCities[minDistanceCityId]);
+                            Deals.addNewList(App.cities[minDistanceCityId]);
                             App.checkLocation();
                         },
                         error: function(){
                             for (i in App.cities) {
                                 if (App.cities[i].id == 'stockholm') {
                                     App.currentCityId = data.cities[i].id;
-                                    Deals.addNewList(data.cities[i], 1);
+                                    Deals.addNewList(App.startCities[i]);
+                                    Deals.addNewList(data.cities[i]);
                                 }
                             }
                             App.checkLocation();
@@ -563,6 +575,11 @@ var App = {
                     checkByIp();
                 }
             }
+
+            for (var i in data.sections) {
+                Deals.addNewList(data.sections[i]);
+            }
+
             Templates.preparePages();
             Templates.prepareHeader();
             Templates.prepareHScroller();

@@ -105,53 +105,55 @@ var Deals = {
             currentEl.parentNode.appendChild(newEl);
             T.request('dealinfo', function(dealInfo){
                 var el = T.query('.dealinfo-content-details'), template = el.innerHTML;
-                template = template.replace("%ABOUT%", dealInfo.about);
-                template = template.replace("%ABOUT_MSG%", Messages.about);
-                template = template.replace("%HIGHLIGHTS%", dealInfo.highlights);
-                template = template.replace("%HIGHLIGHTS_MSG%", Messages.highlights);
-                template = template.replace("%TERMS%", dealInfo.terms);
-                template = template.replace("%TERMS_MSG%", Messages.terms);
-                template = template.replace("%CONTACTS%", dealInfo.contacts);
-                template = template.replace("%SELLER%", dealInfo.seller);
-                template = template.replace("%SELLER_MSG%", Messages.seller);
-                if (dealInfo.otherImg && dealInfo.otherImg != "" && dealInfo.otherImg.indexOf('jpg')>-1) {
-                    template = template.replace("%OTHER:", '');
-                    template = template.replace(":OTHER%", '');
-                    template = template.replace("%OTHER_MSG%", Messages.other);
-                    template = template.replace("%OTHER_IMG%", '<img src="'+dealInfo.otherImg+'" style="display:none;" ' +
-                        'onload="T.query(\'.dealinfo-content-loading\').style.display=\'none\';this.style.display=\'block\';if (App.dealInfoScroller) App.dealInfoScroller.refresh();"/>');
-                } else {
-                    template = template.replace(/%OTHER:.*:OTHER%/m, '');
-                }
-                el.innerHTML = template;
-                el.style.display='block';
-                if (data.lat > 0) {
-                    var map = L.map("dealinfo-map-"+data.id, {zoomControl: false});
-                    map.addControl( L.control.zoom({position: 'topright'}) )
-                    map.setView([data.lat, data.lon], 13);
-                    var marker = L.marker([data.lat, data.lon]).addTo(map);
-                    L.tileLayer('https://mts0.google.com/vt/lyrs=m@240000000&hl=sv&src=app&x={x}&y={y}&z={z}&s=Ga', {
-                        attribution: '',
-                        maxZoom: 19
-                    }).addTo(map);
-                } else {
-                    T.byId("dealinfo-map-"+data.id).style.display = 'none';
-                }
-                T.query('.content-loading',1).style.display = 'none';
-
-                // dealinfo scroller
-                //if (1 || T.isIOS) {
-                    if (App.dealInfoScroller) {
-                        App.dealInfoScroller.destroy();
+                if (template) {
+                    template = template.replace("%ABOUT%", dealInfo.about);
+                    template = template.replace("%ABOUT_MSG%", Messages.about);
+                    template = template.replace("%HIGHLIGHTS%", dealInfo.highlights);
+                    template = template.replace("%HIGHLIGHTS_MSG%", Messages.highlights);
+                    template = template.replace("%TERMS%", dealInfo.terms);
+                    template = template.replace("%TERMS_MSG%", Messages.terms);
+                    template = template.replace("%CONTACTS%", dealInfo.contacts);
+                    template = template.replace("%SELLER%", dealInfo.seller);
+                    template = template.replace("%SELLER_MSG%", Messages.seller);
+                    if (dealInfo.otherImg && dealInfo.otherImg != "" && dealInfo.otherImg.indexOf('jpg')>-1) {
+                        template = template.replace("%OTHER:", '');
+                        template = template.replace(":OTHER%", '');
+                        template = template.replace("%OTHER_MSG%", Messages.other);
+                        template = template.replace("%OTHER_IMG%", '<img src="'+dealInfo.otherImg+'" style="display:none;" ' +
+                            'onload="T.query(\'.dealinfo-content-loading\').style.display=\'none\';this.style.display=\'block\';if (App.dealInfoScroller) App.dealInfoScroller.refresh();"/>');
+                    } else {
+                        template = template.replace(/%OTHER:.*:OTHER%/m, '');
                     }
-                    App.dealInfoScroller = new IScroll(T.query('.dealinfo-wrapper'), {
-                        scrollbars: true,
-                        hideScrollbarsOnMove:true
-                    });
-                    setTimeout(function(){
-                        App.dealInfoScroller.refresh();
-                    },500);
-                //}
+                    el.innerHTML = template;
+                    el.style.display='block';
+                    if (data.lat > 0) {
+                        var map = L.map("dealinfo-map-"+data.id, {zoomControl: false});
+                        map.addControl( L.control.zoom({position: 'topright'}) )
+                        map.setView([data.lat, data.lon], 13);
+                        var marker = L.marker([data.lat, data.lon]).addTo(map);
+                        L.tileLayer('https://mts0.google.com/vt/lyrs=m@240000000&hl=sv&src=app&x={x}&y={y}&z={z}&s=Ga', {
+                            attribution: '',
+                            maxZoom: 19
+                        }).addTo(map);
+                    } else {
+                        T.byId("dealinfo-map-"+data.id).style.display = 'none';
+                    }
+                    T.query('.content-loading',1).style.display = 'none';
+
+                    // dealinfo scroller
+                    //if (1 || T.isIOS) {
+                        if (App.dealInfoScroller) {
+                            App.dealInfoScroller.destroy();
+                        }
+                        App.dealInfoScroller = new IScroll(T.query('.dealinfo-wrapper'), {
+                            scrollbars: true,
+                            hideScrollbarsOnMove:true
+                        });
+                        setTimeout(function(){
+                            App.dealInfoScroller.refresh();
+                        },500);
+                    //}
+                }
             }, {dealId: data.id}, function(){
                 T.query('.content-loading', 1).style.display = 'none';
                 var scroller = new IScroll(T.query('.dealinfo-wrapper'));
@@ -274,20 +276,31 @@ var Deals = {
             });*/
         }
 
-        if (previousPage.length === 0) {
+        if (previousPage.length === 0 && index!==0) {
             T.byId('hscroller-scroller-list').appendChild(newPage);
         } else {
-            previousPage.parentNode.insertBefore(newPage, previousPage.nextSibling);
+            if (index===0) {
+                var hScroller = T.byId('hscroller-scroller-list')
+                hScroller.insertBefore(newPage, hScroller.firstChild);
+            } else {
+                previousPage.parentNode.insertBefore(newPage, previousPage.nextSibling);
+            }
         }
         var headerTpl = Templates.dealsPageHeader(data);
 
         var previousHeader = T.query('#top-menu-tabs > li:nth-child('+(index)+')');
         var newHeader = document.createElement("li");
         newHeader.innerHTML = headerTpl;
-        if (previousHeader.length === 0) {
+        if (previousHeader.length === 0 && index!==0) {
             T.byId('top-menu-tabs').appendChild(newHeader);
         } else {
-            previousHeader.parentNode.insertBefore(newHeader, previousHeader.nextSibling);
+
+            if (index===0) {
+                var topTabs = T.byId('top-menu-tabs');
+                topTabs.insertBefore(newHeader, topTabs.firstChild);
+            } else {
+                previousHeader.parentNode.insertBefore(newHeader, previousHeader.nextSibling);
+            }
         }
         newHeader.firstChild.addEventListener('click', function(e){
             var childs = this.parentNode.parentNode.childNodes;

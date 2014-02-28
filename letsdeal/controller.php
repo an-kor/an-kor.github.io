@@ -20,6 +20,7 @@ class MobileController {
         $this->dbSettings = $this->db->settings;
         $this->dbDeals= $this->db->deals;
         $this->dbCities = $this->db->cities;
+        $this->dbStartCities = $this->db->startcities;
         $this->dbSections = $this->db->sections;
         $this->dbDealsInfo= $this->db->dealsinfo;
         $lastTs = $this->dbSettings->findOne(array('key' => 'lastFeedFetchTs'));
@@ -213,6 +214,7 @@ class MobileController {
     public function saveFeedToDb($xml) {
         try {
             $this->dbCities->drop();
+            $this->dbStartCities->drop();
             $this->dbSections->drop();
             $this->dbDeals->drop();
             $this->dbSettings->drop();
@@ -234,6 +236,28 @@ class MobileController {
                             $this->dbCities->insert($record);
                             foreach ($city[0]->deals->deal as $deal) {
                                 $deal->type = (string) $city->link;
+                                $deal = (array) $deal;
+                                $deal['endtime'] = strtotime($deal['endtime']);
+                                $this->dbDeals->insert($deal);
+                            }
+                        }
+                    }
+                } elseif ($category->type == 'start') {
+                    foreach ($category->cities->city as $city) {
+                        if ((float) $city->longitude > 0) {
+                            $record = array(
+                                "name" => (string) $category->name . ' (' . (string) $city->name . ')',
+                                "link" => (string) $city->link . '_start',
+                                "longitude" => (float) $city->longitude,
+                                "latitude" => (float) $city->latitude
+                            );
+                            if ($city->categories) {
+                                $categories = (array) $city->categories;
+                                $record["categories"] = $categories['category'];
+                            }
+                            $this->dbStartCities->insert($record);
+                            foreach ($city[0]->deals->deal as $deal) {
+                                $deal->type = (string) $city->link . '_start';
                                 $deal = (array) $deal;
                                 $deal['endtime'] = strtotime($deal['endtime']);
                                 $this->dbDeals->insert($deal);
@@ -399,6 +423,21 @@ class MobileController {
                     $r["categories"] = $city['categories'];
                 }
                 $result->cities[] = $r;
+            }
+            $cursor = $this->dbStartCities->find();
+            $result->startCities = array();
+            foreach ($cursor as $city) {
+                $r = array(
+                    "id" => $city['link'],
+                    "name" => $city['name'],
+                    "longitude" => floatval($city['longitude']),
+                    "latitude" => floatval($city['latitude']),
+                    "dealsCount" => $this->dbDeals->find(array("type" => $city['link']))->count()
+                );
+                if (isset($city['categories'])) {
+                    $r["categories"] = $city['categories'];
+                }
+                $result->startCities[] = $r;
             }
         } catch (Exception $e){
             $this->logException($e);
