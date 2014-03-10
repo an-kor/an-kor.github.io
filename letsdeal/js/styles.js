@@ -22,7 +22,7 @@ var Styles = {
     hScroller: {
         bgColor: '#edebe6',
         numberOfPages: 0,
-        numberOfImages: 10
+        numberOfImages: (T.isIPad?14:10)
     },
     searchItem: {
         bgColor: '#edebe6',

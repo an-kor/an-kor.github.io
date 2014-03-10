@@ -1,5 +1,6 @@
 var T = {
     isIOS: /iP(ad|hone|od)/.test(navigator.userAgent),
+    isIPad: /iPad/.test(navigator.userAgent),
     isWebkit: /WebKit/.test(navigator.userAgent),
     isDesktop: !("ontouchstart" in document.documentElement),
     isChrome: /Chrome/.test(navigator.userAgent),
@@ -120,7 +121,7 @@ var T = {
     url: './controller.php',
     request: function(action, callback, params, errorCallback, timeout) {
         if (!timeout) {
-            timeout = 8000;
+            timeout = 20000;
         }
         if (!params) {
             params = {action: action}

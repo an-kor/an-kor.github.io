@@ -491,6 +491,7 @@ var App = {
         document.body.style['font-size'] = T.p(Styles.defaultFontSize) + 'px';
         T.setH('container', T.h());
         Templates.prepareSplash();
+        window.localStorage.removeItem('userCityId');
         T.request('sections', function(data){
             App.sections = data.sections;
             App.cities = data.cities;
@@ -508,7 +509,7 @@ var App = {
                     }
                 }
             } else {
-                var checkByIp = function(){
+                var checkByIp = function(e){
                     T.xhrReq({
                         url: "http://ipinfo.io/json",
                         dataType: 'json',
@@ -516,6 +517,7 @@ var App = {
                         type:'GET',
                         timeout: 3000,
                         success: function(ipData){
+                            console.log('checkByIp success');
                             var minDistance = 99999, minDistanceCityId = 0, dist, stockholmId;
                             for (i in App.cities) {
                                 if (App.cities[i].id == 'stockholm') {
@@ -532,16 +534,17 @@ var App = {
                             }
                             App.currentCityId = data.cities[minDistanceCityId].id;
                             window.localStorage.setItem('userCityId', data.cities[minDistanceCityId].id);
-                            Deals.addNewList(App.startCities[minDistanceCityId]);
-                            Deals.addNewList(App.cities[minDistanceCityId]);
+                            Deals.addNewList(App.cities[minDistanceCityId], 0);
+                            Deals.addNewList(App.startCities[minDistanceCityId], 0);
                             App.checkLocation();
                         },
                         error: function(){
+                            console.log('checkByIp error');
                             for (i in App.cities) {
                                 if (App.cities[i].id == 'stockholm') {
-                                    App.currentCityId = data.cities[i].id;
-                                    Deals.addNewList(App.startCities[i]);
-                                    Deals.addNewList(data.cities[i]);
+                                    App.currentCityId = App.cities[i].id;
+                                    Deals.addNewList(App.cities[i], 0);
+                                    Deals.addNewList(App.startCities[i], 0);
                                 }
                             }
                             App.checkLocation();
@@ -551,6 +554,7 @@ var App = {
 
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(function(pos){
+                        console.log('getCurrentPosition success');
                         var minDistance = 99999, minDistanceCityId = 0, dist, stockholmId;
                         var crd = pos.coords;
                         for (i in App.cities) {
@@ -568,9 +572,17 @@ var App = {
                         }
                         App.currentCityId = data.cities[minDistanceCityId].id;
                         window.localStorage.setItem('userCityId', data.cities[minDistanceCityId].id);
-                        Deals.addNewList(App.cities[minDistanceCityId], 1);
+                        Deals.addNewList(App.cities[minDistanceCityId], 0);
+                        Deals.addNewList(App.startCities[minDistanceCityId], 0);
                         App.checkLocation();
-                    }, checkByIp);
+                    }, function(e){
+                        console.log('getCurrentPosition error');
+                        checkByIp(e);
+                    }, {
+                      enableHighAccuracy: true,
+                      timeout: 3000,
+                      maximumAge: 0
+                    });
                 } else {
                     checkByIp();
                 }

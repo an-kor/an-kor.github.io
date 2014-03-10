@@ -47,7 +47,7 @@ var app = {
         } else {
         	var url = 'http://54.195.253.192';
             //var url = 'http://144.76.56.236';
-        	// var url = 'http://192.168.0.78/an-kor.github.io/letsdeal/';
+        	// var url = 'http://192.168.2.168/an-kor.github.io/letsdeal/';
             checkHost(url);
         }
     }

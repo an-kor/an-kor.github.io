@@ -111,8 +111,8 @@ var FTScroller, CubicBezier;
 	var _transformSuffixes = { x: ',0' + (_useToggleableHardwareAcceleration ? ')' : ',0)'), y: (_useToggleableHardwareAcceleration ? ')' : ',0)') };
 
 	// Constants.  Note that the bezier curve should be changed along with the friction!
-	var _kFriction = 0.9987;
-	var _kMinimumSpeed = 0.5;
+	var _kFriction = 0.998;
+	var _kMinimumSpeed = 0.3;
 
 	// Create a global stylesheet to set up stylesheet rules and track dynamic entries
 	/*(function () {
@@ -257,7 +257,7 @@ var FTScroller, CubicBezier;
 
 			// Set the maximum time (ms) that a fling can take to complete; if
 			// this is not set, flings will complete instantly
-			maxFlingDuration: 1000,
+			maxFlingDuration: 300,
 
 			// Whether to disable any input methods; on some multi-input devices
 			// custom behaviour may be desired for some scrollers.  Use with care!

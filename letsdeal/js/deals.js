@@ -147,7 +147,8 @@ var Deals = {
                         }
                         App.dealInfoScroller = new IScroll(T.query('.dealinfo-wrapper'), {
                             scrollbars: true,
-                            hideScrollbarsOnMove:true
+                            hideScrollbarsOnMove:true,
+                            speedRatio: 0.4
                         });
                         setTimeout(function(){
                             App.dealInfoScroller.refresh();
@@ -156,7 +157,11 @@ var Deals = {
                 }
             }, {dealId: data.id}, function(){
                 T.query('.content-loading', 1).style.display = 'none';
-                var scroller = new IScroll(T.query('.dealinfo-wrapper'));
+                var scroller = new IScroll(T.query('.dealinfo-wrapper'), {
+                    scrollbars: true,
+                    hideScrollbarsOnMove:true,
+                    speedRatio: 0.4
+                });
                 setTimeout(function(){
                     scroller.refresh();
                 },500);
@@ -349,6 +354,8 @@ var Deals = {
         T.updateStyle('#hscroller-scroller', {
             width: T.w()*Styles.hScroller.numberOfPages+'px'
         });
+        T.setW('top-menu-tabs', T.w()*Styles.hScroller.numberOfPages);
+
         if (App.mainPageHScroll) {
             App.mainPageHScroll.refresh()
         }

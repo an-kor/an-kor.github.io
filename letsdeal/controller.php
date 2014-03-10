@@ -246,7 +246,7 @@ class MobileController {
                     foreach ($category->cities->city as $city) {
                         if ((float) $city->longitude > 0) {
                             $record = array(
-                                "name" => (string) $category->name . ' (' . (string) $city->name . ')',
+                                "name" => (string) $category->name,
                                 "link" => (string) $city->link . '_start',
                                 "longitude" => (float) $city->longitude,
                                 "latitude" => (float) $city->latitude
