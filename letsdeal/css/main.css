@@ -469,14 +469,9 @@ div.top-menu {
 }
 .deal-page {
 }
-iframe{
-    -webkit-backface-visibility: hidden;
-    -webkit-transform: translate3d(0,0,0);
-}
 .iframe-wrapper{
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    -webkit-backface-visibility: hidden;
 }
 .iframe-wrapper .content-loading{
     margin: 1em 0;

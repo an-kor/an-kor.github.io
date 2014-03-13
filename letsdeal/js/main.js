@@ -4,6 +4,12 @@ var App = {
     inTransition: 0,
     hashChanged: 0,
     showIFrame:function(title, src){
+        if (T.isIOS) {
+            src.replace("device=","device=app");
+            src += "&is_touch=1";
+            location.href=src;
+            return false;
+        }
         if (App.addPage()) {
             var currentEl, newEl;
             currentEl = T.byId('pages-current');
@@ -16,7 +22,7 @@ var App = {
             template = template.replace('onload=""', 'onload="T.query(\'.content-loading-iframe\').style.display=\'none\'; this.style.display=\'block\'"');
             newEl.innerHTML = template;
             currentEl.parentNode.appendChild(newEl);
-            if (T.isIOS) {
+            /*if (T.isIOS) {
                 var wrapper = T.query('.iframe-wrapper');
                 wrapper.scrollTop = 1;
                 wrapper.bottomReached = 0;
@@ -34,7 +40,7 @@ var App = {
                         }
                     }
                 });
-            }
+            }*/
             T.initHover(T.query('.top-menu-back-btn'), Styles.footer.bgColorHover);
         }
     },
@@ -421,6 +427,7 @@ var App = {
         if (hash!='') {
             hash = hash.split('/');
             switch (hash[1]) {
+                case "buy":
                 case "deal":
                     dealId = hash[2];
                     if (dealId) {
@@ -436,7 +443,7 @@ var App = {
                         }
                     }
                 break;
-                case "buy":
+                /*case "buy":
                     dealId = hash[2];
                     if (dealId) {
                         if (Deals.loadedDeals[dealId]) {
@@ -450,7 +457,7 @@ var App = {
                             });
                         }
                     }
-                break;
+                break;*/
                 case "search":
                     App.showSearchPage();
                     if (hash[2]){
