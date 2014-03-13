@@ -498,7 +498,6 @@ var App = {
         document.body.style['font-size'] = T.p(Styles.defaultFontSize) + 'px';
         T.setH('container', T.h());
         Templates.prepareSplash();
-        window.localStorage.removeItem('userCityId');
         T.request('sections', function(data){
             App.sections = data.sections;
             App.cities = data.cities;
