@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="HandheldFriendly" content="True">
     <meta name="MobileOptimized" content="320">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0"><!--, minimal-ui-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0, minimal-ui"><!--, minimal-ui-->
     <meta http-equiv="cleartype" content="on">
     <meta name="format-detection" content="telephone=no" />
     <meta name="google" value="notranslate">
@@ -105,7 +105,7 @@
                 <div class="dealinfo-bottom-price-new">%NEWPRICE%</div>
                 <div class="dealinfo-bottom-price-old">%OLDPRICE%</div>
                 <div class="spacer"></div>
-                <div class="dealinfo-bottom-buyBtn" onclick="Deals.showBuyPage('%DEAL_ID%')" >%BUY_MSG%</div>
+                <div class="dealinfo-bottom-buyBtn" onclick="if(!%SOLD_OUT%) Deals.showBuyPage('%DEAL_ID%')" >%BUY_MSG%</div>
             </div>
             <div class="dealinfo-bottom-secondline">
                 <div class="dealinfo-bottom-bought">%BULK%</div>
@@ -191,27 +191,27 @@
     <script id="search-categories-template" type="text/x-template">
         <div class="search-categories">
             <div class="search-cat-header">%HEADER%</div>
-            <div class="search-cat" onclick="App.searchByCategory('section:health', '%HEALTH%')">
+            <div class="search-cat" onclick="App.searchByCategory('section:1', '%HEALTH%')">
                 <div class="search-cat-image image-health"></div>
                 <div class="search-cat-title">%HEALTH%</div>
             </div>
-            <div class="search-cat" onclick="App.searchByCategory('section:home', '%HOME%')">
+            <div class="search-cat" onclick="App.searchByCategory('section:2', '%HOME%')">
                 <div class="search-cat-image image-home"></div>
                 <div class="search-cat-title">%HOME%</div>
             </div>
-            <div class="search-cat" onclick="App.searchByCategory('section:beauty', '%MODE%')">
+            <div class="search-cat" onclick="App.searchByCategory('section:3', '%MODE%')">
                 <div class="search-cat-image image-mode"></div>
                 <div class="search-cat-title">%MODE%</div>
             </div>
-            <div class="search-cat" onclick="App.searchByCategory('section:electronics', '%TECH%')">
+            <div class="search-cat" onclick="App.searchByCategory('section:4', '%TECH%')">
                 <div class="search-cat-image image-teknik"></div>
                 <div class="search-cat-title">%TECH%</div>
             </div>
-            <div class="search-cat" onclick="App.searchByCategory('section:sports', '%SPORT%')">
+            <div class="search-cat" onclick="App.searchByCategory('section:5', '%SPORT%')">
                 <div class="search-cat-image image-sport"></div>
                 <div class="search-cat-title">%SPORT%</div>
             </div>
-            <div class="search-cat" onclick="App.searchByCategory('section:outdoors', '%FAMILY%')">
+            <div class="search-cat" onclick="App.searchByCategory('section:6', '%FAMILY%')">
                 <div class="search-cat-image image-family"></div>
                 <div class="search-cat-title">%FAMILY%</div>
             </div>

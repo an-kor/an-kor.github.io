@@ -6,7 +6,7 @@ class MobileController {
     const DEAL_INFO_URL = 'http://letsdeal.se/mdealinfo.php';
     const DEAL_URL = 'http://letsdeal.se/deal/';
     const FEED_LIFETIME = 3600;
-    const DEALINFO_LIFETIME = 43200;
+    const DEALINFO_LIFETIME = 3600;
 
     private $m;
     private $db;
@@ -158,15 +158,20 @@ class MobileController {
                 $xml = simplexml_load_string($result, 'SimpleXMLElement', LIBXML_NOCDATA);
                 $this->log('Successful XML parsing of the document from ' . $url);
                 if ($result != '') {
+                    preg_match_all('/img(.*?)src=\"(.*?)\" alt/s', (string) $xml->reviews, $matches);
+                    $otherImg = '';
+                    if ($matches[2]) {
+                        $otherImg = trim(strip_tags($matches[2][0]));
+                    }
                     $record = array(
-                        "id" => $xml->deal->id,
+                        "id" => $xml->id,
                         "ts" => time(),
-                        "about" => $xml->deal->about,
-                        "highlights" => $xml->deal->highlights,
-                        "terms" => $xml->deal->terms,
-                        "seller" => $xml->deal->seller,
-                        "contacts" => $xml->deal->contacts,
-                        "otherImg" => $xml->deal->img
+                        "about" => (string) $xml->about,
+                        "highlights" => (string) $xml->highlights,
+                        "terms" => (string) $xml->terms,
+                        "seller" => (string) $xml->seller,
+                        "contacts" => (string) $xml->contacts,
+                        "otherImg" => $otherImg
                     );
                     if ($cursor) {
                         $this->dbDealsInfo->update(array("id" => $cursor['id']), array('$set' => $record));
@@ -189,7 +194,8 @@ class MobileController {
 
             $cursor = $this->dbDeals->find();
             foreach ($cursor as $record) {
-                $this->getDealInfo($record['id']);
+                //$this->getDealInfo($record['id']);
+                $this->getDealInfoFromXmlFeed($record['id']);
             }
         } catch (Exception $e){
             $this->logException($e);
@@ -237,6 +243,12 @@ class MobileController {
                             foreach ($city[0]->deals->deal as $deal) {
                                 $deal->type = (string) $city->link;
                                 $deal = (array) $deal;
+                                if (isset($deal["categories"])) {
+                                    $deal["cats"] = array();
+                                    foreach ($deal["categories"] as $catId) {
+                                        $deal["cats"][] = (int) $catId;
+                                    }
+                                }
                                 $deal['endtime'] = strtotime($deal['endtime']);
                                 $this->dbDeals->insert($deal);
                             }
@@ -259,6 +271,12 @@ class MobileController {
                             foreach ($city[0]->deals->deal as $deal) {
                                 $deal->type = (string) $city->link . '_start';
                                 $deal = (array) $deal;
+                                if (isset($deal["categories"])) {
+                                    $deal["cats"] = array();
+                                    foreach ($deal["categories"] as $catId) {
+                                        $deal["cats"][] = (int) $catId;
+                                    }
+                                }
                                 $deal['endtime'] = strtotime($deal['endtime']);
                                 $this->dbDeals->insert($deal);
                             }
@@ -278,6 +296,12 @@ class MobileController {
                         foreach ($deals->deal as $deal) {
                             $deal->type = (string) $category->type;
                             $deal = (array) $deal;
+                            if (isset($deal["categories"])) {
+                                $deal["cats"] = array();
+                                foreach ($deal["categories"] as $catId) {
+                                    $deal["cats"][] = (int) $catId;
+                                }
+                            }
                             $deal['endtime'] = strtotime($deal['endtime']);
                             $this->dbDeals->insert($deal);
                         }
@@ -293,7 +317,7 @@ class MobileController {
         $result = array();
         try {
             if (strpos($text,'section:')>-1) {
-                $query = array("categoryId" => substr($text,8));
+                $query = array("cats" => (int) substr($text,8));
             } else {
                 $query = array('$or' => array(array("title" => new MongoRegex("/\b".$text."/i")), array("shortname" => new MongoRegex("/\b".$text."/i"))));
             }
@@ -304,6 +328,7 @@ class MobileController {
                     "title" => $record['shortname'],
                     "price" => round($record['price']),
                     "origPrice" => round($record['origprice']),
+                    "isSoldOut" => $record['is_sold_out'],
                     "bulk" => $record['bulk'],
                     "imageSrc" => $record['image']['url'],
                     "info" => $record['title'],
@@ -332,7 +357,8 @@ class MobileController {
                 "endtime" => array('$gt' => time())
             );
             if ($category) {
-                $query["categoryId"] = $category;
+                //  $query["categories"]["category"] = array('$gt' => $category);
+                $query["cats"] = (int) $category;
             }
             $cursor = $this->dbDeals->find($query)->sort(array($sort => $sortDirection))->limit($limit)->skip($from);
 
@@ -342,6 +368,7 @@ class MobileController {
                     "title" => $record['shortname'],
                     "price" => round($record['price']),
                     "origPrice" => round($record['origprice']),
+                    "isSoldOut" => $record['is_sold_out'],
                     "bulk" => $record['bulk'],
                     "imageSrc" => $record['image']['url'],
                     "info" => $record['title'],
@@ -352,7 +379,6 @@ class MobileController {
                 if (isset($record['categoryId'])) {
                     $r["categoryId"] = $record['categoryId'];
                 }
-
                 $result[] = $r;
             }
         } catch (Exception $e){
@@ -370,6 +396,7 @@ class MobileController {
                 "title" => $record['shortname'],
                 "price" => round($record['price']),
                 "origPrice" => round($record['origprice']),
+                "isSoldOut" => $record['is_sold_out'],
                 "bulk" => $record['bulk'],
                 "imageSrc" => $record['image']['url'],
                 "info" => $record['title'],
@@ -509,7 +536,8 @@ if(defined('STDIN') ) {
                 if (!isset($_REQUEST['dealId'])) {
                     $_REQUEST['dealId'] = "0";
                 }
-                echo json_encode($app->getDealInfo($_REQUEST['dealId']));
+                //echo json_encode($app->getDealInfo($_REQUEST['dealId']));
+                echo json_encode($app->getDealInfoFromXmlFeed($_REQUEST['dealId']));
                 break;
         }
     }

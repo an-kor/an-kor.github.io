@@ -5,10 +5,12 @@ var App = {
     hashChanged: 0,
     showIFrame:function(title, src){
         if (T.isIOS) {
-            src.replace("device=","device=app");
+            var safari = /safari/i.test( navigator.userAgent );
+            if (safari) src=src.replace("device=app","device=no");
             src += "&is_touch=1";
             location.href=src;
             return false;
+
         }
         if (App.addPage()) {
             var currentEl, newEl;
@@ -96,7 +98,7 @@ var App = {
     },
     showMyDeals:function(){
         App.showIFrame(Messages.myDeals, Messages.myDealsSrc);
-        App.changeHash('/mydeals/');
+        // App.changeHash('/mydeals/');
     },
     showInstructions: function(){
         if (!window.localStorage.getItem("instructionsShown")){
@@ -638,9 +640,18 @@ window.addEventListener('load', function() {
     window.scrollTo( 0, 1 );
 });
 window.addEventListener("orientationchange", function() {
-    setTimeout(function(){
+    /*setTimeout(function(){
         location.reload();
-    }, 100)
+    }, 100)*/
+    if (window.orientation == -90) {
+        document.body.className = 'orientright';
+    }
+    if (window.orientation == 90) {
+        document.body.className = 'orientleft';
+    }
+    if (window.orientation == 0) {
+        document.body.className = '';
+    }
 }, false);
 document.addEventListener('touchmove', function (e) {
     if (T.isIOS && e.changedTouches.length) {
