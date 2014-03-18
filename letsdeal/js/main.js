@@ -219,12 +219,21 @@ var App = {
             currentEl.parentNode.appendChild(newEl);
             var searchCatTpl = T.byId('search-categories-template').innerHTML;
             searchCatTpl = searchCatTpl.replace('%HEADER%', Messages.searchCategories);
-            searchCatTpl = searchCatTpl.replace(new RegExp('%HEALTH%', 'g'), Messages.catHealth);
+            var searchCatItemTpl = T.byId('search-categories-item-template').innerHTML, searchCategoriesHTML = '';
+
+            for (var i in App.searchCategories) {
+                var searchCatItemCurrent = searchCatItemTpl;
+                searchCatItemCurrent = searchCatItemCurrent.replace(new RegExp('%NAME%', 'g'), App.searchCategories[i].name);
+                searchCatItemCurrent = searchCatItemCurrent.replace(new RegExp('%ID%', 'g'), App.searchCategories[i].id);
+                searchCategoriesHTML += searchCatItemCurrent;
+            }
+            searchCatTpl = searchCatTpl.replace('%CATEGORIES%', searchCategoriesHTML);
+            /*searchCatTpl = searchCatTpl.replace(new RegExp('%HEALTH%', 'g'), Messages.catHealth);
             searchCatTpl = searchCatTpl.replace(new RegExp('%HOME%', 'g'), Messages.catHome);
             searchCatTpl = searchCatTpl.replace(new RegExp('%MODE%', 'g'), Messages.catMode);
             searchCatTpl = searchCatTpl.replace(new RegExp('%TECH%', 'g'), Messages.catTech);
             searchCatTpl = searchCatTpl.replace(new RegExp('%SPORT%', 'g'), Messages.catSport);
-            searchCatTpl = searchCatTpl.replace(new RegExp('%FAMILY%', 'g'), Messages.catFamily);
+            searchCatTpl = searchCatTpl.replace(new RegExp('%FAMILY%', 'g'), Messages.catFamily);*/
             T.byId('search-categories-template').innerHTML = searchCatTpl;
             T.query('.search-scroller').innerHTML = searchCatTpl;
             T.initHover(T.query('.search-cat'), Styles.searchItem.bgColorHover);
@@ -504,6 +513,7 @@ var App = {
             App.sections = data.sections;
             App.cities = data.cities;
             App.startCities = data.startCities;
+            App.searchCategories = data.searchCategories;
             var userCityId = window.localStorage.getItem('userCityId');
             if (userCityId || location.hash.length>3) {
                 if (!userCityId) {

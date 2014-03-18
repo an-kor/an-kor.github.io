@@ -13,6 +13,8 @@ class MobileController {
     private $dbDeals;
     private $dbCities;
     private $dbSections;
+    private $dbStartCities;
+    private $dbSearchCategories;
 
     public function __construct(){
         $this->m = new MongoClient();
@@ -22,6 +24,7 @@ class MobileController {
         $this->dbCities = $this->db->cities;
         $this->dbStartCities = $this->db->startcities;
         $this->dbSections = $this->db->sections;
+        $this->dbSearchCategories = $this->db->searchcategories;
         $this->dbDealsInfo= $this->db->dealsinfo;
         $lastTs = $this->dbSettings->findOne(array('key' => 'lastFeedFetchTs'));
         if ($lastTs['value'] < time() - $this::FEED_LIFETIME ) {
@@ -222,6 +225,7 @@ class MobileController {
             $this->dbCities->drop();
             $this->dbStartCities->drop();
             $this->dbSections->drop();
+            $this->dbSearchCategories->drop();
             $this->dbDeals->drop();
             $this->dbSettings->drop();
 
@@ -308,6 +312,15 @@ class MobileController {
                     }
                 }
             }
+
+            foreach ($xml->search->categories->category as $searchCategory) {
+                $record = array(
+                    "categoryId" => (string) $searchCategory->id,
+                    "name" => (string) $searchCategory->name
+                );
+                $this->dbSearchCategories->insert($record);
+            }
+
             $this->dbSettings->insert(array('key'=> 'lastFeedFetchTs', 'value' => time()));
         } catch (Exception $e){
             $this->logException($e);
@@ -465,6 +478,15 @@ class MobileController {
                     $r["categories"] = $city['categories'];
                 }
                 $result->startCities[] = $r;
+            }
+            $cursor = $this->dbSearchCategories->find();
+            $result->searchCategories = array();
+            foreach ($cursor as $searchCategory) {
+                $r = array(
+                    "id"   => $searchCategory['categoryId'],
+                    "name" => $searchCategory['name']
+                );
+                $result->searchCategories[] = $r;
             }
         } catch (Exception $e){
             $this->logException($e);

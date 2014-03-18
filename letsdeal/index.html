@@ -188,10 +188,18 @@
             <div class="search-item-description">%DESCRIPTION%</div>
         </div>
     </script>
+
+    <script id="search-categories-item-template" type="text/x-template">
+        <div class="search-cat" onclick="App.searchByCategory('section:%ID%', '%NAME%')">
+            <div class="search-cat-image"></div>
+            <div class="search-cat-title">%NAME%</div>
+        </div>
+    </script>
     <script id="search-categories-template" type="text/x-template">
         <div class="search-categories">
             <div class="search-cat-header">%HEADER%</div>
-            <div class="search-cat" onclick="App.searchByCategory('section:1', '%HEALTH%')">
+            %CATEGORIES%
+            <!--div class="search-cat" onclick="App.searchByCategory('section:1', '%HEALTH%')">
                 <div class="search-cat-image image-health"></div>
                 <div class="search-cat-title">%HEALTH%</div>
             </div>
@@ -214,7 +222,7 @@
             <div class="search-cat" onclick="App.searchByCategory('section:6', '%FAMILY%')">
                 <div class="search-cat-image image-family"></div>
                 <div class="search-cat-title">%FAMILY%</div>
-            </div>
+            </div-->
         </div>
     </script>
     <script id="changecity-item-template" type="text/x-template">
@@ -256,7 +264,7 @@
                     <ul id="footer-tabs">
                         <li><a href="javascript:" onclick="App.showSearchPage()"  id="footer-tabs-search"></a></li>
                         <li><a href="javascript:" onclick="App.showMyDeals()" id="footer-tabs-mydeals"></a></li>
-                        <li><a href="javascript:" onclick="App.showChangeCityPage()" id="footer-tabs-settings"></a></li>
+                        <li><a href="javascript:" onclick="App.showChangeCityPage()" id="footer-tabs-city"></a></li>
                         <!--li><a href="javascript:" id="footer-tabs-settings"></a></li-->
                     </ul>
                 </div>
