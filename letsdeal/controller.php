@@ -346,7 +346,14 @@ class MobileController {
             } else {
                 $query = array('$or' => array(array("title" => new MongoRegex("/\b".$text."/i")), array("shortname" => new MongoRegex("/\b".$text."/i"))));
             }
-            $query["type"] = $city;
+
+            $sections = array();
+            $cursor = $this->dbSections->find();
+            foreach ($cursor as $section) {
+                $sections[] = $section['type'];
+            }
+            $sections[] = $city;
+            $query["type"] = array('$in' => $sections);
 
             $cursor = $this->dbDeals->find($query)->limit(200);
             foreach ($cursor as $record) {
