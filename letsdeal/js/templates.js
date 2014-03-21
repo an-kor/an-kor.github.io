@@ -194,7 +194,7 @@ var Templates = {
             height: T.px(Styles.topMenu.height - 25),
             fontFamily: 'source-sans-pro, sans-serif',
             padding: T.px(0) + ' ' + T.px(5) +' 0 ' + T.px(50),
-            fontSize: T.px(Styles.topMenu.height - 40),
+            fontSize: T.px(Styles.topMenu.height - 45),
             width: T.w() - T.p(Styles.topMenu.backButtonWith) + 'px',
             backgroundSize:  T.px(37) + ' ' + T.px(25)
         });
@@ -228,7 +228,7 @@ var Templates = {
         T.updateStyle('.search-item-image', {
             borderRadius: T.px(8),
             margin: T.px(5)+' '+T.px(5)+' '+T.px(5)+' '+T.px(0),
-            width: T.px(80)
+            width: T.px(100)
         });
         T.updateStyle('.search-item-image img', {
             height: T.px(100)

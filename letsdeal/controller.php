@@ -6,7 +6,7 @@ class MobileController {
     const DEAL_INFO_URL = 'http://letsdeal.se/mdealinfo.php';
     const DEAL_URL = 'http://letsdeal.se/deal/';
     const FEED_LIFETIME = 3600;
-    const DEALINFO_LIFETIME = 3600;
+    const DEALINFO_LIFETIME = 7200;
 
     private $m;
     private $db;
@@ -228,8 +228,10 @@ class MobileController {
             $this->dbSearchCategories->drop();
             $this->dbDeals->drop();
             $this->dbSettings->drop();
+            $sortIncrement = 0;
 
             foreach ($xml->sections->section as $category) {
+                $sortIncrement++;
                 if ($category->type == 'local') {
                     foreach ($category->cities->city as $city) {
                         if ((float) $city->longitude > 0) {
@@ -254,6 +256,7 @@ class MobileController {
                                     }
                                 }
                                 $deal['endtime'] = strtotime($deal['endtime']);
+                                $deal['sorting'] = $sortIncrement;
                                 $this->dbDeals->insert($deal);
                             }
                         }
@@ -282,6 +285,7 @@ class MobileController {
                                     }
                                 }
                                 $deal['endtime'] = strtotime($deal['endtime']);
+                                $deal['sorting'] = $sortIncrement;
                                 $this->dbDeals->insert($deal);
                             }
                         }
@@ -307,6 +311,7 @@ class MobileController {
                                 }
                             }
                             $deal['endtime'] = strtotime($deal['endtime']);
+                            $deal['sorting'] = $sortIncrement;
                             $this->dbDeals->insert($deal);
                         }
                     }
@@ -383,7 +388,7 @@ class MobileController {
         }
         return $result;
     }
-    public function getDeals($type, $category = null, $from = 0 , $limit = 20, $sort = 'endtime', $sortDirection = 1) {
+    public function getDeals($type, $category = null, $from = 0 , $limit = 20, $sort = 'sorting', $sortDirection = 1) {
         $result = array();
         try {
             $query = array(
@@ -549,7 +554,7 @@ if(defined('STDIN') ) {
                     $_REQUEST['limit'] = 20;
                 }
                 if (!isset($_REQUEST['sort'])) {
-                    $_REQUEST['sort'] = 'endtime';
+                    $_REQUEST['sort'] = 'sorting';
                 }
                 if (!isset($_REQUEST['sortDirection'])) {
                     $_REQUEST['sortDirection'] = 1;
