@@ -139,7 +139,6 @@ body {
     display: none;
 }
 
-
 #splash{
     display: none;
     z-index:100;
@@ -190,7 +189,6 @@ body {
 #pages-wrapper {
     height: 100%;
 }
-
 
 .wrapper{
     position: absolute;
@@ -512,6 +510,7 @@ div.top-menu {
     /*font-family: source-sans-pro,  'avenir', sans-serif;*/
 }
 .dealinfo-bottom-buyBtn{}
+.dealinfo-bottom-buyBtn-soldOut{}
 .dealinfo-bottom-bought{}
 .dealinfo-bottom-countdown{}
 .dealinfo-bottom-infoIcon{
@@ -751,9 +750,11 @@ div.top-menu {
     background-repeat: no-repeat;
 }
 .search-cat-header{
+    overflow:hidden;;
     font-family: source-sans-pro,  'avenir', sans-serif;
 }
 .search-cat-title{
+    overflow:hidden;;
     font-family: source-sans-pro,  'avenir', sans-serif;
     float: left;
 }

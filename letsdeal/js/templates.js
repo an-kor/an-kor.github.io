@@ -1,7 +1,3 @@
-/*ontouchstart="if (App.isScrolling) {setTimeout(function(){App.isScrolling=0;},100)}" ' +
-            'onscroll="if (!App.isScrolling) {App.isScrolling=1;if (App.scrollingTimeout) {clearTimeout(App.scrollingTimeout);}; App.scrollingTimeout = setTimeout(function(){App.isScrolling=0;},2000)}"*/
- /*ontouchmove="T.checkScrolling(event, this)" ontouchstart="App.scrollStartEvent={x: event.touches[0].pageX, y: event.touches[0].pageY};if (App.isScrolling) {var el = this; setTimeout(function(){' +
-            'if (Math.abs(event.touches[0].pageY - App.scrollStartEvent.y) < 10) {T.stopScrolling(el)} else {T.checkScrolling(event, el)}}, 100)}">'+*/
 var Templates = {
     dealsPage: function(pageId){
         return '<div class="main-v-wrapper" id="wrapper_'+pageId+'">'+
@@ -71,11 +67,11 @@ var Templates = {
         T.updateStyle('#footer-tabs-city', {
             borderLeft: T.px(1,1) + ' solid ' + Styles.footer.borderColor2
         });
-        T.updateStyle('#footer-tabs-settings', {
+        /*T.updateStyle('#footer-tabs-settings', {
             borderLeft: T.px(1,1) + ' solid ' + Styles.footer.borderColor2
         });
 
-        /*T.byId('footer-tabs-search').innerHTML = Messages.searchDeal;
+        T.byId('footer-tabs-search').innerHTML = Messages.searchDeal;
         T.byId('footer-tabs-mydeals').innerHTML = Messages.myDeals;
         T.byId('footer-tabs-city').innerHTML = Messages.changeCity;
         T.byId('footer-tabs-settings').innerHTML = Messages.settings;*/
@@ -198,7 +194,7 @@ var Templates = {
             height: T.px(Styles.topMenu.height - 25),
             fontFamily: 'source-sans-pro, sans-serif',
             padding: T.px(0) + ' ' + T.px(5) +' 0 ' + T.px(50),
-            fontSize: T.px(35),
+            fontSize: T.px(Styles.topMenu.height - 40),
             width: T.w() - T.p(Styles.topMenu.backButtonWith) + 'px',
             backgroundSize:  T.px(37) + ' ' + T.px(25)
         });
@@ -232,7 +228,7 @@ var Templates = {
         T.updateStyle('.search-item-image', {
             borderRadius: T.px(8),
             margin: T.px(5)+' '+T.px(5)+' '+T.px(5)+' '+T.px(0),
-            width: T.px(100)
+            width: T.px(80)
         });
         T.updateStyle('.search-item-image img', {
             height: T.px(100)
@@ -275,17 +271,19 @@ var Templates = {
             fontSize: T.px(36),
             fontWeight: 'bold',
             lineHeight: T.px(100),
-            padding: '0 0 0 ' + T.px(Styles.topMenu.backButtonWith - 30),
+            padding: '0 0 0 ' + T.px(30),
             borderBottom: T.px(1,1) + ' solid #aaa'
         });
         T.updateStyle('.search-cat-image', {
             backgroundPosition:  T.p(60) + 'px 50%',
             backgroundSize: T.px(48) + ' ' + T.px(48),
-            width: T.px(Styles.topMenu.backButtonWith + 10),
+            width: T.px(80),
             height: T.px(90)
         });
         T.updateStyle('.search-cat-title', {
-            width: T.w() - T.p(300) + 'px'
+            fontSize: T.px(36),
+            width: T.w() - T.p(170) + 'px',
+            height: T.px(90)
         });
         T.updateStyle('.search-cat', {
             height: T.px(90),
@@ -595,6 +593,11 @@ var Templates = {
             boxShadow: (!T.isAndroid2)? 'inset 0 '+T.px(-4)+' '+ T.px(1)+' '+ T.px(1)+' #339a3c':''
             //,marginLeft: 'auto'
         });
+        T.updateStyle('.dealinfo-bottom-buyBtn-soldOut', {
+            fontSize: T.px(st.buyBtn.fontSize-6),
+            background: '#b5b5b5',
+            boxShadow: (!T.isAndroid2)? 'inset 0 '+T.px(-4)+' '+ T.px(1)+' '+ T.px(1)+' #a9a9a9':''
+        })
         T.updateStyle('.dealinfo-bottom-bought', {
             paddingLeft: T.px(st.oldPrice.padding),
             fontSize: T.px(st.bought.fontSize),

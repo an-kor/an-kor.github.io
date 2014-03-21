@@ -163,7 +163,7 @@ var App = {
                         T.query('.search-scroller').innerHTML = T.byId('search-categories-template').innerHTML;
                     }
                 }
-            }, {text: App.lastSearch}, function(){
+            }, {text: App.lastSearch, city: App.currentCityId}, function(){
             });
         }
         App.changeHash('/search/'+value);
@@ -198,7 +198,7 @@ var App = {
                         T.query('.search-scroller').innerHTML = T.byId('search-categories-template').innerHTML;
                     }
                 }
-            }, {text: App.lastSearch}, function(){
+            }, {text: App.lastSearch, city: App.currentCityId}, function(){
             });
         } else {
             T.query('.search-noresults').style.display = 'none';
@@ -650,18 +650,9 @@ window.addEventListener('load', function() {
     window.scrollTo( 0, 1 );
 });
 window.addEventListener("orientationchange", function() {
-    /*setTimeout(function(){
+    setTimeout(function(){
         location.reload();
-    }, 100)*/
-    if (window.orientation == -90) {
-        document.body.className = 'orientright';
-    }
-    if (window.orientation == 90) {
-        document.body.className = 'orientleft';
-    }
-    if (window.orientation == 0) {
-        document.body.className = '';
-    }
+    }, 50)
 }, false);
 document.addEventListener('touchmove', function (e) {
     if (T.isIOS && e.changedTouches.length) {

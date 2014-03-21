@@ -44,5 +44,6 @@ var Messages = {
     "noConnectionMsg": "Vänligen kontrollera er internetuppkoppling och försök igen",
     "instructionsTitle": "Så gör du",
     "instructionsHorizontal": "Svajpa åt sidan för att välja avdelning",
-    "instructionsVertical": "Svajpa nedåt för att se fler deals"
+    "instructionsVertical": "Svajpa nedåt för att se fler deals",
+    "soldOut": "Slutsåld"
 };

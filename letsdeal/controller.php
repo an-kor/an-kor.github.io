@@ -314,8 +314,12 @@ class MobileController {
             }
 
             foreach ($xml->search->categories->category as $searchCategory) {
+                $catIds = array();
+                foreach ($searchCategory->id as $catId) {
+                    $catIds[] = (int) $catId;
+                }
                 $record = array(
-                    "categoryId" => (string) $searchCategory->id,
+                    "categoryId" => $catIds,
                     "name" => (string) $searchCategory->name
                 );
                 $this->dbSearchCategories->insert($record);
@@ -326,15 +330,25 @@ class MobileController {
             $this->logException($e);
         }
     }
-    public function searchDeals($text) {
+    public function searchDeals($text, $city) {
         $result = array();
         try {
             if (strpos($text,'section:')>-1) {
-                $query = array("cats" => (int) substr($text,8));
+                // $query = array("cats" => (int) substr($text,8));
+
+                $catIds = explode(",", substr($text,8));
+                $catQuery = array();
+                foreach ($catIds as $catId) {
+                    $catQuery[] = array("cats" => (int) $catId);
+                }
+                $query = array('$or' => $catQuery);
+                // print_r($query);die;
             } else {
                 $query = array('$or' => array(array("title" => new MongoRegex("/\b".$text."/i")), array("shortname" => new MongoRegex("/\b".$text."/i"))));
             }
-            $cursor = $this->dbDeals->find($query)->limit(30);
+            $query["type"] = $city;
+
+            $cursor = $this->dbDeals->find($query)->limit(200);
             foreach ($cursor as $record) {
                 $r = array(
                     "id" => $record['id'],
@@ -542,7 +556,7 @@ if(defined('STDIN') ) {
                 if (!isset($_REQUEST['text']) || strlen($_REQUEST['text'])<4) {
                     echo json_encode(array());
                 } else {
-                    echo json_encode($app->searchDeals($_REQUEST['text']));
+                    echo json_encode($app->searchDeals($_REQUEST['text'], $_REQUEST['city']));
                 }
                 break;
             case 'sections':

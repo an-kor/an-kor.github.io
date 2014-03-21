@@ -70,8 +70,13 @@ var Deals = {
                     template = template.replace("%MAP_ID%", "dealinfo-map-"+data.id);
                     template = template.replace("%SHORT_DESCRIPTION%", data.info);
                     bottomTemplate = bottomTemplate.replace("%BULK%", T.formatNumber(data.bulk) + " " + Messages.bought);
-                    bottomTemplate = bottomTemplate.replace("%BUY_MSG%", Messages.buy);
                     bottomTemplate = bottomTemplate.replace("%SOLD_OUT%", data.isSoldOut);
+                    if (data.isSoldOut==1) {
+                        bottomTemplate = bottomTemplate.replace("%SOLD_OUT_CLASS%", "dealinfo-bottom-buyBtn-soldOut");
+                        bottomTemplate = bottomTemplate.replace("%BUY_MSG%", Messages.soldOut);
+                    } else {
+                        bottomTemplate = bottomTemplate.replace("%BUY_MSG%", Messages.buy);
+                    }
                     bottomTemplate = bottomTemplate.replace("%DEAL_ID%", data.id);
                     bottomTemplate = bottomTemplate.replace("%OLDPRICE%", (data.origPrice!=data.price && data.origPrice>0)?T.formatNumber(data.origPrice)+" "+Messages.kr:"");
                     bottomTemplate = bottomTemplate.replace("%NEWPRICE%", T.formatNumber(data.price)+" "+Messages.kr);
@@ -142,7 +147,7 @@ var Deals = {
                     T.query('.content-loading',1).style.display = 'none';
 
                     // dealinfo scroller
-                    //if (1 || T.isIOS) {
+                    //if (T.isIOS) {
                         if (App.dealInfoScroller) {
                             App.dealInfoScroller.destroy();
                         }
@@ -232,7 +237,6 @@ var Deals = {
                 wrapper.scrollTop = 1
             }*/
             wrapper.addEventListener("scroll",function(e){
-                //var el = T.byId(App.mainPageHScroll.currentPageIndex);
                 var el = e.target;
                 if (T.isIOS) {
                     if (el.scrollTop == 0) {
@@ -326,7 +330,9 @@ var Deals = {
                 }
                 var divs = T.query('#deallist_'+data.id+' > div');
                 if (!divs.length){
-                    divs.parentNode.removeChild(divs);
+                    if (divs.parentNode) {
+                        divs.parentNode.removeChild(divs);
+                    }
                 } else {
                     for (i=0;i<divs.length;i++){
                         divs[i].parentNode.removeChild(divs[i]);
