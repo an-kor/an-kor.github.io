@@ -37,10 +37,10 @@ var Templates = {
         select.onchange = function(){
             callback(this.value);
         };
-		select.onеtouchend = function(){
+		select.ontouchend = function(){
 			this.firstChild.innerHTML = Messages.viewAll;
 		};
-		select.onеclick = function(){
+		select.onclick = function(){
 			this.firstChild.innerHTML = Messages.viewAll;
 		};
         return select;
