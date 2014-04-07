@@ -1,0 +1,253 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="robots" content="noindex" />
+    <title>hcSticky Plugin</title>
+    <link rel="stylesheet" href="http://someweblog.com/demo/hcsticky/examples/style.css">
+    <script>
+        var footerHeight = 100, headerHeight = 100, scrollTimeout;
+        changeFromFixedToAbsolute = function () {
+            var sidebar = document.getElementById('sidebar');
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(function () {
+                bodyRect = document.body.getBoundingClientRect();
+                elemRect = sidebar.getBoundingClientRect();
+                elTop = elemRect.top - bodyRect.top;
+                sidebar.style.top = elTop + 'px';
+                sidebar.style.position = 'absolute';
+            }, 200);
+        }
+
+        window.onscroll = function (event) {
+            var sidebar = document.getElementById('sidebar');
+            var pY = window.pageYOffset;
+
+            var bodyRect = document.body.getBoundingClientRect(),
+                    elemRect = sidebar.getBoundingClientRect(),
+                    elTop = elemRect.top - bodyRect.top;
+            if (pY < headerHeight) {
+                sidebar.style.top = headerHeight - pY + 'px';
+            } else if (document.body.offsetHeight - pY - window.innerHeight < footerHeight && window.innerHeight < sidebar.offsetHeight) {
+                sidebar.style.position = 'fixed';
+                sidebar.style.top = window.innerHeight - sidebar.offsetHeight - footerHeight + 'px';
+            } else if (pY + window.innerHeight > sidebar.offsetHeight + elTop) {
+                sidebar.style.position = 'fixed';
+                if (window.innerHeight < sidebar.offsetHeight) {
+                    sidebar.style.top = window.innerHeight - sidebar.offsetHeight + 'px';
+                } else {
+                    sidebar.style.top = '0px';
+                }
+            } else if (pY < elTop) {
+                if (pY > headerHeight) {
+                    sidebar.style.position = 'fixed';
+                    sidebar.style.top = 0 + 'px';
+                }
+            }
+            changeFromFixedToAbsolute();
+        };
+
+        window.onload = function () {
+            var sidebar = document.getElementById('sidebar');
+            var bodyRect = document.body.getBoundingClientRect(),
+                    elemRect = sidebar.getBoundingClientRect(),
+                    offset = elemRect.left - bodyRect.left - 20;
+            sidebar.style.position = 'absolute';
+            sidebar.style.left = offset + "px";
+            sidebar.style.webkitBackfaceVisibility = 'hidden';
+            sidebar.style.float = null;
+            sidebar.style.padding = null;
+        }
+    </script>
+</head>
+<body>
+
+<div id="header">
+    <div class="wrapper clearfix">Imagine this as some fancy header</div>
+</div>
+
+
+<div id="content">
+    <div class="wrapper clearfix" >
+        <div class="post-content" style="margin-left:280px;">
+            <h1>hcSticky – jQuery Floating Sticky Plugin</h1>
+            <p><strong>hcSticky</strong> is a cross-browser <a title="jQuery" href="http://jquery.com/" target="_blank">jQuery</a> plugin that makes any element on your page float.</p>
+            <p>It is used for sidebars on long pages, so they can be visible all the time user scrolls down the page, instead of a empty space visitors usually see. It is also used for floating top menus, emphasizing it to the user at all time.<!--more--></p>
+            <p>It is designed to be flexible, but very easy to use. <strong>hcSticky</strong> applied to a content makes it fixed on the page and always visible no matter how high the page is, or how high the sticky content is. Its packed with many interesting features in case you need them.</p>
+            <p><strong>hcSticky</strong> is compatible with all modern web browsers. It requires <em>jQuery 1.7.1</em>or later to work properly.</p>
+            <ul id="post-floating-menu" class="clearfix">
+                <li><a href="http://someweblog.com/scripts/hcsticky/jquery.hcsticky-min.js" target="_blank">Download plugin</a></li>
+                <li><a href="#usage">How to use</a></li>
+                <li><a href="#options">Options</a></li>
+                <li><a href="http://someweblog.com/demo/hcsticky/" target="_blank">Examples</a></li>
+            </ul>
+            <h2>Overview</h2>
+            <p>While searching for this kind of plugin I've found none that has all the features I needed. The most important of all, I needed for the sticky element to continue scrolling down if it is bigger than the document itself, until it reaches its end. Then for example if I have some <em>Adds</em> in my sidebar, I needed the ability to specify an inside element that I want sticky to stop at, instead of stopping at containers top.</p>
+            <p><strong>hcSticky</strong> has two modes of working:</p>
+            <ul>
+                <li>Inside of content, referring to it</li>
+                <li>Referring to the <em>Document</em></li>
+            </ul>
+            <p class="thumbnail"><img title="hcSticky working modes" src="http://someweblog.com/wp-content/uploads/2012/09/hcsticky-modes.jpg" alt="hcSticky working modes" /></p>
+            <p>When ran in the first mode, parent element of sticky content acts like its holder. Your sticky content will follow the page until the bottom of it reaches bottom of its parent element, and then it will stop. The same is when you scroll up. <strong>Its ideal for sidebars.</strong></p>
+            <p><strong></strong>In the second mode, sticky content is referred to a <em>Document</em> top and bottom, ignoring any element before or after. <strong>Ideal for menus.</strong></p>
+
+            <h2><a name="options"></a>Options</h2>
+            <p>You can set additional options, like distance from <em>top</em> or <em>bottom</em> when to start or stop floating, or even inside element of your sticky content that you want to be top starting point. <strong>Great when you have some important widget inside your sidebar that you want to signify.</strong></p>
+            <table>
+                <thead>
+                <tr><th>Option Key</th><th>Default Value</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><strong>top</strong></td>
+                    <td>0</td>
+                    <td>The distance from the top of the Window at which to trigger hcSticky.</td>
+                </tr>
+                <tr>
+                    <td><strong>bottom</strong></td>
+                    <td>0</td>
+                    <td>The distance from the bottom of the Window at which to glue hcSticky.</td>
+                </tr>
+                <tr>
+                    <td><strong>bottomEnd</strong></td>
+                    <td>0</td>
+                    <td>The distance from the bottom of the referring element at which to stop hcSticky.</td>
+                </tr>
+                <tr>
+                    <td><strong>bottomLimiter</strong></td>
+                    <td>null</td>
+                    <td>jQuery selector that selects element and calculates <strong>bottomEnd</strong> value based on its offset top position. <strong>It works only if noContainer is set to "true" and it has higher priority than BottomEnd.</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>innerTop</strong></td>
+                    <td>0</td>
+                    <td>The distance from the top inside of the sticky content at which to trigger hcSticky.</td>
+                </tr>
+                <tr>
+                    <td><strong>innerSticker</strong></td>
+                    <td>null</td>
+                    <td>jQuery selector that selects element at which to trigger hcSticky instead of top of sticky container. <strong>This has higher priority than innerTop option.</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>noContainer</strong></td>
+                    <td>false</td>
+                    <td>When set to "true", hcSticky will be referred to the Document.</td>
+                </tr>
+                <tr>
+                    <td><strong>followScroll</strong></td>
+                    <td>true</td>
+                    <td>When set to "false", sticky content will not move with the page if it is bigger that Window.</td>
+                </tr>
+                <tr>
+                    <td><strong>className</strong></td>
+                    <td>'sticky'</td>
+                    <td>Class that will be applied to sticky container while it is floating.</td>
+                </tr>
+                <tr>
+                    <td><strong>wrapperClassName</strong></td>
+                    <td>'wrapper-sticky'</td>
+                    <td>Class that is set to wrapper that hcSticky creates around your sticky content.</td>
+                </tr>
+                </tbody>
+            </table>
+            <h2><a name="usage"></a>How to use</h2>
+            <p>Include <strong><em>jquery.hcsticky.js</em></strong> after <strong>jQuery</strong>, like any other jQuery plugin.</p>
+				<pre class="brush: html;">&lt;!-- jQuery --&gt;
+					&lt;script type="text/javascript" src="jquery.js"&gt;&lt;/script&gt;
+
+					&lt;!-- hcSticky script --&gt;
+					&lt;script type="text/javascript" src="jquery.hcsticky.js"&gt;&lt;/script&gt;
+				</pre>
+            <p>The <strong>hcSticky</strong>method is called on the selector for which you want to float on the page. For example:</p>
+            <pre class="brush: js;">$('#sidebar').hcSticky();</pre>
+            <p>That way you load all default options. If you want to set any of them, pass them to <strong>hcSticky</strong>method like this:</p>
+				<pre class="brush: js;">$('#sidebar').hcSticky({
+					top: 50,
+					bottomEnd: 100,
+					wrapperClassName: 'sidebar-sticky'
+				});</pre>
+            <p>Be sure to run it after <a href="http://api.jquery.com/ready/" title="jQuery DOM fully loaded" target="_blank">DOM has been loaded</a>.</p>
+            <blockquote>
+                <p>You can change your settings at any time, just pass new values to your element like described above. Don't worry about other options you set at first, <strong>hcSticky</strong> will update only newly set values.</p>
+            </blockquote>
+            <h2>Methods</h2>
+            <p>It also has some additional methods you can use:</p>
+            <h3>reinit</h3>
+            <p>If you have done something to the layout or changed dimensions of your sticky content, you can update hcSticky. It will destroy itself and initialize itself again, with all initially set options.</p>
+            <pre class="brush: js;">$('#sidebar').hcSticky('reinit');</pre>
+            <blockquote>
+                <p><strong>Do not reinit hcSticky on Window resize, it already has built-in function for that!</strong> Reinit it only if you've updated its content or changed its dimensions.</p>
+            </blockquote>
+            <h3>off/on</h3>
+            <p>If you want for some reason, you can turn your sticky off and back on.</p>
+            <pre class="brush: js;">$('#sidebar').hcSticky('off');</pre>
+            <h2>How does it work</h2>
+            <p>When called, hcSticky first wraps your element with a <strong>&lt;div&gt;</strong> element, copying necessary styles from your element (<em>width, height, float, left, right, top, bottom...</em>). Wrapper acts as a substitution for your element, that way preserving your layout. Once your sticky content touches top limit, its <em>position</em> becomes <strong>fixed</strong>, and stays like that until you scroll down to bottom limit.</p>
+            <p>And how that works, I really don't know. Theres some sick math behind all that, I had many sleepless nights because of it.</p>
+            <div class="button download"><a href="http://someweblog.com/scripts/hcsticky/jquery.hcsticky-min.js" target="_blank">Download</a><span class="btn-bg"></span></div>
+            <p>You can also get the <a href="http://someweblog.com/scripts/hcsticky/jquery.hcsticky.js" target="_blank">unminified version</a> if yu want to see the sourcecode</p>
+            <h2>To do</h2>
+            <p>Callback functions <strong>onStart</strong>, <strong>onStop</strong>...</p>
+            <p>Soon on <a href="http://github.com/" target="_blank">GitHub</a></p>
+            <p><strong>hcSticky</strong> is © 2012 by <a href="http://somewebmedia.com/" target="_blank">Some Web Media</a> and licensed under the <a href="http://www.opensource.org/licenses/mit-license.php" target="_blank">MIT</a> license.</p>
+        </div>
+        <!-- END Post Content -->
+
+
+        <!-- Sticky Sidebar -->
+        <div id="sidebar">
+            <div class="widget-menu">
+                <h4>Some menu</h4>
+                <ul>
+                    <li><a href="#">Potato Potato</a></li>
+                    <li><a href="#">Watermelon fun</a></li>
+                    <li><a href="#">This is Spartaaa!</a></li>
+                    <li><a href="#">Koala on ecstasy</a></li>
+                    <li><a href="#">Lets Buggy tonight</a></li>
+                    <li><a href="#">I'm sexy and I know it</a></li>
+                    <li><a href="#">Dancing Giraffe</a></li>
+                    <li><a href="#">Love for Unicorns!</a></li>
+                    <li><a href="#">Hey, I just met you</a></li>
+                    <li><a href="#">And this is crazy</a></li>
+                    <li><a href="#">But here's my plugin</a></li>
+                    <li><a href="#">So use it maybe</a></li>
+                </ul>
+            </div>
+            <div class="logo">
+                <img src="http://someweblog.com/demo/hcsticky/examples/sample_images/somewebmedia.jpg" />
+            </div>
+            <div class="facebook">
+                <h4><a href="https://www.facebook.com/SomeWebMedia" target="_blank">We like beer!</a></h4>
+                <div class="fb-like-box" data-href="https://www.facebook.com/SomeWebMedia" data-width="260" data-show-faces="true" data-border-color="#FFF" data-stream="false" data-header="false"></div>
+            </div>
+            <div class="widget-menu">
+                <h4>Again some menu</h4>
+                <ul>
+                    <li><a href="#">Potato Potato</a></li>
+                    <li><a href="#">Watermelon fun</a></li>
+                    <li><a href="#">This is Spartaaa!</a></li>
+                    <li><a href="#">Koala on ecstasy</a></li>
+                    <li><a href="#">Lets Buggy tonight</a></li>
+                    <li><a href="#">I'm sexy and I know it</a></li>
+                    <li><a href="#">Dancing Giraffe</a></li>
+                    <li><a href="#">Love for Unicorns!</a></li>
+                    <li><a href="#">Hey, I just met you</a></li>
+                    <li><a href="#">And this is crazy</a></li>
+                    <li><a href="#">But here's my plugin</a></li>
+                    <li><a href="#">So use it maybe</a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- END Sidebar -->
+
+
+    </div>
+</div>
+
+
+<div id="footer">
+    <div class="wrapper clearfix">Imagine this as some fancy footer</div>
+</div>
+</body>
+</html>

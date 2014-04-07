@@ -12,7 +12,8 @@ var Templates = {
             '<div class="deallist-item-header">'+data.title+'</div>' +
             '<div class="deallist-item-footer">' +
             '<div class="deallist-item-footer-bought">'+data.bulk+' köpta</div>' +
-            '<div class="deallist-item-footer-price">'+((data.origPrice!=data.price && data.origPrice>0)?'<div class="deallist-item-footer-price-old">'+ T.formatNumber(data.origPrice)+' kr</div>':'')+'<div class="deallist-item-footer-price-new">'+T.formatNumber(data.price)+' kr</div></div>' +
+            (data.timer?'<div class="deallist-item-footer-timer" data-endtime="'+data.endtime+'">'+T.getCountdownTime(data.endtime)+'</div>':'') +
+            '<div class="deallist-item-footer-price '+(!data.timer?'deallist-item-without-timer':'')+'">'+((data.origPrice!=data.price && data.origPrice>0)?'<div class="deallist-item-footer-price-old">'+ T.formatNumber(data.origPrice)+' kr</div>':'')+'<div class="deallist-item-footer-price-new">'+T.formatNumber(data.price)+' kr</div></div>' +
             '</div>' +
             '</div></div></li>';
     },
@@ -36,6 +37,12 @@ var Templates = {
         select.onchange = function(){
             callback(this.value);
         };
+		select.onеtouchend = function(){
+			this.firstChild.innerHTML = Messages.viewAll;
+		};
+		select.onеclick = function(){
+			this.firstChild.innerHTML = Messages.viewAll;
+		};
         return select;
     },
     prepareFooter: function(){
@@ -43,7 +50,6 @@ var Templates = {
             height: T.px(Styles.footer.height, 1),
             boxShadow: (!T.isAndroid2)? '0px 0px '+T.px(50)+' 1px rgba(0,0,0,0.4)':''
         });
-
         T.updateStyle('#footer-tabs', {
             background: Styles.footer.bgColor
             ,borderTop: T.px(1,1) + ' solid ' + Styles.footer.borderTop
@@ -54,7 +60,6 @@ var Templates = {
             backgroundSize: T.px(52)+' '+ T.px(52),
             backgroundPosition: '50% '+ T.px(18)
         });
-
         T.updateStyle('#footer-tabs-search', {
             borderRight: T.px(1,1) + ' solid ' + Styles.footer.borderColor1
         });
@@ -76,6 +81,44 @@ var Templates = {
         T.byId('footer-tabs-city').innerHTML = Messages.changeCity;
         T.byId('footer-tabs-settings').innerHTML = Messages.settings;*/
         T.initHover(T.query('#footer-tabs li'), Styles.footer.bgColorHover);
+    },
+    prepareNoConnection: function(){
+        T.updateStyle('#splash-noconnection-button-pane', {
+            bottom: T.px(150)
+        });
+        T.updateStyle('#splash-noconnection-button', {
+            top: T.px(10),
+            padding: T.px(10) + ' 0',
+            fontSize: T.px(46),
+            height: T.px(80),
+            lineHeight: T.px(65),
+            width: T.px(400),
+            margin: '0 ' + (T.w() - T.p(400))/2+'px'
+        });
+        T.updateStyle('#splash-noconnection-button-pane', {
+            height: T.px(100)
+        });
+        T.updateStyle('#splash-noconnection-message', {
+            bottom: T.px(270),
+            fontSize: T.px(30)
+        });
+        T.updateStyle('#splash-noconnection-tag', {
+            bottom: T.px(400)
+        });
+		if (T.h() < 950) {
+			T.updateStyle('#splash', {
+				backgroundPosition: '50% ' + T.px(100)
+			});
+			T.updateStyle('#splash-noconnection-button-pane', {
+				bottom: T.px(50)
+			});
+			T.updateStyle('#splash-noconnection-message', {
+				bottom: T.px(170)
+			});
+			T.updateStyle('#splash-noconnection-tag', {
+				bottom: T.px(300)
+			});
+		}
     },
     prepareHeader: function(){
         if (T.p(Styles.topMenu.fontSize)>T.w()/15) {
@@ -194,7 +237,7 @@ var Templates = {
             height: T.px(Styles.topMenu.height - 25),
             fontFamily: 'source-sans-pro, sans-serif',
             padding: T.px(0) + ' ' + T.px(5) +' 0 ' + T.px(50),
-            fontSize: T.px(Styles.topMenu.height - 45),
+            fontSize: T.px(30),
             width: T.w() - T.p(Styles.topMenu.backButtonWith) + 'px',
             backgroundSize:  T.px(37) + ' ' + T.px(25)
         });
@@ -245,7 +288,6 @@ var Templates = {
             fontSize: T.px(30),
             lineHeight: T.px(50)
         });
-
         T.updateStyle('.search-noresults', {
             top: T.px(Styles.topMenu.height),
             bottom: 0
@@ -275,7 +317,6 @@ var Templates = {
             borderBottom: T.px(1,1) + ' solid #aaa'
         });
         T.updateStyle('.search-cat-image', {
-            backgroundPosition:  T.p(60) + 'px 50%',
             backgroundSize: T.px(48) + ' ' + T.px(48),
             width: T.px(80),
             height: T.px(90)
@@ -416,10 +457,11 @@ var Templates = {
             scrollWidth = 8 / ((window.outerWidth - 8) / window.innerWidth)
         }
         var itemWidth = T.w() - T.p(30);
-        if ((T.w() > 600 && !T.isAndroid) || (Math.abs(window.orientation) == 90)) {
+        if ((T.w() > 600 && !T.isAndroid && !T.isIOS) || (Math.abs(window.orientation) == 90)) {
             is2Columns = true;
             itemWidth = T.w()/2 - T.p(21.5);
         }
+		T.is2Columns = is2Columns;
         var itemHeight = 290 / (510 / itemWidth);
         if (itemWidth / itemHeight < 510 / 290) {
             backgroundSize = 'auto ' + itemHeight + 'px'
@@ -457,6 +499,9 @@ var Templates = {
             borderTop: 1+'px solid #cccac5',
             height: T.px(60)
         });
+		T.updateStyle('.deallist-item-without-timer', {
+			marginLeft: T.px(160)
+		});
         T.updateStyle('.deallist-item-footer-bought', {
             width: T.p(140) + 'px',
             background: '#edebe6',
@@ -467,15 +512,30 @@ var Templates = {
             fontSize: (!is2Columns)?T.px(26) : T.px(22)
             ,lineHeight: (!is2Columns)? T.px(65) : T.px(60)
         });
+        T.updateStyle('.deallist-item-footer-timer', {
+            width: T.p(140) + 'px',
+			marginLeft: T.px(3),
+			paddingLeft: T.px(25),
+            backgroundColor: '#edebe6',
+			backgroundSize: (!is2Columns)? T.px(20) : T.px(20),
+			backgroundPosition: T.px(12) + ' ' + T.px(21.5),
+            color: '#545351',
+            textAlign: 'center',
+            fontFamily: 'source-sans-pro',
+            fontSize: (!is2Columns)?T.px(26) : T.px(22)
+            ,lineHeight: (!is2Columns)? T.px(65) : T.px(60)
+        });
         T.updateStyle('.deallist-item-footer-price', {
-            width: itemWidth - T.p(160) - (T.isDesktop?16:0) + 'px',
+            //width: itemWidth - T.p(320) - (T.isDesktop?16:0) + 'px',
+			'float': 'right',
+			marginRight: T.px(20),
             lineHeight: T.px(60)
         });
         T.updateStyle('.deallist-item-footer-price-new', {
             color: '#d72e1e',
             fontWeight: 'bold',
             fontFamily: 'source-sans-pro',
-            margin: '0 0 0 ' + T.px(10),
+            margin: '0 0 0 ' + T.px(5),
             fontSize: (!is2Columns)?T.px(45) : T.px(30)
             ,lineHeight: T.px(60)
         });
@@ -538,12 +598,12 @@ var Templates = {
         });
 
         // dealinfo scroller
-        /*if (0 && !T.isIOS) {
+        if (!T.isIOS) {
             T.updateStyle('.dealinfo-wrapper', {
                 overflowY: 'scroll',
                 webkitOverflowScrolling: 'touch'
             });
-        }*/
+        }
 
         //BOTTOM
         T.updateStyle('.dealinfo-bottom', {
@@ -597,7 +657,7 @@ var Templates = {
             fontSize: T.px(st.buyBtn.fontSize-6),
             background: '#b5b5b5',
             boxShadow: (!T.isAndroid2)? 'inset 0 '+T.px(-4)+' '+ T.px(1)+' '+ T.px(1)+' #a9a9a9':''
-        })
+        });
         T.updateStyle('.dealinfo-bottom-bought', {
             paddingLeft: T.px(st.oldPrice.padding),
             fontSize: T.px(st.bought.fontSize),
@@ -649,17 +709,16 @@ var Templates = {
             backgroundSize: 'contain'
         });
         T.updateStyle('.dealinfo-content-block', {
-            font: '-apple-system-body',
+            // font: '-apple-system-body',
             border: T.px(1)+ ' solid #c6c6c6',
             background: 'white',
             boxShadow: (!T.isAndroid2)? '0px 1px '+T.px(1,1)+' '+T.px(1,1)+' rgba(0,0,0,0.05)':'',
             borderRadius: (!T.isAndroid2)? T.px(4,1):'',
-            marginBottom: T.px(20),
+            marginBottom: T.px(30),
             overflow: 'hidden'
         });
         T.updateStyle('.dealinfo-content-map', {
             height:  T.px(400),
-
             border: T.px(1,1)+ ' solid #c6c6c6',
             boxShadow: (!T.isAndroid2)? '0px 1px '+T.px(1,1)+' '+T.px(1,1)+' rgba(0,0,0,0.05)':'',
             marginBottom: T.px(10),
@@ -671,27 +730,40 @@ var Templates = {
             height: T.px(65),
             lineHeight: T.px(65),
             color: 'white',
-            fontSize: T.px(32),
+            fontSize: T.px(36),
             fontWeight: 'bold',
             overflow: 'hidden'
+
         });
         T.updateStyle('.dealinfo-content-block h5', {
             paddingTop: T.px(5),
-            fontSize: T.px(28)
+            fontWeight: 'bold',
+            fontSize: T.px(30)
+        });
+        T.updateStyle('.dealinfo-content-block h5 > strong', {
+            display: 'block',
+            marginTop: T.px(40),
+            fontSize: T.px(30),
+            fontWeight: 'bold',
+            color: '#333333'
+        });
+        T.updateStyle('.dealinfo-content-block p', {
+            paddingTop: T.px(10)
         });
 
         T.updateStyle('.dealinfo-content-block-content', {
             padding: T.px(10) + ' ' + T.px(25) + ' ' + T.px(25)+ ' ' + T.px(25),
-            color: '#5b5b59',
-            fontSize: T.px(28)
+            color: '#555',
+            fontSize: T.px(30),
+            lineHeight: 1.3
         });
         T.updateStyle('.dealinfo-content-contacts', {
             padding: '0 ' + T.px(10),
-            color: '#5b5b59',
-            fontSize: T.px(28)
+            color: '#555',
+            fontSize: T.px(30)
         });
         T.updateStyle('.dealinfo-content-contacts h5', {
-            fontSize: T.px(28),
+            fontSize: T.px(30),
             color: '#333',
             paddingTop: T.px(10)
         });

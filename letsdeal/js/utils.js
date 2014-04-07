@@ -136,13 +136,13 @@ var T = {
             timeout: timeout,
             data: params,
             success: function(data){
-               // try {
+                try {
                     callback(JSON.parse(data));
-               /* } catch(e) {
+                } catch(e) {
                      console.error('error on parsing data', data)
                      console.error(e)
                      errorCallback();
-                }*/
+                }
             },
             error: function(data){
                 App.showNoConnection();
@@ -174,7 +174,7 @@ var T = {
         }
     },
     preloadImages: function() {
-        var imagestList = ['img/broken-tag.png', 'img/loadinfo-blue.gif', 'img/loadinfo.gif', 'img/share-btn.png', 'img/gesture-h.png', 'img/gesture-v.png', 'img/logo-small.png', 'img/back-btn.png'];
+        var imagestList = ['img/broken_tag.png', 'img/loadinfo-blue.gif', 'img/clock.png', 'img/loadinfo.gif', 'img/share-btn.png', 'img/gesture-h.png', 'img/gesture-v.png', 'img/logo-small.png', 'img/back-btn.png'];
         for (var i in imagestList) {
             try {
                 var img = new Image();
@@ -229,7 +229,29 @@ var T = {
                 }, 250);
             }
         }
-    }
+    },
+	getCountdownTime: function(countdown){
+		countdown = parseInt(countdown, 10);
+		var curTime = Math.floor(new Date().getTime() / 1000),
+			delta = countdown - curTime,
+			hours = Math.floor(delta/3600),
+			minutes = Math.floor((delta - (hours*3600))/60),
+			seconds = (delta - (hours*3600) - (minutes*60));
+		if (delta>0) {
+			if (hours < 10) {
+				hours = '0' + hours;
+			}
+			if (minutes < 10) {
+				minutes = '0' + minutes;
+			}
+			if (seconds < 10) {
+				seconds = '0' + seconds;
+			}
+			return hours + ":" + minutes + ":" + seconds;
+		} else {
+			return '00:00:00';
+		}
+	}
 };
 
 (function($) {

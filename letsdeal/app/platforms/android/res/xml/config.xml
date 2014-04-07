@@ -18,7 +18,7 @@
     <preference name="SplashScreenDelay" value="3600000" />
     <preference name="fullscreen" value="false" />
     <preference name="permissions" value="none" />
-    <preference name="orientation" value="portrait" />
+    <preference name="orientation" value="default" />
     <preference name="target-device" value="universal" />
     <preference name="webviewbounce" value="true" />
     <preference name="prerendered-icon" value="true" />
@@ -34,8 +34,5 @@
     <icon src="icon.png" />
     <feature name="NetworkStatus">
         <param name="android-package" value="org.apache.cordova.networkinformation.NetworkManager" />
-    </feature>
-    <feature name="InAppBrowser"> 
-        <param name="android-package" value="org.apache.cordova.inappbrowser.InAppBrowser"/>
     </feature>
 </widget>

@@ -147,7 +147,7 @@ var Deals = {
                     T.query('.content-loading',1).style.display = 'none';
 
                     // dealinfo scroller
-                    //if (T.isIOS) {
+                    if (T.isIOS) {
                         if (App.dealInfoScroller) {
                             App.dealInfoScroller.destroy();
                         }
@@ -159,15 +159,17 @@ var Deals = {
                         setTimeout(function(){
                             App.dealInfoScroller.refresh();
                         },500);
-                    //}
+                    }
                 }
             }, {dealId: data.id}, function(){
                 T.query('.content-loading', 1).style.display = 'none';
-                var scroller = new IScroll(T.query('.dealinfo-wrapper'), {
-                    scrollbars: true,
-                    hideScrollbarsOnMove:true,
-                    speedRatio: 0.4
-                });
+                if (T.isIOS) {
+					var scroller = new IScroll(T.query('.dealinfo-wrapper'), {
+						scrollbars: true,
+						hideScrollbarsOnMove:true,
+						speedRatio: 0.4
+					});
+				}
                 setTimeout(function(){
                     scroller.refresh();
                 },500);
@@ -220,14 +222,18 @@ var Deals = {
             }
         );
     },
-    addNewList: function(data, index){
-        if (typeof(index)=='undefined'){
+    addNewList: function(data, index, numberOfDeals){
+        if (typeof(index)=='undefined' || index === null){
             index = Styles.hScroller.numberOfPages;
         }
         var pageTpl = Templates.dealsPage(data.id);
         var previousPage = T.query('#hscroller-scroller-list > li:nth-child('+(index)+')');
         var newPage = document.createElement("li");
         newPage.innerHTML = pageTpl;
+		
+		if (!numberOfDeals) {
+			numberOfDeals = Styles.hScroller.numberOfImages
+		}
 
         var wrapper = newPage.firstChild;
         wrapper.index = data.id;
@@ -338,7 +344,7 @@ var Deals = {
                         divs[i].parentNode.removeChild(divs[i]);
                     }
                 }
-                Deals.loadDeals(data.id, 0, Styles.hScroller.numberOfImages, function(result){
+                Deals.loadDeals(data.id, 0, numberOfDeals, function(result){
                     if (result) {
                         T.byId('deallist_'+data.id).appendChild(result)
                     }
@@ -351,7 +357,7 @@ var Deals = {
             T.byId('deallist_'+data.id).appendChild(catPadding);
         }
 
-        Deals.loadDeals(data.id, 0, Styles.hScroller.numberOfImages, function(result){
+        Deals.loadDeals(data.id, 0, numberOfDeals, function(result){
             if (result) {
                 T.byId('deallist_'+data.id).appendChild(result)
             }

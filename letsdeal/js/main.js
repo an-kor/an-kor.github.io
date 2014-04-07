@@ -47,17 +47,30 @@ var App = {
         }
     },
     lastCheckConnectionTs: new Date().getTime(),
+	checkDealsTimer:function(){
+		var timerDeals = document.querySelectorAll('#'+App.mainPageHScroll.currentPageIndex+' .deallist-item-footer-timer');
+		for (var i in timerDeals) {
+			if (timerDeals[i].getAttribute) {
+				timerDeals[i].innerHTML = T.getCountdownTime(timerDeals[i].getAttribute("data-endtime"));
+			}
+		}
+	},
     checkConnectionInterval: 5000,
-    checkConnection: function(){
-        if (new Date().getTime() - App.lastCheckConnectionTs > 180*App.checkConnectionInterval) {
-            var id = App.mainPageHScroll.currentPageIndex.substr(8);
-            var divs = T.query('#deallist_'+id+' > div', false);
-            var length = divs.length;
-            for (var i=0; i<length; i++){
-                divs[i].parentNode.removeChild(divs[i]);
+    checkConnection: function(force){
+        if (force || new Date().getTime() - App.lastCheckConnectionTs > 180*App.checkConnectionInterval) {
+            try {
+                var id = App.mainPageHScroll.currentPageIndex.substr(8);
+                var divs = T.query('#deallist_'+id+' > div', false);
+                var length = divs.length;
+                for (var i=0; i<length; i++){
+                    divs[i].parentNode.removeChild(divs[i]);
+                }
+            } catch(e) {
+                var id = 'shopping';
             }
             T.byId('hscroller-scroller-loading').style.display='block';
             Deals.loadDeals(id, 0, Styles.hScroller.numberOfImages*length, function(result){
+				App.hideNoConnection();
                 if (result) {
                     T.byId('deallist_'+id).appendChild(result);
                     T.byId('hscroller-scroller-loading').style.display='none';
@@ -85,20 +98,23 @@ var App = {
     },
     hideNoConnection: function(){
         App.isOffline = false;
-        T.byId('page-on-top').innerHTML = '';
-        T.byId('page-on-top').style.display = 'none';
+        T.byId('container').style.display = 'block';
+        T.byId('splash').style.display = 'none';
     },
     showNoConnection: function(){
         App.isOffline = true;
         var template = T.byId('noconnection-template').innerHTML;
         template = template.replace('%TITLE%', Messages.noConnectionTitle);
         template = template.replace('%MSG%', Messages.noConnectionMsg);
-        T.byId('page-on-top').innerHTML = template;
-        T.byId('page-on-top').style.display = 'block';
+        T.byId('container').style.display = 'none';
+        T.byId('splash-message').style.display = 'none';
+        T.byId('splash-loading').style.display = 'none';
+        T.byId('splash').style.display = 'block';
+        T.byId('splash-noconnection').style.display = 'block';
+        T.byId('splash-noconnection').innerHTML = template;
     },
     showMyDeals:function(){
         App.showIFrame(Messages.myDeals, Messages.myDealsSrc);
-        // App.changeHash('/mydeals/');
     },
     showInstructions: function(){
         if (!window.localStorage.getItem("instructionsShown")){
@@ -223,6 +239,7 @@ var App = {
 
             for (var i in App.searchCategories) {
                 var searchCatItemCurrent = searchCatItemTpl;
+                searchCatItemCurrent = searchCatItemCurrent.replace(new RegExp('%ICON%', 'g'), App.searchCategories[i].icon);
                 searchCatItemCurrent = searchCatItemCurrent.replace(new RegExp('%NAME%', 'g'), App.searchCategories[i].name);
                 searchCatItemCurrent = searchCatItemCurrent.replace(new RegExp('%ID%', 'g'), App.searchCategories[i].id);
                 searchCategoriesHTML += searchCatItemCurrent;
@@ -509,6 +526,7 @@ var App = {
         document.body.style['font-size'] = T.p(Styles.defaultFontSize) + 'px';
         T.setH('container', T.h());
         Templates.prepareSplash();
+        Templates.prepareNoConnection();
         T.request('sections', function(data){
             App.sections = data.sections;
             App.cities = data.cities;
@@ -606,10 +624,6 @@ var App = {
                 }
             }
 
-            for (var i in data.sections) {
-                Deals.addNewList(data.sections[i]);
-            }
-
             Templates.preparePages();
             Templates.prepareHeader();
             Templates.prepareHScroller();
@@ -618,6 +632,12 @@ var App = {
             Templates.prepareFooter();
             Templates.prepareSearch();
             Templates.prepareModalPages();
+			
+			
+            for (var i in data.sections) {
+                Deals.addNewList(data.sections[i], null, (T.is2Columns)?8:4);
+            }
+			
             if (userCityId) {
                 App.checkLocation();
             }
@@ -636,10 +656,10 @@ var App = {
             },1000);
             window.addEventListener("hashchange", App.hashChangeEvent, false);
             setInterval(App.checkConnection, App.checkConnectionInterval)
+            setInterval(App.checkDealsTimer, 1000);
 
         }, null, function(){
-            T.byId('splash-loading').style.display = 'none';
-            T.byId('splash-message').innerHTML = Messages.connectionError
+            App.showNoConnection();
         });
         return 0;
     }
@@ -652,7 +672,7 @@ window.addEventListener('load', function() {
 window.addEventListener("orientationchange", function() {
     setTimeout(function(){
         location.reload();
-    }, 50)
+    }, 100)
 }, false);
 document.addEventListener('touchmove', function (e) {
     if (T.isIOS && e.changedTouches.length) {

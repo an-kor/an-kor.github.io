@@ -80,15 +80,15 @@
                 <div class="dealinfo-content-details">
                     <div class="dealinfo-content-block">
                         <div class="dealinfo-content-block-title">%HIGHLIGHTS_MSG%</div>
-                        <div class="dealinfo-content-block-content">%HIGHLIGHTS%</div>
+                        <div class="dealinfo-content-block-content"><ul>%HIGHLIGHTS%</ul></div>
                     </div>
                     <div class="dealinfo-content-block">
                         <div class="dealinfo-content-block-title">%TERMS_MSG%</div>
-                        <div class="dealinfo-content-block-content">%TERMS%</div>
+                        <div class="dealinfo-content-block-content"><ul>%TERMS%</ul></div>
                     </div>
                     <div class="dealinfo-content-block">
                         <div class="dealinfo-content-block-title">%ABOUT_MSG%</div>
-                        <div class="dealinfo-content-block-content">%ABOUT%</div>
+                        <div class="dealinfo-content-block-content"><ul>%ABOUT%</ul></div>
                     </div>
                     %OTHER:<div class="dealinfo-content-block"><div class="dealinfo-content-block-title">%OTHER_MSG%</div><div class="dealinfo-content-loading content-loading"></div><div class="dealinfo-content-block-content dealinfo-content-block-image">%OTHER_IMG%</div></div>:OTHER%
                     <div class="dealinfo-content-map" id="%MAP_ID%"></div>
@@ -129,13 +129,9 @@
         </div>
     </script>
     <script id="noconnection-template" type="text/x-template">
-        <div onclick="App.checkConnection();" ontouchmove="return false;" class="noconnection-page">
-            <div class="noconnection-tag"></div>
-            <div class="noconnection-msg">
-                <div class="noconnection-title">%TITLE%</div>
-                %MSG%
-            </div>
-        </div>
+        <div id="splash-noconnection-tag"></div>
+        <div id="splash-noconnection-message">%TITLE%</div>
+        <div id="splash-noconnection-button-pane"><div id="splash-noconnection-button">%MSG%</div></div>
     </script>
     <script id="instructions-template" type="text/x-template">
         <div onclick="App.hideInstructions();" ontouchmove="return false;" class="instructions-page">
@@ -191,7 +187,7 @@
 
     <script id="search-categories-item-template" type="text/x-template">
         <div class="search-cat" onclick="App.searchByCategory('section:%ID%', '%NAME%')">
-            <div class="search-cat-image"></div>
+            <div class="search-cat-image" style="background-image: url(%ICON%)"></div>
             <div class="search-cat-title">%NAME%</div>
         </div>
     </script>
@@ -199,30 +195,6 @@
         <div class="search-categories">
             <div class="search-cat-header">%HEADER%</div>
             %CATEGORIES%
-            <!--div class="search-cat" onclick="App.searchByCategory('section:1', '%HEALTH%')">
-                <div class="search-cat-image image-health"></div>
-                <div class="search-cat-title">%HEALTH%</div>
-            </div>
-            <div class="search-cat" onclick="App.searchByCategory('section:2', '%HOME%')">
-                <div class="search-cat-image image-home"></div>
-                <div class="search-cat-title">%HOME%</div>
-            </div>
-            <div class="search-cat" onclick="App.searchByCategory('section:3', '%MODE%')">
-                <div class="search-cat-image image-mode"></div>
-                <div class="search-cat-title">%MODE%</div>
-            </div>
-            <div class="search-cat" onclick="App.searchByCategory('section:4', '%TECH%')">
-                <div class="search-cat-image image-teknik"></div>
-                <div class="search-cat-title">%TECH%</div>
-            </div>
-            <div class="search-cat" onclick="App.searchByCategory('section:5', '%SPORT%')">
-                <div class="search-cat-image image-sport"></div>
-                <div class="search-cat-title">%SPORT%</div>
-            </div>
-            <div class="search-cat" onclick="App.searchByCategory('section:6', '%FAMILY%')">
-                <div class="search-cat-image image-family"></div>
-                <div class="search-cat-title">%FAMILY%</div>
-            </div-->
         </div>
     </script>
     <script id="changecity-item-template" type="text/x-template">
@@ -241,9 +213,10 @@
     </script>
 </head>
 <body>
-<div id="splash">
+<div id="splash" onclick="App.checkConnection(1);" ontouchmove="return false;">
     <div id="splash-loading"></div>
     <div id="splash-message"></div>
+    <div id="splash-noconnection" style="display:none"></div>
 </div>
 <div id="container">
     <div id="pages-wrapper" class="wrapper">
@@ -272,10 +245,8 @@
         </div>
     </div>
 </div>
-
 <div id="page-on-top" style="display:none;">
 </div>
-
 <script type="text/javascript" src="js/messages.se.js"></script>
 <script type="text/javascript" src="js/utils.js"></script>
 <script type="text/javascript" src="js/styles.js"></script>

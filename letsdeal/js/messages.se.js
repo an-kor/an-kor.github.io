@@ -40,10 +40,11 @@ var Messages = {
     "shareText": "%NAME% at Let\'s deal",
     "shareTextWithLink": "%NAME% at Let\'s deal - %LINK%",
     "viaTwitter": "Letsdeal_sve",
-    "noConnectionTitle": "Kunde inte ladda deals!",
-    "noConnectionMsg": "Vänligen kontrollera er internetuppkoppling och försök igen",
+    "noConnectionTitle": "<strong>Kunde inte ladda deals!</strong><br/>Vänligen kontrollera er internetuppkoppling",
+    "noConnectionMsg": "Försök igen",
     "instructionsTitle": "Så gör du",
     "instructionsHorizontal": "Svajpa åt sidan för att välja avdelning",
     "instructionsVertical": "Svajpa nedåt för att se fler deals",
-    "soldOut": "Slutsåld"
+    "soldOut": "Slutsåld",
+	"viewAll": "Visa alla"
 };

@@ -22,7 +22,7 @@ var Styles = {
     hScroller: {
         bgColor: '#edebe6',
         numberOfPages: 0,
-        numberOfImages: (T.isIPad?14:10)
+        numberOfImages: (T.isIPad?6:10)
     },
     searchItem: {
         bgColor: '#edebe6',
@@ -33,12 +33,12 @@ var Styles = {
         content: {
             title: {
                 fontSize: 40,
-                fontFamily: "source-sans-pro,  'avenir', sans-serif",
+                fontFamily: "source-sans-pro, 'avenir', sans-serif",
                 fontWeight: 'normal',
                 color: '#333333',
                 lineHeight: 1.3,
                 paddingTop: 12,
-                paddingBottom: 12
+                paddingBottom: 25
             }
         },
         bottom: {

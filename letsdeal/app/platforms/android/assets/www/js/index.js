@@ -15,11 +15,10 @@ var app = {
 
             document.getElementById('splash-loading').style.display = 'none';
             document.getElementById('splash-message').innerHTML = msg;
-            document.getElementById('splash-button').innerHTML = 'försök igen';
         }   
     	var networkState = navigator.connection.type;
-    	var errorMsg = '<strong>Kunde inte ladda deals!</strong><br/>Vänligen kontrollera er internetuppkoppling';
-    	var noConnectionMsg = '<strong>Kunde inte ladda deals!</strong><br/>Vänligen kontrollera er internetuppkoppling';
+    	var errorMsg = '<strong>Kunde inte ladda deals!</strong><br/>Vänligen kontrollera er internetuppkoppling och försök igen';
+    	var noConnectionMsg = '<strong>Kunde inte ladda deals!</strong><br/>Vänligen kontrollera er internetuppkoppling och försök igen';
         var noConnection = function(){
             showError(noConnectionMsg);
         }
@@ -42,14 +41,12 @@ var app = {
             xmlhttp.send(null);
             var timeout = setTimeout( function(){ xmlhttp.abort(); showError(errorMsg); }, 5000);
         }
-        
         if (networkState == Connection.NONE) {
             noConnection();
             setInterval(app.checkConnection, 5000);
         } else {
-        	var url = 'http://touch.letsdeal.se';
-            //var url = 'http://144.76.56.236';
-        	//  var url = 'http://192.168.2.168/an-kor.github.io/letsdeal/';
+            var url = 'http://144.76.56.236';
+        	// var url = 'http://192.168.0.78/an-kor.github.io/letsdeal/';
             checkHost(url);
         }
     }

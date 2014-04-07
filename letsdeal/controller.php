@@ -325,7 +325,8 @@ class MobileController {
                 }
                 $record = array(
                     "categoryId" => $catIds,
-                    "name" => (string) $searchCategory->name
+                    "name" => (string) $searchCategory->name,
+                    "icon" => (string) $searchCategory->icon
                 );
                 $this->dbSearchCategories->insert($record);
             }
@@ -339,15 +340,12 @@ class MobileController {
         $result = array();
         try {
             if (strpos($text,'section:')>-1) {
-                // $query = array("cats" => (int) substr($text,8));
-
                 $catIds = explode(",", substr($text,8));
                 $catQuery = array();
                 foreach ($catIds as $catId) {
                     $catQuery[] = array("cats" => (int) $catId);
                 }
                 $query = array('$or' => $catQuery);
-                // print_r($query);die;
             } else {
                 $query = array('$or' => array(array("title" => new MongoRegex("/\b".$text."/i")), array("shortname" => new MongoRegex("/\b".$text."/i"))));
             }
@@ -361,27 +359,30 @@ class MobileController {
             $query["type"] = array('$in' => $sections);
 
             $cursor = $this->dbDeals->find($query)->limit(200);
+			$ids = array();
             foreach ($cursor as $record) {
-                $r = array(
-                    "id" => $record['id'],
-                    "title" => $record['shortname'],
-                    "price" => round($record['price']),
-                    "origPrice" => round($record['origprice']),
-                    "isSoldOut" => $record['is_sold_out'],
-                    "bulk" => $record['bulk'],
-                    "imageSrc" => $record['image']['url'],
-                    "info" => $record['title'],
-                    "endtime" => $record['endtime'],
-                    "lat" => $record['latitude'],
-                    "lon" => $record['longitude'],
-                    "smallimage" => $record['smallimage'],
-                    "type" => $record['type']
-                );
-                if (isset($record['categoryId'])) {
-                    $r["categoryId"] = $record['categoryId'];
-                }
-
-                $result[] = $r;
+				if (!in_array($record['id'], $ids)) {
+					$ids[] = $record['id'];
+					$r = array(
+						"id" => $record['id'],
+						"title" => $record['shortname'],
+						"price" => round($record['price']),
+						"origPrice" => round($record['origprice']),
+						"isSoldOut" => $record['is_sold_out'],
+						"bulk" => $record['bulk'],
+						"imageSrc" => $record['image']['url'],
+						"info" => $record['title'],
+						"endtime" => $record['endtime'],
+						"lat" => $record['latitude'],
+						"lon" => $record['longitude'],
+						"smallimage" => $record['smallimage'],
+						"type" => $record['type']
+					);
+					if (isset($record['categoryId'])) {
+						$r["categoryId"] = $record['categoryId'];
+					}
+					$result[] = $r;
+				}
             }
         } catch (Exception $e){
             $this->logException($e);
@@ -413,7 +414,8 @@ class MobileController {
                     "info" => $record['title'],
                     "endtime" => $record['endtime'],
                     "lat" => $record['latitude'],
-                    "lon" => $record['longitude']
+                    "lon" => $record['longitude'],
+                    "timer" => (rand(0,2) == 2)?1:0					
                 );
                 if (isset($record['categoryId'])) {
                     $r["categoryId"] = $record['categoryId'];
@@ -510,7 +512,8 @@ class MobileController {
             foreach ($cursor as $searchCategory) {
                 $r = array(
                     "id"   => $searchCategory['categoryId'],
-                    "name" => $searchCategory['name']
+                    "name" => $searchCategory['name'],
+                    "icon" => $searchCategory['icon']
                 );
                 $result->searchCategories[] = $r;
             }
@@ -587,6 +590,9 @@ if(defined('STDIN') ) {
                 //echo json_encode($app->getDealInfo($_REQUEST['dealId']));
                 echo json_encode($app->getDealInfoFromXmlFeed($_REQUEST['dealId']));
                 break;
+	    case 'getfeed':
+                $app->getFeed();
+	        break;
         }
     }
 }
