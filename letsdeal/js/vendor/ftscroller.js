@@ -111,8 +111,8 @@ var FTScroller, CubicBezier;
 	var _transformSuffixes = { x: ',0' + (_useToggleableHardwareAcceleration ? ')' : ',0)'), y: (_useToggleableHardwareAcceleration ? ')' : ',0)') };
 
 	// Constants.  Note that the bezier curve should be changed along with the friction!
-	var _kFriction = 0.998;
-	var _kMinimumSpeed = 0.3;
+	var _kFriction = 0.996;
+	var _kMinimumSpeed = 0.2;
 
 	// Create a global stylesheet to set up stylesheet rules and track dynamic entries
 	/*(function () {

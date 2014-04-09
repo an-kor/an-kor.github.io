@@ -225,7 +225,6 @@ var Templates = {
             top: T.px(Styles.topMenu.height),
             bottom: 0
         });
-        
     },
     prepareSearch: function(){
         T.updateStyle('.top-menu-search', {
@@ -337,7 +336,6 @@ var Templates = {
             backgroundSize:  T.px(18) + ' ' + T.px(27),
             backgroundPosition:  T.w()- T.p(60) + 'px 50%'
         });
-
         T.updateStyle('.changecity-item', {
             width: T.w()+'px',
             borderBottom: T.px(1,1) + 'solid #aaa',
@@ -348,9 +346,7 @@ var Templates = {
             lineHeight: T.px(90),
             fontSize: T.px(40)
         });
-
     },
-
     prepareSplash: function(){
         T.updateStyle('#splash', {
             'background-size':  T.p(559)+'px '+ T.px(359),
@@ -403,11 +399,9 @@ var Templates = {
             backgroundColor: Styles.hScroller.bgColor
         });
         T.updateStyle('#hscroller-scroller-list > li', 'width', T.w() + 'px');
-
         T.updateStyle('.ftscroller_scrollbary', {
             top: T.px(Styles.topMenu.height)
         });
-
         App.mainPageHScroll = new IScroll(T.byId('hscroller-wrapper'), {
             scrollX: true,
             scrollY: 0,
@@ -443,15 +437,12 @@ var Templates = {
         });
     },
     prepareDeals: function(){
-
-
         if (!T.isIOS) {
             T.updateStyle('.main-v-wrapper', {
                 overflowY: 'scroll',
                 webkitOverflowScrolling: 'touch'
             });
         }
-
         var scrollWidth = 0, backgroundSize, is2Columns = false;
         if (T.isDesktop) {
             scrollWidth = 8 / ((window.outerWidth - 8) / window.innerWidth)
@@ -468,7 +459,6 @@ var Templates = {
         } else {
             backgroundSize = itemWidth + 'px auto'
         }
-
         T.updateStyle('.deallist-item', {
             margin: T.p(22) + 'px 0 0 ' + T.p(15, 1) + 'px',
             height: itemHeight + T.px(50) + 'px',
@@ -481,7 +471,6 @@ var Templates = {
             backgroundPosition: '50% 0'
         });
         var shadowHeight = itemHeight / 3;
-
         T.updateStyle('.deallist-item-header', {
             //background: 'rgba(0,0,0,0.6)',
             height: T.p(50) + shadowHeight+'px',
@@ -555,7 +544,6 @@ var Templates = {
             webkitBackgroundSize: T.px(48) + ' ' + T.px(48),
             backgroundSize: T.px(48) + ' ' + T.px(48)
         });
-
         T.updateStyle('.categories-dropdown', {
             width: T.w() - T.p(28) - (T.isDesktop?16:0) + 'px',
             fontSize: T.px(30),
