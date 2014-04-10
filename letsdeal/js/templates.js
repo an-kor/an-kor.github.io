@@ -664,14 +664,30 @@ var Templates = {
             backgroundSize: T.px(25) + ' ' + T.px(25)
         });
 
-        var imgHeight = (T.w()/510)*290;
-        if (imgHeight > T.h()/2.1) {
-            imgHeight = T.h()/2.1
+        var pageWidth = T.w();
+        if (T.h() < T.w()) {
+            pageWidth = T.h();
+
+            T.updateStyle('.dealinfo-content', {
+                padding: '0 '+ (T.w() - pageWidth)/2+'px'
+            });
+
+            T.updateStyle('.dealinfo-content-wrapper', {
+                padding: T.px(10) + ' ' + T.px(0),
+                background: '#edebe6'
+            });
+        } else {
+            T.updateStyle('.dealinfo-content-wrapper', {
+                padding: T.px(10) + ' ' + T.px(20),
+                background: '#edebe6'
+            });
         }
+
+        var imgHeight = (pageWidth/510)*290;
 
         st = Styles.dealInfo.content;
         T.updateStyle('.dealinfo-content-image', {
-            width: T.w(),
+            width: pageWidth+'px',
             height: imgHeight+'px'
         });
         /*if (T.w()/510>2) {
@@ -679,10 +695,6 @@ var Templates = {
                 webkitFilter: 'blur('+ T.px(3)+')'
             });
         }*/
-        T.updateStyle('.dealinfo-content-wrapper', {
-            padding: T.px(10) + ' ' + T.px(20),
-            background: '#edebe6'
-        });
         T.updateStyle('.dealinfo-content-title', {
             color: st.title.color,
             lineHeight: st.title.lineHeight,

@@ -117,7 +117,7 @@ var App = {
         App.showIFrame(Messages.myDeals, Messages.myDealsSrc);
     },
     showInstructions: function(){
-        if (!window.localStorage.getItem("instructionsShown")){
+        if (!window.localStorage || !window.localStorage.getItem("instructionsShown")){
             var template = T.byId('instructions-template').innerHTML;
             template = template.replace('%TITLE%', Messages.instructionsTitle);
             template = template.replace('%MSG_H%', Messages.instructionsHorizontal);
@@ -214,6 +214,13 @@ var App = {
                         T.query('.search-scroller').innerHTML = T.byId('search-categories-template').innerHTML;
                     }
                 }
+
+                if (T.isIOS) {
+                    App.searchScroller.scrollTo(0,0);
+                } else {
+                    T.query('.search-scroller').scrollTop = 0;
+                }
+
             }, {text: App.lastSearch, city: App.currentCityId}, function(){
             });
         } else {
@@ -245,12 +252,6 @@ var App = {
                 searchCategoriesHTML += searchCatItemCurrent;
             }
             searchCatTpl = searchCatTpl.replace('%CATEGORIES%', searchCategoriesHTML);
-            /*searchCatTpl = searchCatTpl.replace(new RegExp('%HEALTH%', 'g'), Messages.catHealth);
-            searchCatTpl = searchCatTpl.replace(new RegExp('%HOME%', 'g'), Messages.catHome);
-            searchCatTpl = searchCatTpl.replace(new RegExp('%MODE%', 'g'), Messages.catMode);
-            searchCatTpl = searchCatTpl.replace(new RegExp('%TECH%', 'g'), Messages.catTech);
-            searchCatTpl = searchCatTpl.replace(new RegExp('%SPORT%', 'g'), Messages.catSport);
-            searchCatTpl = searchCatTpl.replace(new RegExp('%FAMILY%', 'g'), Messages.catFamily);*/
             T.byId('search-categories-template').innerHTML = searchCatTpl;
             T.query('.search-scroller').innerHTML = searchCatTpl;
             T.initHover(T.query('.search-cat'), Styles.searchItem.bgColorHover);
@@ -325,7 +326,9 @@ var App = {
                     T.updateStyle('#hscroller-scroller', {
                         width: T.w()*Styles.hScroller.numberOfPages+'px'
                     });
-                    window.localStorage.setItem('userCityId', App.cities[i].id);
+                    try{
+                        window.localStorage.setItem('userCityId', App.cities[i].id);
+                    } catch (e){}
                     if (setActive) {
                         T.query('#top-menu-tabs > li:nth-child(2)').className = 'top-menu-tabs-active';
                     }
@@ -532,7 +535,10 @@ var App = {
             App.cities = data.cities;
             App.startCities = data.startCities;
             App.searchCategories = data.searchCategories;
-            var userCityId = window.localStorage.getItem('userCityId');
+            var userCityId = false;
+            try{
+                userCityId = window.localStorage.getItem('userCityId');
+            } catch (e){}
             if (userCityId || location.hash.length>3) {
                 if (!userCityId) {
                     userCityId = 'stockholm';
@@ -569,7 +575,9 @@ var App = {
                                 minDistanceCityId = stockholmId;
                             }
                             App.currentCityId = data.cities[minDistanceCityId].id;
-                            window.localStorage.setItem('userCityId', data.cities[minDistanceCityId].id);
+                            try{
+                                window.localStorage.setItem('userCityId', App.currentCityId);
+                            } catch (e){}
                             Deals.addNewList(App.cities[minDistanceCityId], 0);
                             Deals.addNewList(App.startCities[minDistanceCityId], 0);
                             App.checkLocation();
@@ -607,7 +615,9 @@ var App = {
                             minDistanceCityId = stockholmId;
                         }
                         App.currentCityId = data.cities[minDistanceCityId].id;
-                        window.localStorage.setItem('userCityId', data.cities[minDistanceCityId].id);
+                        try{
+                            window.localStorage.setItem('userCityId', App.currentCityId);
+                        } catch (e){}
                         Deals.addNewList(App.cities[minDistanceCityId], 0);
                         Deals.addNewList(App.startCities[minDistanceCityId], 0);
                         App.checkLocation();
@@ -672,7 +682,7 @@ window.addEventListener('load', function() {
 window.addEventListener("orientationchange", function() {
     setTimeout(function(){
         location.reload();
-    }, 100)
+    }, 500)
 }, false);
 document.addEventListener('touchmove', function (e) {
     if (T.isIOS && e.changedTouches.length) {

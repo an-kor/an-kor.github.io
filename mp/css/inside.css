@@ -3779,7 +3779,7 @@ ul#submenu {
     position: fixed;
 }
 
-@media (min-width: 533px) {
+@media (min-width: 813px) {
     #aside::-webkit-scrollbar, #nav::-webkit-scrollbar {
         width: 5px;
     }
