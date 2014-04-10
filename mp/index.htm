@@ -22,7 +22,7 @@
                 userEntryEl.parentNode.insertBefore(newUserEntry, userEntryEl.nextSibling)
             }
             byId('page-loading').style.display = 'none';
-            byId('page').style.height = window.innerHeight - byId('page').getBoundingClientRect().top + 'px';
+            //byId('page').style.height = window.innerHeight - byId('page').getBoundingClientRect().top + 'px';
             byId('aside').scrollTop = 1;
             var navEl = byId('nav');
             navEl.scrollTop = 1;
@@ -48,6 +48,7 @@
                     byId('header').style.width = w;
                     byId('main').style.width = w;
                     byId('header').style.left = navEl.offsetWidth + 'px';
+                    byId('submenu').style.left = navEl.offsetWidth + 'px';
                     byId('main').style.marginLeft = navEl.offsetWidth + 'px';
                 }
             };
@@ -58,6 +59,7 @@
                     byId('header').style.width = 'auto';
                     byId('main').style.width = 'auto';
                     byId('header').style.left = 0;
+                    byId('submenu').style.left = 0;
                     byId('main').style.marginLeft = 0;
                 }
             };
@@ -78,7 +80,7 @@
             } else {
                 byId('aside').style.display = 'none';
             }
-            byId('page').style.height = window.innerHeight - byId('page').getBoundingClientRect().top + 'px';
+           // byId('page').style.height = window.innerHeight - byId('page').getBoundingClientRect().top + 'px';
         });
     </script>
 </head>
@@ -349,7 +351,6 @@
     </ul>
 </div>
 <div id="page">
-<div id="page-scroller">
 <div id="visitors_count" class="pad_sm_l pad_sm_r pad_sm_t">
     <div id="page-loading">Loading...</div>
     <span id="i18n-29">Totalt antal besök: 100</span>
@@ -382,7 +383,6 @@
 
 </div>
 
-</div>
 </div>
 </div>
 </div>

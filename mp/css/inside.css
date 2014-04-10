@@ -2532,11 +2532,9 @@ ul#submenu li a:active {
     right: 282px;
   }
   #main #submenu {
-    left: 0px;
-    width: 100%;
-  /*
+    width: auto;
     left: 187px;
-    right: 282px;*/
+    right: 282px;
   }
   #aside {
     right: 0;
@@ -2596,12 +2594,12 @@ ul#submenu li a:active {
   #site.active-sidebar #main {
     margin-left: 187px;
   }
-  /*#site.active-sidebar #main #header {
+  #site.active-sidebar #main #header {
     left: 187px;
   }
   #site.active-sidebar #main #submenu {
     left: 187px;
-  }*/
+  }
 }
 .form-control {
   padding: 8px 12px;
@@ -3736,11 +3734,11 @@ fieldset[disabled] .btn-mp-notification {
 }
 
 body{
-    overflow: hidden;
+    overflow-x: hidden;
 }
 #nav {
     display: block;
-    position: absolute;
+    position: fixed;
     width: 187px;
     height: 100%;
     top: 0;
@@ -3751,8 +3749,10 @@ body{
     overflow-x:hidden;
     -webkit-overflow-scrolling: touch;
 }
+
 #aside {
     display: none;
+    position: fixed;
     float:left;
     width: 282px;
     overflow-y:auto;
@@ -3761,11 +3761,10 @@ body{
 }
 #page {
     position:relative;
-    height:100%;
 }
 #page-scroller {
     display: block;
-    position:absolute;
+    position:fixed;
     top:0;
     bottom:0;
     width:100%;
@@ -3774,8 +3773,26 @@ body{
     -webkit-overflow-scrolling: touch;
 }
 #main #header {
-    position: absolute;
+    position: fixed;
 }
 ul#submenu {
-    position: absolute;
+    position: fixed;
+}
+
+@media (min-width: 533px) {
+    #aside::-webkit-scrollbar, #nav::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    #aside::-webkit-scrollbar-track, #nav::-webkit-scrollbar-track {
+        background-color: #f7f2ea;
+        z-index:1000;
+    }
+
+    #nav::-webkit-scrollbar-thumb , #aside::-webkit-scrollbar-thumb {
+        -webkit-border-radius: 2px;
+        border-radius: 2px;
+        background: rgba(0,0,0,0.5);
+        z-index:10000;
+    }
 }
