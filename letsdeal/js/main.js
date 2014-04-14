@@ -512,12 +512,14 @@ var App = {
         FastClick.attach(document.body);
         T.checkStandalone();
         var windowH = 1136, windowW = 800, screenH = 1136;
-        //alert(screen.availHeight + " " + window.innerHeight)
-        if (T.isAndroid) {
-            screenH = screen.availHeight/window.devicePixelRatio;
-        } else {
-            screenH = screen.availHeight;
+        var screenH = screen.availHeight;
+        if (Math.abs(window.orientation) == 90) {
+            screenH = screen.availWidth;
         }
+        if (T.isAndroid) {
+            screenH = screenH/window.devicePixelRatio;
+        }
+
         if (!T.isDesktop && (screenH - window.innerHeight > 20)) {
             windowH = windowH - (screenH - window.innerHeight)*2.5;
         }
@@ -672,18 +674,32 @@ var App = {
             App.showNoConnection();
         });
         return 0;
+    },
+    changeOrientation: function(){
+       /* T.byId('splash').style.display = 'block';
+        T.byId('hscroller-scroller-list').innerHTML = "";
+        T.byId('top-menu-tabs').innerHTML = "";
+        T.byId('top-menu-tabs').innerHTML = "";
+        setTimeout(function(){
+            App.init();
+        }, 500);*/
+        window.scrollTo( 0, 0 );
+        T.byId('splash').style.display = 'block';
+        setTimeout(function(){
+            location.reload();
+        }, 300)
     }
 };
 window.addEventListener('load', function() {
     setTimeout(T.preloadImages, 0);
     App.init();
-    window.scrollTo( 0, 1 );
+    window.scrollTo( 0, 0 );
 });
+
 window.addEventListener("orientationchange", function() {
-    setTimeout(function(){
-        location.reload();
-    }, 500)
+    App.changeOrientation()
 }, false);
+
 document.addEventListener('touchmove', function (e) {
     if (T.isIOS && e.changedTouches.length) {
         if (e.changedTouches[0].screenY < T.p(Styles.topMenu.height) || e.changedTouches[0].screenY > T.h() - T.p(Styles.footer.height)) {
