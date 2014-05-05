@@ -176,19 +176,30 @@ var Templates = {
             color: Styles.topMenu.color
         });
 
+        T.updateStyle('.top-menu', {
+            color: Styles.topMenu.color,
+            fontSize: T.px(Styles.topMenu.fontSize),
+            fontWeight: Styles.topMenu.fontWeight
+        });
+
         T.updateStyle('.top-menu-back-btn', {
             width: T.px(Styles.topMenu.backButtonWith),
-            borderRight: T.px(1,1)+ ' solid rgba(0,0,0,0.1)',
-            backgroundSize: T.px(24) + ' ' + T.px(42)
+            //borderRight: T.px(1,1)+ ' solid rgba(0,0,0,0.1)',
+            backgroundPosition: T.px(24) + ' 50%',
+            backgroundSize: T.px(24) + ' ' + T.px(42),
+            fontSize: T.px(32),
+            lineHeight: T.px(Styles.topMenu.height+5),
+            paddingLeft: T.px(70)
         });
+
         T.updateStyle('.search-page .top-menu-back-btn', {
-            borderRight: 0,
-            width: T.px(Styles.topMenu.backButtonWith - 30)
+            //borderRight: 0,
+            width: T.px(80)
         });
 
         T.updateStyle('.top-menu-share-btn', {
             width: T.px(Styles.topMenu.shareButtonWith),
-            borderLeft: T.px(1,1)+ ' solid rgba(255,255,255,0.2)',
+            //borderLeft: T.px(1,1)+ ' solid rgba(255,255,255,0.2)',
             backgroundSize: T.px(80) + ' ' + T.px(80),
             lineHeight: T.px(Styles.topMenu.height+5),
             textAlign: 'center',
@@ -204,19 +215,18 @@ var Templates = {
 
         T.updateStyle('.top-menu-title', {
             width: T.w() - T.p(Styles.topMenu.backButtonWith) + 'px',
-            borderLeft: T.px(1,1)+ ' solid rgba(255,255,255,0.2)',
+            //borderLeft: T.px(1,1)+ ' solid rgba(255,255,255,0.2)',
             paddingLeft: T.px(20),
-            lineHeight: T.px(Styles.topMenu.height),
-            color: Styles.topMenu.color,
-            fontSize: T.px(Styles.topMenu.fontSize),
-            fontWeight: Styles.topMenu.fontWeight
+            lineHeight: T.px(Styles.topMenu.height)
         });
 
+        var topMenuTitleWidth = T.w() - T.p(Styles.topMenu.backButtonWith + Styles.topMenu.shareButtonWith);
         T.updateStyle('.deal-page .top-menu-title', {
-            width: T.w() - T.p(Styles.topMenu.backButtonWith + Styles.topMenu.shareButtonWith) + 'px',
-            borderRight: T.px(1,1)+ ' solid rgba(0,0,0,0.1)',
-            borderLeft: T.px(1,1)+ ' solid rgba(255,255,255,0.2)',
-            backgroundSize: 'contain'
+            width: topMenuTitleWidth + 'px',
+            //borderRight: T.px(1,1)+ ' solid rgba(0,0,0,0.1)',
+            //borderLeft: T.px(1,1)+ ' solid rgba(255,255,255,0.2)',
+            backgroundSize: 'contain',
+            backgroundPosition: (topMenuTitleWidth - T.p(230))/2 + 'px 50%'
         });
 
         T.query('#top-menu-wrapper li:nth-child(1)').className = 'top-menu-tabs-active';

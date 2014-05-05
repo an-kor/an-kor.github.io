@@ -65,6 +65,7 @@ var Deals = {
                 if(Deals.loadedDeals[dealId]) {
                     var data = Deals.loadedDeals[dealId];
                     //template = template.replace("%TITLE%", data.title);
+                    template = template.replace("%BACK%", Messages.backBtn);
                     template = template.replace("%SHARE%", Messages.share);
                     template = template.replace("%IMAGESRC%", data.imageSrc);
                     template = template.replace("%MAP_ID%", "dealinfo-map-"+data.id);
@@ -374,11 +375,16 @@ var Deals = {
         }
     },
     loadDeals: function(section, from, limit, callback, errorCallback){
-        var dealsText = '', sections = App.sections.concat(App.cities), category = 0;
-        for (var i in sections) {
-            if (sections[i].id == section && sections[i].currentCategory) {
-                category = sections[i].currentCategory;
+        var dealsText = '', category = 0;
+        try {
+            var sections = App.sections.concat(App.cities);
+            for (var i in sections) {
+                if (sections[i].id == section && sections[i].currentCategory) {
+                    category = sections[i].currentCategory;
+                }
             }
+        } catch (e) {
+            console.error(e);
         }
         T.request('deals', function(data){
             try {
