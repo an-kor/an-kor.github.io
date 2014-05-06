@@ -20,12 +20,36 @@ var Deals = {
         var shareTitle = encodeURIComponent(Messages.shareTitle).replace(/'/g, "%27");
         var shareTextWithLink = encodeURIComponent(Messages.shareTextWithLink.replace('%NAME%', Deals.loadedDeals[App.currentDeal].title).replace('%LINK%', location.href)).replace(/'/g, "%27");
         var viaTwitter = encodeURIComponent(Messages.viaTwitter).replace(/'/g, "%27");
-        template = template.replace(/%FACEBOOK%/g, 'http://www.facebook.com/sharer/sharer.php?s=100&p[url]='+encodeURIComponent(location.href)+'&p[title]='+shareTitle+'&p[summary]='+shareText);
+        /*template = template.replace(/%FACEBOOK%/g, 'http://www.facebook.com/sharer/sharer.php?s=100&p[url]='
+            +encodeURIComponent(location.href)+
+            '&p[title]='
+            +shareTitle+
+            '&p[summary]='
+            +shareText+
+            'p[images][0]='
+            +encodeURIComponent(Deals.loadedDeals[App.currentDeal].imageSrc)
+        );*/
+        template = template.replace(/%FACEBOOK%/g,
+            'https://www.facebook.com/dialog/feed?' +
+                'app_id=' + Messages.facebookAppId +
+                '&display=popup' +
+                '&name='
+                + encodeURIComponent(Messages.shareFacebookText) +
+                '&link='
+                + encodeURIComponent(location.href) +
+                '&caption='
+                + encodeURIComponent(Deals.loadedDeals[App.currentDeal].title) +
+                '&picture='
+                + encodeURIComponent(Deals.loadedDeals[App.currentDeal].imageSrc) +
+                '&redirect_uri='
+                + encodeURIComponent(location.href)
+        );
+
         template = template.replace(/%EMAIL%/g, ('mailto:?subject='+shareTitle+'&body='+shareTextWithLink).replace('%27','\''));
         template = template.replace(/%TWITTER%/g, 'https://twitter.com/intent/tweet?url='+encodeURIComponent(location.href)+'&text='+shareText+'&via='+viaTwitter);
         this.blurBackground();
         T.byId('page-on-top').innerHTML = template;
-        T.query('.dealinfo-share-block', 1).style.marginTop = T.h() - 5.5 * T.p(80) + 'px';
+        T.query('.dealinfo-share-block', 1).style.marginTop = T.h() - 4.5 * T.p(80) + 'px';
         T.byId('page-on-top').style.display = 'block';
     },
     hideSharePage: function () {
@@ -232,7 +256,7 @@ var Deals = {
         var newPage = document.createElement("li");
         newPage.innerHTML = pageTpl;
 		
-		if (!numberOfDeals) {
+		if (!numberOfDeals || isNaN(numberOfDeals)) {
 			numberOfDeals = Styles.hScroller.numberOfImages
 		}
 
@@ -258,7 +282,6 @@ var Deals = {
                 }
             });
         } else {
-
             var scroller = new FTScroller(wrapper, {
                 index: wrapper.index,
                 scrollingX: false,
@@ -376,15 +399,14 @@ var Deals = {
     },
     loadDeals: function(section, from, limit, callback, errorCallback){
         var dealsText = '', category = 0;
-        try {
-            var sections = App.sections.concat(App.cities);
-            for (var i in sections) {
-                if (sections[i].id == section && sections[i].currentCategory) {
-                    category = sections[i].currentCategory;
-                }
+        var sections = App.sections.concat(App.cities);
+        for (var i in sections) {
+            if (sections[i].id == section && sections[i].currentCategory) {
+                category = sections[i].currentCategory;
             }
-        } catch (e) {
-            console.error(e);
+        }
+        if (!limit) {
+            limit = Styles.hScroller.numberOfImages;
         }
         T.request('deals', function(data){
             try {

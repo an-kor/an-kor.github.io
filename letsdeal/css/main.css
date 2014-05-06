@@ -539,6 +539,9 @@ div.top-menu {
     background-position: 50% 50%;
 }
 .top-menu-share-btn{
+    background-image: url(../img/share-btn.png);
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
 }
 .deal-page {
 }
@@ -709,7 +712,6 @@ div.top-menu {
     width:100%;
     background-color: rgba(0,0,0,0.5);
 }
-
 .noconnection-page{
     position: absolute;
     top:0;

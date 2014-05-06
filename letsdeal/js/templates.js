@@ -8,6 +8,9 @@ var Templates = {
             '</div>';
     },
     dealsItem: function(data){
+        if (data.discount > 0) {
+            data.title = data.title + " -" + data.discount + "%";
+        }
         return '<li onclick="Deals.showDeal('+data.id+')"><div class="deallist-item" style="background-image: url('+data.imageSrc+');"><div>' + // ontouchend="Deals.showDeal('+data.id+')"
             '<div class="deallist-item-header">'+data.title+'</div>' +
             '<div class="deallist-item-footer">' +
@@ -72,14 +75,16 @@ var Templates = {
         T.updateStyle('#footer-tabs-city', {
             borderLeft: T.px(1,1) + ' solid ' + Styles.footer.borderColor2
         });
-        /*T.updateStyle('#footer-tabs-settings', {
+        /*
+        T.updateStyle('#footer-tabs-settings', {
             borderLeft: T.px(1,1) + ' solid ' + Styles.footer.borderColor2
         });
 
         T.byId('footer-tabs-search').innerHTML = Messages.searchDeal;
         T.byId('footer-tabs-mydeals').innerHTML = Messages.myDeals;
         T.byId('footer-tabs-city').innerHTML = Messages.changeCity;
-        T.byId('footer-tabs-settings').innerHTML = Messages.settings;*/
+        T.byId('footer-tabs-settings').innerHTML = Messages.settings;
+        */
         T.initHover(T.query('#footer-tabs li'), Styles.footer.bgColorHover);
     },
     prepareNoConnection: function(){
@@ -247,13 +252,13 @@ var Templates = {
             fontFamily: 'source-sans-pro, sans-serif',
             padding: T.px(0) + ' ' + T.px(5) +' 0 ' + T.px(50),
             fontSize: T.px(30),
-            width: T.w() - T.p(Styles.topMenu.backButtonWith) + 'px',
+            width: T.w() - T.p(110) + 'px',
             backgroundSize:  T.px(37) + ' ' + T.px(25)
         });
         T.updateStyle('#top-menu-search-input-empty', {
             margin: T.px(13) +' 0 0 0',
             height: T.px(Styles.topMenu.height - 25),
-            left: T.w() - T.p(Styles.topMenu.backButtonWith + 50) + 'px',
+            left: T.w() - T.p(160) + 'px',
             width: T.px(50),
             backgroundSize:  T.px(50) + ' ' + T.px(29)
         });

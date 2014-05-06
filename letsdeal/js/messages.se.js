@@ -19,7 +19,7 @@ var Messages = {
     "bought": "köpta",
     "kr": "kr",
     "highlights": "Höjdpunkter",
-    "terms": "Vilkor",
+    "terms": "Villkor",
     "about": "Om dealen",
     "other": "Övrigt",
     "seller": "Dealen säljes av",
@@ -30,9 +30,14 @@ var Messages = {
     "noResults": "Inga sökträffar",
     "noResultsDescription": "Ordet <strong class='search-noresults-keyword'></strong> gav ingen träff, vänligen försök med ett annat sökdord.",
     "searchCategories": "Eller välj kategori:",
-    "shareTitle": "Let\'s deal",
-    "shareText": "%NAME% at Let\'s deal",
-    "shareTextWithLink": "%NAME% at Let\'s deal - %LINK%",
+    "shareTitle": "Din vän har tipsat om en bra deal!",
+    "shareText": "Spana in dagens deal på Letsdeal.se! %NAME%",
+    "shareFacebookText": "Spana in dealen på Letsdeal.se!",
+    "shareTextWithLink": "Hej, \r\n"+
+        "Spana in dagens deal på Letsdeal.se! \r\n"+
+        "%NAME% \r\n"+
+        "Mer info hittar du här:"+
+        "%LINK%",
     "viaTwitter": "Letsdeal_sve",
     "noConnectionTitle": "<strong>Kunde inte ladda deals!</strong><br/>Vänligen kontrollera er internetuppkoppling",
     "noConnectionMsg": "Försök igen",
@@ -40,5 +45,7 @@ var Messages = {
     "instructionsHorizontal": "Svajpa åt sidan för att välja avdelning",
     "instructionsVertical": "Svajpa nedåt för att se fler deals",
     "soldOut": "Slutsåld",
-	"viewAll": "Visa alla"
+	"viewAll": "Visa alla",
+    "restOfCountry": "Övriga landet",
+    "facebookAppId": 109952115728515
 };

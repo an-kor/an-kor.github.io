@@ -263,31 +263,29 @@ class MobileController {
                     }
                 } elseif ($category->type == 'start') {
                     foreach ($category->cities->city as $city) {
-                        if ((float) $city->longitude > 0) {
-                            $record = array(
-                                "name" => (string) $category->name,
-                                "link" => (string) $city->link . '_start',
-                                "longitude" => (float) $city->longitude,
-                                "latitude" => (float) $city->latitude
-                            );
-                            if ($city->categories) {
-                                $categories = (array) $city->categories;
-                                $record["categories"] = $categories['category'];
-                            }
-                            $this->dbStartCities->insert($record);
-                            foreach ($city[0]->deals->deal as $deal) {
-                                $deal->type = (string) $city->link . '_start';
-                                $deal = (array) $deal;
-                                if (isset($deal["categories"])) {
-                                    $deal["cats"] = array();
-                                    foreach ($deal["categories"] as $catId) {
-                                        $deal["cats"][] = (int) $catId;
-                                    }
+                        $record = array(
+                            "name" => (string) $category->name,
+                            "link" => (string) $city->link . '_start',
+                            "longitude" => (float) $city->longitude,
+                            "latitude" => (float) $city->latitude
+                        );
+                        if ($city->categories) {
+                            $categories = (array) $city->categories;
+                            $record["categories"] = $categories['category'];
+                        }
+                        $this->dbStartCities->insert($record);
+                        foreach ($city[0]->deals->deal as $deal) {
+                            $deal->type = (string) $city->link . '_start';
+                            $deal = (array) $deal;
+                            if (isset($deal["categories"])) {
+                                $deal["cats"] = array();
+                                foreach ($deal["categories"] as $catId) {
+                                    $deal["cats"][] = (int) $catId;
                                 }
-                                $deal['endtime'] = strtotime($deal['endtime']);
-                                $deal['sorting'] = $sortIncrement;
-                                $this->dbDeals->insert($deal);
                             }
+                            $deal['endtime'] = strtotime($deal['endtime']);
+                            $deal['sorting'] = $sortIncrement;
+                            $this->dbDeals->insert($deal);
                         }
                     }
                 } else {
@@ -368,6 +366,7 @@ class MobileController {
 						"title" => $record['shortname'],
 						"price" => round($record['price']),
 						"origPrice" => round($record['origprice']),
+						"discount" => (isset($record['hide_discount']))?round($record['discount_percentage']):'0',
 						"isSoldOut" => $record['is_sold_out'],
 						"bulk" => $record['bulk'],
 						"imageSrc" => $record['image']['url'],
@@ -401,13 +400,13 @@ class MobileController {
                 $query["cats"] = (int) $category;
             }
             $cursor = $this->dbDeals->find($query)->sort(array($sort => $sortDirection))->limit($limit)->skip($from);
-
             foreach ($cursor as $record) {
                 $r = array(
                     "id" => $record['id'],
                     "title" => $record['shortname'],
                     "price" => round($record['price']),
                     "origPrice" => round($record['origprice']),
+                    "discount" => (isset($record['hide_discount']))?round($record['discount_percentage']):'0',
                     "isSoldOut" => $record['is_sold_out'],
                     "bulk" => $record['bulk'],
                     "imageSrc" => $record['image']['url'],
@@ -415,7 +414,7 @@ class MobileController {
                     "endtime" => $record['endtime'],
                     "lat" => $record['latitude'],
                     "lon" => $record['longitude'],
-                    "timer" => (rand(0,2) == 2)?1:0					
+                    "timer" => ($record['endtime'] < time() + 24*3600)?1:0
                 );
                 if (isset($record['categoryId'])) {
                     $r["categoryId"] = $record['categoryId'];
@@ -437,6 +436,7 @@ class MobileController {
                 "title" => $record['shortname'],
                 "price" => round($record['price']),
                 "origPrice" => round($record['origprice']),
+                "discount" => (isset($record['hide_discount']))?round($record['discount_percentage']):'0',
                 "isSoldOut" => $record['is_sold_out'],
                 "bulk" => $record['bulk'],
                 "imageSrc" => $record['image']['url'],

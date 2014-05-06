@@ -58,24 +58,30 @@ var App = {
     checkConnectionInterval: 5000,
     checkConnection: function(force){
         if (force || new Date().getTime() - App.lastCheckConnectionTs > 180*App.checkConnectionInterval) {
-            try {
-                var id = App.mainPageHScroll.currentPageIndex.substr(8);
-                var divs = T.query('#deallist_'+id+' > div', false);
-                var length = divs.length;
-                for (var i=0; i<length; i++){
-                    divs[i].parentNode.removeChild(divs[i]);
+            if (!App.initialized) {
+                App.init();
+                T.byId('container').style.display='block';
+            } else {
+                var length = 1, id;
+                try {
+                    id = App.mainPageHScroll.currentPageIndex.substr(8);
+                    var divs = T.query('#deallist_'+id+' > div', false);
+                    length = divs.length;
+                    for (var i=0; i<length; i++){
+                        divs[i].parentNode.removeChild(divs[i]);
+                    }
+                } catch(e) {
+                    id = 'shopping';
                 }
-            } catch(e) {
-                var id = 'shopping';
+                T.byId('hscroller-scroller-loading').style.display='block';
+                Deals.loadDeals(id, 0, Styles.hScroller.numberOfImages*length, function(result){
+                    App.hideNoConnection();
+                    if (result) {
+                        T.byId('deallist_'+id).appendChild(result);
+                        T.byId('hscroller-scroller-loading').style.display='none';
+                    }
+                });
             }
-            T.byId('hscroller-scroller-loading').style.display='block';
-            Deals.loadDeals(id, 0, Styles.hScroller.numberOfImages*length, function(result){
-				App.hideNoConnection();
-                if (result) {
-                    T.byId('deallist_'+id).appendChild(result);
-                    T.byId('hscroller-scroller-loading').style.display='none';
-                }
-            });
         }
         App.lastCheckConnectionTs = new Date().getTime();
         /*var xmlhttp = new XMLHttpRequest();
@@ -300,42 +306,53 @@ var App = {
         }
         newEl.innerHTML = template;
         newEl.onclick = function(){
+            var previousCityId = App.currentCityId;
             App.currentCityId = data.id;
-            for (var i in App.cities) {
-                if (App.cities[i].id == data.id) {
-                    var el = T.query('#hscroller-scroller-list > li:nth-child(1)'), setActive = 0;
-                    el.parentNode.removeChild(el);
-                    el = T.query('#top-menu-tabs > li:nth-child(1)');
-                    if (el.className == 'top-menu-tabs-active') {
-                        setActive = 1;
-                    }
-                    el.parentNode.removeChild(el);
 
-                    var el = T.query('#hscroller-scroller-list > li:nth-child(1)'), setActive = 0;
-                    el.parentNode.removeChild(el);
-                    el = T.query('#top-menu-tabs > li:nth-child(1)');
-                    if (el.className == 'top-menu-tabs-active') {
-                        setActive = 1;
-                    }
-                    el.parentNode.removeChild(el);
+            var el = T.query('#hscroller-scroller-list > li:nth-child(1)'), setActive = 0;
+            el.parentNode.removeChild(el);
+            el = T.query('#top-menu-tabs > li:nth-child(1)');
+            if (el.className == 'top-menu-tabs-active') {
+                setActive = 1;
+            }
+            el.parentNode.removeChild(el);
 
-                    Deals.addNewList(App.cities[i], 0);
-                    Deals.addNewList(App.startCities[i], 0);
-                    Styles.hScroller.numberOfPages--;
-                    Styles.hScroller.numberOfPages--;
-                    T.updateStyle('#hscroller-scroller', {
-                        width: T.w()*Styles.hScroller.numberOfPages+'px'
-                    });
-                    try{
-                        window.localStorage.setItem('userCityId', App.cities[i].id);
-                    } catch (e){}
-                    if (setActive) {
-                        T.query('#top-menu-tabs > li:nth-child(2)').className = 'top-menu-tabs-active';
+            if (previousCityId != 'default') {
+                el = T.query('#hscroller-scroller-list > li:nth-child(2)');setActive = 0;
+                el.parentNode.removeChild(el);
+                el = T.query('#top-menu-tabs > li:nth-child(2)');
+                if (el.className == 'top-menu-tabs-active') {
+                    setActive = 1;
+                }
+                el.parentNode.removeChild(el);
+            }
+
+            if (App.currentCityId == 'default') {
+                Deals.addNewList(App.startCities[App.startCities.length-1], 0);
+                window.localStorage.setItem('userCityId', App.currentCityId);
+            } else {
+                for (var i in App.cities) {
+                    if (App.cities[i].id == data.id) {
+                        Deals.addNewList(App.cities[i], 1);
+                        Deals.addNewList(App.startCities[i], 0);
+                        try{
+                            window.localStorage.setItem('userCityId', App.cities[i].id);
+                        } catch (e){}
+                        if (setActive) {
+                            T.query('#top-menu-tabs > li:nth-child(2)').className = 'top-menu-tabs-active';
+                        }
                     }
-                    App.mainPageHScroll.goToPage(0, 0, 0);
-                    App.mainPageHScroll.refresh();
                 }
             }
+            if (previousCityId != 'default') {
+                Styles.hScroller.numberOfPages--;
+            }
+            Styles.hScroller.numberOfPages--;
+            T.updateStyle('#hscroller-scroller', {
+                width: T.w()*Styles.hScroller.numberOfPages+'px'
+            });
+            App.mainPageHScroll.goToPage(0, 0, 0);
+            App.mainPageHScroll.refresh();
             App.goBack();
         };
         T.initHover(newEl, Styles.searchItem.bgColorHover);
@@ -367,6 +384,10 @@ var App = {
             for (var i in App.cities) {
                 App.addChangeCityItem(App.cities[i]);
             }
+            App.addChangeCityItem({
+                id: 'default',
+                name: Messages.restOfCountry
+            });
             T.initHover(T.query('.top-menu-back-btn'), Styles.footer.bgColorHover);
             App.changeHash('/city/');
         }
@@ -511,7 +532,7 @@ var App = {
     init: function(){
         FastClick.attach(document.body);
         T.checkStandalone();
-        var windowH = 1136, windowW = 800, screenH = 1136;
+        var windowH = 1136, windowW = 800;
         var screenH = screen.availHeight;
         if (Math.abs(window.orientation) == 90) {
             screenH = screen.availWidth;
@@ -543,14 +564,20 @@ var App = {
             } catch (e){}
             if (userCityId || location.hash.length>3) {
                 if (!userCityId) {
-                    userCityId = 'stockholm';
+                    userCityId = 'default';
                 }
                 App.currentCityId = userCityId;
-                for (i in App.cities) {
-                    if (App.cities[i].id == userCityId) {
-                        Deals.addNewList(App.startCities[i]);
-                        Deals.addNewList(App.cities[i]);
+                if (userCityId != 'default') {
+                    for (i in App.cities) {
+                        if (App.cities[i].id == userCityId) {
+                            Deals.addNewList(App.startCities[i]);
+                            setTimeout(function(){
+                                Deals.addNewList(App.cities[i], 2);
+                            },0);
+                        }
                     }
+                } else {
+                    Deals.addNewList(App.startCities[App.startCities.length-1]);
                 }
             } else {
                 var checkByIp = function(e){
@@ -562,37 +589,32 @@ var App = {
                         timeout: 3000,
                         success: function(ipData){
                             console.log('checkByIp success');
-                            var minDistance = 99999, minDistanceCityId = 0, dist, stockholmId;
+                            var minDistance = 99999, minDistanceCityId = 0, dist;
                             for (i in App.cities) {
-                                if (App.cities[i].id == 'stockholm') {
-                                    stockholmId = i;
-                                }
                                 dist = T.getDistance(ipData.loc.split(','), [App.cities[i].latitude, App.cities[i].longitude]);
                                 if (minDistance > dist) {
                                     minDistance = dist;
                                     minDistanceCityId = i;
                                 }
                             }
-                            if (minDistance > 2000) {
-                                minDistanceCityId = stockholmId;
+                            if (minDistance > 150) {
+                                minDistanceCityId = App.startCities.length-1;
+                                App.currentCityId = 'default';
+                            } else {
+                                App.currentCityId = data.cities[minDistanceCityId].id;
                             }
-                            App.currentCityId = data.cities[minDistanceCityId].id;
                             try{
                                 window.localStorage.setItem('userCityId', App.currentCityId);
                             } catch (e){}
-                            Deals.addNewList(App.cities[minDistanceCityId], 0);
+                            if (App.currentCityId != 'default') {
+                                Deals.addNewList(App.cities[minDistanceCityId], 1);
+                            }
                             Deals.addNewList(App.startCities[minDistanceCityId], 0);
                             App.checkLocation();
                         },
                         error: function(){
                             console.log('checkByIp error');
-                            for (i in App.cities) {
-                                if (App.cities[i].id == 'stockholm') {
-                                    App.currentCityId = App.cities[i].id;
-                                    Deals.addNewList(App.cities[i], 0);
-                                    Deals.addNewList(App.startCities[i], 0);
-                                }
-                            }
+                            Deals.addNewList(App.startCities[App.startCities.length-1], 0);
                             App.checkLocation();
                         }
                     });
@@ -601,26 +623,27 @@ var App = {
                 if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(function(pos){
                         console.log('getCurrentPosition success');
-                        var minDistance = 99999, minDistanceCityId = 0, dist, stockholmId;
+                        var minDistance = 99999, minDistanceCityId = 0, dist;
                         var crd = pos.coords;
                         for (i in App.cities) {
-                            if (App.cities[i].id == 'stockholm') {
-                                stockholmId = i;
-                            }
                             dist = T.getDistance([crd.latitude, crd.longitude], [App.cities[i].latitude, App.cities[i].longitude]);
                             if (minDistance > dist) {
                                 minDistance = dist;
                                 minDistanceCityId = i;
                             }
                         }
-                        if (minDistance > 2000) {
-                            minDistanceCityId = stockholmId;
+                        if (minDistance > 150) {
+                            minDistanceCityId = App.startCities.length-1;
+                            App.currentCityId = 'default';
+                        } else {
+                            App.currentCityId = data.cities[minDistanceCityId].id;
                         }
-                        App.currentCityId = data.cities[minDistanceCityId].id;
                         try{
                             window.localStorage.setItem('userCityId', App.currentCityId);
                         } catch (e){}
-                        Deals.addNewList(App.cities[minDistanceCityId], 0);
+                        if (minDistanceCityId != 'default') {
+                            Deals.addNewList(App.cities[minDistanceCityId], 1);
+                        }
                         Deals.addNewList(App.startCities[minDistanceCityId], 0);
                         App.checkLocation();
                     }, function(e){
@@ -669,6 +692,7 @@ var App = {
             window.addEventListener("hashchange", App.hashChangeEvent, false);
             setInterval(App.checkConnection, App.checkConnectionInterval)
             setInterval(App.checkDealsTimer, 1000);
+            App.initialized = true;
 
         }, null, function(){
             App.showNoConnection();
@@ -690,10 +714,14 @@ var App = {
         }, 300)
     }
 };
+
 window.addEventListener('load', function() {
     setTimeout(T.preloadImages, 0);
     App.init();
     window.scrollTo( 0, 0 );
+    if (window.Sailthru) {
+        Sailthru.setup({domain: 'horizon.letsdeal.se'});
+    }
 });
 
 window.addEventListener("orientationchange", function() {

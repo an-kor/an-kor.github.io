@@ -12,7 +12,7 @@ var Styles = {
     topMenu: {
         bgColor: 'rgba(62,172,200,0.95)',
         backButtonWith: 240,
-        shareButtonWith: 110,
+        shareButtonWith: 80,
         borderBottom: '2px solid #e1e1e1',
         height: 85,
         fontSize: 45,
