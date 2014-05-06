@@ -226,12 +226,16 @@ var Templates = {
         });
 
         var topMenuTitleWidth = T.w() - T.p(Styles.topMenu.backButtonWith + Styles.topMenu.shareButtonWith);
+        var topMenuTitlePosition = (topMenuTitleWidth - T.p(230))/2;
+        if (topMenuTitlePosition < 0) {
+            topMenuTitlePosition = 0;
+        }
         T.updateStyle('.deal-page .top-menu-title', {
             width: topMenuTitleWidth + 'px',
             //borderRight: T.px(1,1)+ ' solid rgba(0,0,0,0.1)',
             //borderLeft: T.px(1,1)+ ' solid rgba(255,255,255,0.2)',
             backgroundSize: 'contain',
-            backgroundPosition: (topMenuTitleWidth - T.p(230))/2 + 'px 50%'
+            backgroundPosition: topMenuTitlePosition + 'px 50%'
         });
 
         T.query('#top-menu-wrapper li:nth-child(1)').className = 'top-menu-tabs-active';
