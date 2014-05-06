@@ -481,7 +481,7 @@ var App = {
             switch (hash[1]) {
                 case "buy":
                 case "deal":
-                    dealId = hash[2];
+                    dealId = parseInt(hash[2],10);
                     if (dealId) {
                         if (Deals.loadedDeals[dealId]) {
                             Deals.showDeal(dealId);
