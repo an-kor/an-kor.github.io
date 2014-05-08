@@ -174,7 +174,7 @@ var T = {
         }
     },
     preloadImages: function() {
-        var imagestList = ['img/broken_tag.png', 'img/loadinfo-blue.gif', 'img/clock.png', 'img/loadinfo.gif', 'img/share-btn.png', 'img/gesture-h.png', 'img/gesture-v.png', 'img/logo-small.png', 'img/back-btn.png'];
+        var imagestList = ['img/broken_tag.png', 'img/loadinfo-blue.gif', 'img/clock.png', 'img/loadinfo.gif', 'img/share-btn-new.png', 'img/gesture-h.png', 'img/gesture-v.png', 'img/logo-small.png', 'img/back-btn.png'];
         for (var i in imagestList) {
             try {
                 var img = new Image();

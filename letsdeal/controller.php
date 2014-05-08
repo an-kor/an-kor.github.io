@@ -414,7 +414,7 @@ class MobileController {
                     "endtime" => $record['endtime'],
                     "lat" => $record['latitude'],
                     "lon" => $record['longitude'],
-                    "timer" => ($record['endtime'] < time() + 24*3600)?1:0
+                    "timer" => (isset($record['showclock']) && $record['showclock'] == 1)?1:0
                 );
                 if (isset($record['categoryId'])) {
                     $r["categoryId"] = $record['categoryId'];

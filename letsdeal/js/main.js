@@ -717,7 +717,18 @@ var App = {
 
 window.addEventListener('load', function() {
     setTimeout(T.preloadImages, 0);
-    App.init();
+
+    if ( T.isIOS ) {
+        var v = T.getIOSVersion();
+        if (v[0] >= 7 && v[1] >= 1) {
+            setTimeout(App.init, 300);
+        } else {
+            App.init();
+        }
+    } else {
+        App.init();
+    }
+
     window.scrollTo( 0, 0 );
     if (window.Sailthru) {
         Sailthru.setup({domain: 'horizon.letsdeal.se'});

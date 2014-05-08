@@ -105,10 +105,18 @@ var Deals = {
                     bottomTemplate = bottomTemplate.replace("%DEAL_ID%", data.id);
                     bottomTemplate = bottomTemplate.replace("%OLDPRICE%", (data.origPrice!=data.price && data.origPrice>0)?T.formatNumber(data.origPrice)+" "+Messages.kr:"");
                     bottomTemplate = bottomTemplate.replace("%NEWPRICE%", T.formatNumber(data.price)+" "+Messages.kr);
+                    mixpanel.track(
+                        "Deal View",
+                        {
+                            "Deal id": dealId,
+                            "City": App.currentCityId
+                        }
+                    );
                 } else {
                     return false;
                 }
             }
+
             clearInterval(App.countDownInterval);
             var countdown = parseInt(data.endtime);
             App.countDownInterval = setInterval(function(){
@@ -351,34 +359,46 @@ var Deals = {
             }
         });
         if (data.categories) {
-            var catDropdown = Templates.catDropdown(data.categories, function(value){
-                var sections = App.sections.concat(App.cities);
-                for (var i in sections) {
-                    if (sections[i].id == data.id) {
-                        sections[i].currentCategory = value;
+            var createDropdown = function(data){
+                var catDropdown = Templates.catDropdown(data.categories, function(value){
+                    var sections = App.sections.concat(App.cities);
+                    for (var i in sections) {
+                        if (sections[i].id == data.id) {
+                            sections[i].currentCategory = value;
+                        }
                     }
-                }
-                var divs = T.query('#deallist_'+data.id+' > div');
-                if (!divs.length){
-                    if (divs.parentNode) {
-                        divs.parentNode.removeChild(divs);
+                    var divs = T.query('#deallist_'+data.id+' > div');
+                    if (!divs.length){
+                        if (divs.parentNode) {
+                            divs.parentNode.removeChild(divs);
+                        }
+                    } else {
+                        for (i=0;i<divs.length;i++){
+                            divs[i].parentNode.removeChild(divs[i]);
+                        }
                     }
-                } else {
-                    for (i=0;i<divs.length;i++){
-                        divs[i].parentNode.removeChild(divs[i]);
-                    }
-                }
-                Deals.loadDeals(data.id, 0, numberOfDeals, function(result){
-                    if (result) {
-                        T.byId('deallist_'+data.id).appendChild(result)
-                    }
+                    Deals.loadDeals(data.id, 0, numberOfDeals, function(result){
+                        if (result) {
+                            T.byId('deallist_'+data.id).appendChild(result)
+                        }
+                    });
                 });
-            });
-            T.byId('deallist_'+data.id).appendChild(catDropdown);
+                var el = T.byId('deallist_'+data.id);
+                el.insertBefore(catDropdown, el.firstChild);
+            };
+            setTimeout(function(){
+                createDropdown(data);
+            },0);
         } else {
-            var catPadding = document.createElement("div");
-            catPadding.style.height = T.px(Styles.topMenu.height);
-            T.byId('deallist_'+data.id).appendChild(catPadding);
+            var addPadding = function(data){
+                var catPadding = document.createElement("div");
+                catPadding.style.height = T.px(Styles.topMenu.height);
+                var el = T.byId('deallist_'+data.id);
+                el.insertBefore(catPadding, el.firstChild);
+            };
+            setTimeout(function(){
+                addPadding(data);
+            },0);
         }
 
         Deals.loadDeals(data.id, 0, numberOfDeals, function(result){
