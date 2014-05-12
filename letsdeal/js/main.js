@@ -84,23 +84,6 @@ var App = {
             }
         }
         App.lastCheckConnectionTs = new Date().getTime();
-        /*var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open('GET', T.url +"?" +  new Date().getTime());
-        xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState == 4) {
-                if(xmlhttp.status == 200) {
-                    if (App.isOffline) {
-                        App.hideNoConnection();
-                    }
-                } else {
-                    App.showNoConnection();
-                }
-                // clearTimeout(xmlhttp.timeout);
-            }
-        };
-        xmlhttp.send(null);
-        */
-        //xmlhttp.timeout = setTimeout(function () { xmlhttp.abort(); App.showNoConnection(); }, 15000);
     },
     hideNoConnection: function(){
         App.isOffline = false;
@@ -478,22 +461,32 @@ var App = {
         var hash = window.location.hash, dealId;
         if (hash!='') {
             hash = hash.split('/');
+            var showDeal = function(hash) {
+                dealId = parseInt(hash[2],10);
+                if (dealId) {
+                    if (Deals.loadedDeals[dealId]) {
+                        Deals.showDeal(dealId);
+                    } else {
+                        T.request('getdeal', function(data){
+                            if (data.id) {
+                                Deals.loadedDeals[data.id] = data;
+                                Deals.showDeal(data.id);
+                            }
+                        }, {
+                            dealId: dealId
+                        });
+                    }
+                }
+            };
+            for (var i in App.cities) {
+                if (App.cities[i].id == hash[1]) {
+                    showDeal(hash);
+                }
+            }
             switch (hash[1]) {
                 case "buy":
                 case "deal":
-                    dealId = parseInt(hash[2],10);
-                    if (dealId) {
-                        if (Deals.loadedDeals[dealId]) {
-                            Deals.showDeal(dealId);
-                        } else {
-                            T.request('getdeal', function(data){
-                                Deals.loadedDeals[data.id] = data;
-                                Deals.showDeal(data.id);
-                            }, {
-                                dealId: dealId
-                            });
-                        }
-                    }
+                    showDeal(hash);
                 break;
                 /*case "buy":
                     dealId = hash[2];
@@ -549,6 +542,10 @@ var App = {
         } else {
             T.scale = T.h() / windowW;
         }
+        if (T.scale > 0.8) {
+            T.scale = 0.8;
+        }
+
         document.body.style['font-size'] = T.p(Styles.defaultFontSize) + 'px';
         T.setH('container', T.h());
         Templates.prepareSplash();
@@ -565,6 +562,11 @@ var App = {
             if (userCityId || location.hash.length>3) {
                 if (!userCityId) {
                     userCityId = 'default';
+                }
+                for (i in App.cities) {
+                    if (location.hash.indexOf(App.cities[i].id) > -1) {
+                        userCityId = App.cities[i].id;
+                    }
                 }
                 App.currentCityId = userCityId;
                 if (userCityId != 'default') {
@@ -700,18 +702,12 @@ var App = {
         return 0;
     },
     changeOrientation: function(){
-       /* T.byId('splash').style.display = 'block';
-        T.byId('hscroller-scroller-list').innerHTML = "";
-        T.byId('top-menu-tabs').innerHTML = "";
-        T.byId('top-menu-tabs').innerHTML = "";
-        setTimeout(function(){
-            App.init();
-        }, 500);*/
         window.scrollTo( 0, 0 );
+        T.byId('container').style.display = 'none';
         T.byId('splash').style.display = 'block';
         setTimeout(function(){
             location.reload();
-        }, 300)
+        }, 1500)
     }
 };
 
@@ -721,7 +717,19 @@ window.addEventListener('load', function() {
     if ( T.isIOS ) {
         var v = T.getIOSVersion();
         if (v[0] >= 7 && v[1] >= 1) {
-            setTimeout(App.init, 300);
+            var windowH = 1136, windowW = 800;
+            var screenH = screen.availHeight;
+            if (Math.abs(window.orientation) == 90) {
+                screenH = screen.availWidth;
+            }
+            if (!window.orientation || window.orientation == 180) {
+                T.scale = T.h() / windowH;
+            } else {
+                T.scale = T.h() / windowW;
+            }
+            document.body.style['font-size'] = T.p(Styles.defaultFontSize) + 'px';
+            Templates.prepareSplash();
+            setTimeout(App.init, 2000);
         } else {
             App.init();
         }

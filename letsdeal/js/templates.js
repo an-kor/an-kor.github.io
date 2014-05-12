@@ -369,7 +369,7 @@ var Templates = {
     prepareSplash: function(){
         T.updateStyle('#splash', {
             'background-size':  T.p(559)+'px '+ T.px(359),
-            'background-position':  '50% '+ T.px(150)
+            'background-position':  '50% 150px'
         });
         T.updateStyle('#splash-loading', {
             top:  T.px(640),
@@ -427,7 +427,7 @@ var Templates = {
             snap: true,
             momentum: false,
             //bounce: false,
-            snapThreshold: 0.1,
+            snapThreshold: 0.05,
             lockDirection: true,
             directionLockThreshold: 20,
             eventPassthrough: 'vertical',
@@ -467,7 +467,7 @@ var Templates = {
             scrollWidth = 8 / ((window.outerWidth - 8) / window.innerWidth)
         }
         var itemWidth = T.w() - T.p(30);
-        if ((T.w() > 600 && !T.isAndroid && !T.isIOS) || (Math.abs(window.orientation) == 90)) {
+        if ((T.w() > 800 && T.isDesktop) || (T.isIOS && Math.abs(window.orientation) == 90)) {
             is2Columns = true;
             itemWidth = T.w()/2 - T.p(21.5);
         }
@@ -605,7 +605,7 @@ var Templates = {
         });
 
         // dealinfo scroller
-        if (!T.isIOS) {
+        if (0 && !T.isIOS) {
             T.updateStyle('.dealinfo-wrapper', {
                 overflowY: 'scroll',
                 webkitOverflowScrolling: 'touch'

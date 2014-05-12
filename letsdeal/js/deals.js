@@ -112,6 +112,10 @@ var Deals = {
                             "City": App.currentCityId
                         }
                     );
+                    ga("send", "pageview", {
+                      'page': "/#/deal/"+dealId,
+                      'title': data.title
+                    });
                 } else {
                     return false;
                 }
@@ -180,7 +184,7 @@ var Deals = {
                     T.query('.content-loading',1).style.display = 'none';
 
                     // dealinfo scroller
-                    if (T.isIOS) {
+                    if (1 || T.isIOS) {
                         if (App.dealInfoScroller) {
                             App.dealInfoScroller.destroy();
                         }
@@ -294,8 +298,8 @@ var Deals = {
                 index: wrapper.index,
                 scrollingX: false,
                 //bouncing:false,
-                scrollResponseBoundary: 100,
-                scrollBoundary: 30
+                //scrollResponseBoundary: 100,
+                scrollBoundary: 5
             });
 
             scroller.addEventListener('reachedend', function (response) {
@@ -305,23 +309,6 @@ var Deals = {
                     Deals.appendDeals(wrapper);
                 }
             });
-            /*var scrollerOptions = {
-                index: wrapper.index,
-                startX: 0,
-                startY: 0,
-                scrollX: false,
-                scrollY: true,
-                scrollbars: true,
-                lockDirection: true
-            };
-
-            scroller.on('translate', function(){
-                if(!App.isDealsLoading && Math.abs(this.y) > Math.abs(this.maxScrollY)) {
-                    T.byId('hscroller-scroller-loading').style.display='block';
-                    var wrapper = T.byId('wrapper_' + this.options.index);
-                    Deals.appendDeals(wrapper);
-                }
-            });*/
         }
 
         if (previousPage.length === 0 && index!==0) {
