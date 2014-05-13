@@ -573,9 +573,11 @@ var App = {
                     for (i in App.cities) {
                         if (App.cities[i].id == userCityId) {
                             Deals.addNewList(App.startCities[i]);
-                            setTimeout(function(){
-                                Deals.addNewList(App.cities[i], 2);
-                            },0);
+                            setTimeout(function(i){
+                                return function(){
+                                    Deals.addNewList(App.cities[i], 2);
+                                }
+                            }(i),0);
                         }
                     }
                 } else {
