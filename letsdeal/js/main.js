@@ -8,7 +8,9 @@ var App = {
             var safari = /safari/i.test( navigator.userAgent );
             if (safari) src=src.replace("device=app","device=no");
             src += "&is_touch=1";
-            location.href=src;
+            setTimeout(function(){
+                location.href=src;
+            }, 300);
             return false;
 
         }

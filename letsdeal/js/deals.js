@@ -70,6 +70,10 @@ var Deals = {
     },
     showBuyPage:function(dealId){
         var data = Deals.loadedDeals[dealId];
+        ga("send", "pageview", {
+          'page': "/#/buy/"+dealId,
+          'title': data.title
+        });
         App.showIFrame(data.title, Messages.buySrc.replace("%DEAL_ID%", data.id));
         App.changeHash('/buy/'+dealId);
     },
