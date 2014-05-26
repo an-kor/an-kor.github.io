@@ -10,7 +10,7 @@ var App = {
             src += "&is_touch=1";
             setTimeout(function(){
                 location.href=src;
-            }, 300);
+            }, 500);
             return false;
 
         }
