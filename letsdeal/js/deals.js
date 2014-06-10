@@ -74,17 +74,17 @@ var Deals = {
           'page': "/#/buy/"+dealId,
           'title': data.title
         });
-        
+
         var trId = data.id + "_" + Math.ceil(Math.random()*100000);
         ga('ecommerce:addTransaction', {
           'id': trId,
-          'affiliation': data.name,
+          'affiliation': data.title,
           'revenue': data.price
         });
 
         ga('ecommerce:addItem', {
           'id': trId,
-          'name': data.name,
+          'name': data.title,
           'sku': data.id
         });
 
@@ -211,7 +211,7 @@ var Deals = {
                         App.dealInfoScroller = new IScroll(T.query('.dealinfo-wrapper'), {
                             scrollbars: true,
                             hideScrollbarsOnMove:true,
-                            speedRatio: 0.4
+                            speedRatio: T.isAndroid?1:0.4
                         });
                         setTimeout(function(){
                             App.dealInfoScroller.refresh();
