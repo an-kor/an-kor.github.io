@@ -1,5 +1,5 @@
 <?php
-ini_set('display_errors', 1);
+// ini_set('display_errors', 1);
 class MobileController {
     const LOG_FILE = '/var/log/letsdeal/ajax.log';
     const FEED_URL = 'http://letsdeal.se/mfeed_touch_generator.php';

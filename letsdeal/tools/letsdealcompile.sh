@@ -1,2 +1,44 @@
-java -jar compiler.jar --js=an-kor.github.io/letsdeal/js/vendor/fastclick.js --js=an-kor.github.io/letsdeal/js/vendor/iscroll.js --js=an-kor.github.io/letsdeal/js/vendor/trmix.min.js --js=an-kor.github.io/letsdeal/js/vendor/ftscroller.js --js_output_file=an-kor.github.io/letsdeal/js/compiled-libs.js --language_in=ECMASCRIPT5 --charset 'utf-8'
-java -jar compiler.jar --js=an-kor.github.io/letsdeal/js/messages.se.js --js=an-kor.github.io/letsdeal/js/utils.js --js=an-kor.github.io/letsdeal/js/styles.js --js=an-kor.github.io/letsdeal/js/deals.js --js=an-kor.github.io/letsdeal/js/templates.js --js=an-kor.github.io/letsdeal/js/main.js --js_output_file=an-kor.github.io/letsdeal/js/compiled-app.js --language_in=ECMASCRIPT5 --charset 'utf-8'
+java -jar compiler.jar \
+--js=../js/vendor/fastclick.js \
+--js=../js/vendor/iscroll.js \
+--js=../js/vendor/trmix.min.js \
+--js=../js/vendor/ftscroller.js \
+--js_output_file=../js/compiled-libs.js \
+--language_in=ECMASCRIPT5 --charset 'utf-8'
+
+java -jar compiler.jar \
+--js=../js/messages.se.js \
+--js=../js/utils.js \
+--js=../js/styles.js \
+--js=../js/deals.js \
+--js=../js/main.js \
+--js=../js/app/changeCity.js \
+--js=../js/app/connection.js \
+--js=../js/app/intro.js \
+--js=../js/app/myDeals.js \
+--js=../js/app/router.js \
+--js=../js/app/search.js \
+--js=../js/app/showExternalPage.js \
+--js=../js/deals/addNewList.js \
+--js=../js/deals/appendDeals.js \
+--js=../js/deals/buyPage.js \
+--js=../js/deals/checkDealsTimer.js \
+--js=../js/deals/loadDeals.js \
+--js=../js/deals/sharePage.js \
+--js=../js/deals/showDeal.js \
+--js=../js/templates/catDropdown.js \
+--js=../js/templates/dealsItem.js \
+--js=../js/templates/dealsPage.js \
+--js=../js/templates/dealsPageHeader.js \
+--js=../js/templates/prepareDealInfo.js \
+--js=../js/templates/prepareDeals.js \
+--js=../js/templates/prepareFooter.js \
+--js=../js/templates/prepareHeader.js \
+--js=../js/templates/prepareHScroller.js \
+--js=../js/templates/prepareModalPages.js \
+--js=../js/templates/prepareNoConnection.js \
+--js=../js/templates/preparePages.js \
+--js=../js/templates/prepareSearch.js \
+--js=../js/templates/prepareSplash.js \
+--js_output_file=../js/compiled-app.js \
+--language_in=ECMASCRIPT5 --charset 'utf-8'

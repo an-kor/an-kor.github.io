@@ -57,7 +57,6 @@
             document.getElementsByTagName('head')[0].appendChild(se);
         }
     </script>
-    <!--script src="//use.edgefonts.net/source-sans-pro:n3,n4,n6.js"></script-->
 
     <script id="deal-page-template" type="text/x-template">
         <div class="deal-page">
@@ -134,7 +133,7 @@
         <div id="splash-noconnection-button-pane"><div id="splash-noconnection-button">%MSG%</div></div>
     </script>
     <script id="instructions-template" type="text/x-template">
-        <div onclick="App.hideInstructions();" ontouchmove="return false;" class="instructions-page">
+        <div onclick="App.hideInstructions();" ontouchmove="App.hideInstructions();" class="instructions-page">
             <div class="instructions-title">%TITLE%</div>
             <div class="instructions-msg">%MSG_H%</div>
             <div class="instructions-img-h"></div>
@@ -247,12 +246,44 @@
 </div>
 <div id="page-on-top" style="display:none;">
 </div>
+
 <!--script type="text/javascript" src="js/messages.se.js"></script>
 <script type="text/javascript" src="js/utils.js"></script>
 <script type="text/javascript" src="js/styles.js"></script>
 <script type="text/javascript" src="js/deals.js"></script>
-<script type="text/javascript" src="js/templates.js"></script>
-<script type="text/javascript" src="js/main.js"></script-->
+<script type="text/javascript" src="js/main.js"></script>
+
+<script type="text/javascript" src="js/app/changeCity.js"></script>
+<script type="text/javascript" src="js/app/connection.js"></script>
+<script type="text/javascript" src="js/app/intro.js"></script>
+<script type="text/javascript" src="js/app/myDeals.js"></script>
+<script type="text/javascript" src="js/app/router.js"></script>
+<script type="text/javascript" src="js/app/search.js"></script>
+<script type="text/javascript" src="js/app/showExternalPage.js"></script>
+
+<script type="text/javascript" src="js/deals/addNewList.js"></script>
+<script type="text/javascript" src="js/deals/appendDeals.js"></script>
+<script type="text/javascript" src="js/deals/buyPage.js"></script>
+<script type="text/javascript" src="js/deals/checkDealsTimer.js"></script>
+<script type="text/javascript" src="js/deals/loadDeals.js"></script>
+<script type="text/javascript" src="js/deals/sharePage.js"></script>
+<script type="text/javascript" src="js/deals/showDeal.js"></script>
+
+<script type="text/javascript" src="js/templates/catDropdown.js"></script>
+<script type="text/javascript" src="js/templates/dealsItem.js"></script>
+<script type="text/javascript" src="js/templates/dealsPage.js"></script>
+<script type="text/javascript" src="js/templates/dealsPageHeader.js"></script>
+<script type="text/javascript" src="js/templates/prepareDealInfo.js"></script>
+<script type="text/javascript" src="js/templates/prepareDeals.js"></script>
+<script type="text/javascript" src="js/templates/prepareFooter.js"></script>
+<script type="text/javascript" src="js/templates/prepareHeader.js"></script>
+<script type="text/javascript" src="js/templates/prepareHScroller.js"></script>
+<script type="text/javascript" src="js/templates/prepareModalPages.js"></script>
+<script type="text/javascript" src="js/templates/prepareNoConnection.js"></script>
+<script type="text/javascript" src="js/templates/preparePages.js"></script>
+<script type="text/javascript" src="js/templates/prepareSearch.js"></script>
+<script type="text/javascript" src="js/templates/prepareSplash.js"></script-->
+
 <script type="text/javascript" src="js/compiled-app.js"></script>
 
 <!-- start Mixpanel -->
