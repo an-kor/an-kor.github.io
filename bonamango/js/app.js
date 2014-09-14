@@ -71,4 +71,93 @@
         map.locate({setView: true, maxZoom: 16});
     });
 
+    App.onPageInit('contact', function (page) {
+        $$('.accordion-item-content .item-content').on('click', function () {
+            var popupHTML = function(){
+                return '<div class="popup">'+
+
+                    '<div class="content-block">'+
+                    '<div class="popup-image"><img src="http://lorempixel.com/160/160/food/5/"></div>'+
+                    '<div class="popup-header1">Shirazisallad</div>'+
+                    '<div class="popup-text">Tomater (färska), Lök, Mynta, Gurka</div>'+
+                    '<div class="popup-header2">Size</div>'+
+                    '<p class="buttons-row">'+
+                    '<a href="#" class="button active">Standart</a>'+
+                    '<a href="#" class="button">Extra big</a>'+
+                    '</p>'+
+                    '<div class="buttons-block row">'+
+                    '<div class="col-50">'+
+                    '<a href="#" class="close-popup button button-big color-black">Cancel</a>'+
+                    '</div>'+
+                    '<div class="col-50">'+
+                    '<a href="#" class="close-popup button button-big button-fill color-green">35.00 KR</a>'+
+                    '</div>'+
+                    '</div>'+
+                    '</div>'+
+                    '</div>'+
+
+                '</div>';
+            };
+            App.popup(popupHTML());
+        });
+    });
+
+    App.onPageInit('order', function (page) {
+        $$('.edit').on('click', function () {
+            var popupHTML = function(){
+                return '<div class="popup">'+
+
+                    '<div class="content-block">'+
+                    '<div class="popup-image"><img src="http://lorempixel.com/160/160/food/5/"></div>'+
+                    '<div class="popup-header1">Shirazisallad</div>'+
+                    '<div class="popup-text">Tomater (färska), Lök, Mynta, Gurka</div>'+
+                    '<div class="popup-header2">Size</div>'+
+                    '<p class="buttons-row">'+
+                    '<a href="#" class="button active">Standart</a>'+
+                    '<a href="#" class="button">Extra big</a>'+
+                    '</p>'+
+                    '<div class="buttons-block row">'+
+                    '<div class="col-33">'+
+                    '<a href="#" class="close-popup button button-big color-black">Cancel</a>'+
+                    '</div>'+
+                    '<div class="col-33">'+
+                    '<a href="#" class="close-popup button button-big button-fill color-green">Add</a>'+
+                    '</div>'+
+                    '<div class="col-33">'+
+                    '<a href="#" class="close-popup button button-big button-fill color-red">Remove</a>'+
+                    '</div>'+
+                    '</div>'+
+                    '</div>'+
+                    '</div>'+
+
+                    '</div>';
+            };
+            App.popup(popupHTML());
+        });
+    });
+
+    App.onPageInit('thankyou', function (page) {
+            setTimeout(function(){
+                App.addNotification({
+                    title: 'Order status changed',
+                    message: 'Your order has been confirmed by the restaurant',
+                    hold: 2000
+                });
+                $$('#reject').hide();
+            }, 1500);
+
+            setTimeout(function(){
+                App.modal({
+                    text: 'Preparation time is 26 minutes. Do you accept this?',
+                    title: 'Order 123456 confirmed',
+                    buttons: [
+                        {text: 'Reject it', onClick: function() {}},
+                        {text: 'OK', bold: true, onClick:  function() {}}
+                    ]
+                });
+                $$('#waiting').hide();
+                $$('#confirmed').show();
+            }, 5000);
+    });
+
     App.init();

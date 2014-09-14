@@ -23,9 +23,6 @@ body {
   border-bottom: none;
   background: @white;
   color: @darker;
-    .navbar-inner{
-      padding: 0;
-    }
     .center {
       font-size: @headerSize;
     }
@@ -79,7 +76,7 @@ body {
 
 }
 
-.buttons-row{
+.buttons-row.bottom-line{
   width:100%;
   padding:0;
   .button {
@@ -155,6 +152,29 @@ body {
   margin: 0;
   padding: 0;
 }
+.accordion-item-content {
+  .item-media img{
+    border-radius: 16px;
+  }
+  .item-title {
+    flex: 1;
+    padding-left:8px;
+  }
+}
+.content-block-inner {
+  box-sizing: border-box;
+}
+.message-text{
+  width:100%;
+  font-size:14px !important;
+}
+.photo-browser-close-link{
+  font-size:14px !important;
+  padding-left:8px;
+}
+html.android .list-block .list-group-title {
+  display: block !important;
+}
 i {
   color: @darker;
 }
@@ -175,6 +195,39 @@ i.icon {
 }
 i.ion-compose {
 	font-weight: 100;
+}
+.popup {
+
+  background: rgba(255,255,255,0.9);
+
+  >div{
+    text-align: center;
+  }
+
+  .popup-image{
+    img {
+      border-radius: 80px;
+    }
+    padding:20px 0 10px 0;
+  }
+
+  .popup-header1{
+    padding:20px 0 10px 0;
+    font-size:22px;
+  }
+
+  .popup-header2{
+    padding:20px 0 10px 0;
+    font-size:18px;
+  }
+
+  .content-block{
+    padding: 10px;
+  }
+
+  .buttons-block{
+    padding: 80px 0 0 0;
+  }
 }
 .popup-overlay {
 	background: rgba(128, 128, 128, 0.2);
