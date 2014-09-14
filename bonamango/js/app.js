@@ -136,28 +136,32 @@
         });
     });
 
+    var showModals = false;
     App.onPageInit('thankyou', function (page) {
-            setTimeout(function(){
-                App.addNotification({
-                    title: 'Order status changed',
-                    message: 'Your order has been confirmed by the restaurant',
-                    hold: 2000
-                });
-                $$('#reject').hide();
-            }, 1500);
+            if (!showModals) {
+                setTimeout(function(){
+                    showModals = true;
+                    App.addNotification({
+                        title: 'Order status changed',
+                        message: 'Your order has been confirmed by the restaurant',
+                        hold: 2000
+                    });
+                    $$('#reject').hide();
+                }, 1500);
 
-            setTimeout(function(){
-                App.modal({
-                    text: 'Preparation time is 26 minutes. Do you accept this?',
-                    title: 'Order 123456 confirmed',
-                    buttons: [
-                        {text: 'Reject it', onClick: function() {}},
-                        {text: 'OK', bold: true, onClick:  function() {}}
-                    ]
-                });
-                $$('#waiting').hide();
-                $$('#confirmed').show();
-            }, 5000);
+                setTimeout(function(){
+                    App.modal({
+                        text: 'Preparation time is 26 minutes. Do you accept this?',
+                        title: 'Order 123456 confirmed',
+                        buttons: [
+                            {text: 'Reject it', onClick: function() {}},
+                            {text: 'OK', bold: true, onClick:  function() {}}
+                        ]
+                    });
+                    $$('#waiting').hide();
+                    $$('#confirmed').show();
+                }, 5000);
+            }
     });
 
     App.init();
