@@ -77,7 +77,7 @@
                 return '<div class="popup">'+
 
                     '<div class="content-block">'+
-                    '<div class="popup-image"><img src="http://lorempixel.com/160/160/food/5/"></div>'+
+                    '<div class="popup-image"><img src="http://www.delivery-club.ru/pcs/777/3882746_s.jpg"></div>'+
                     '<div class="popup-header1">Shirazisallad</div>'+
                     '<div class="popup-text">Tomater (färska), Lök, Mynta, Gurka</div>'+
                     '<div class="popup-header2">Size</div>'+
@@ -108,7 +108,7 @@
                 return '<div class="popup">'+
 
                     '<div class="content-block">'+
-                    '<div class="popup-image"><img src="http://lorempixel.com/160/160/food/5/"></div>'+
+                    '<div class="popup-image"><img src="http://www.delivery-club.ru/pcs/777/3882746_s.jpg"></div>'+
                     '<div class="popup-header1">Shirazisallad</div>'+
                     '<div class="popup-text">Tomater (färska), Lök, Mynta, Gurka</div>'+
                     '<div class="popup-header2">Size</div>'+
