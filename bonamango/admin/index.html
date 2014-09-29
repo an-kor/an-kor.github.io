@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Bonamango.se Admin area</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css">
+
+        <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700,800,400italic%7cMontserrat:400,700" rel="stylesheet" type="text/css">
+        <!-- Icons -->
+        <link href="saltkin/css/typicons.min.css" rel="stylesheet">
+        <link href="saltkin/css/font-awesome.min.css" rel="stylesheet" />
+        <!-- iCheck - Custom radio/check input -->
+        <link href="saltkin/css/icheck/minimal.css" rel="stylesheet">
+        <!-- Bootstrap -->
+        <link href="saltkin/css/bootstrap.min.css" rel="stylesheet">
+        <!-- All plugins -->
+        <link href="saltkin/css/plugins.min.css" rel="stylesheet">
+        <!-- Template -->
+        <link href="saltkin/css/main.css" rel="stylesheet">
+
+        <script id="header-template" type="text/x-handlebars-template">
+            <nav class="header-site">
+                <div class="container-fluid">
+                    <!-- Page title and breadcrumb navigation -->
+                    <div class="page-title">
+                        <h4><a href="#" id="toggle-menu" onclick="$('body').removeClass('compact-sidebar');$('body').toggleClass('show-menu');"><i class="typcn typcn-th-menu"></i></a> <span>{{title}}</span></h4>
+                        <nav>
+                            {{#each breadcrunbs}}
+                                <a {{#if url}} href="#{{url}}" {{/if}}>{{name}}</a>
+                                    {{#unless last}}
+                                <span class="typcn typcn-chevron-right"></span>
+                                {{/unless}}
+                            {{/each}}
+                        </nav>
+                    </div>
+                    <!-- /Page title and breadcrumb navigation -->
+                    <!-- Header navigation / icons -->
+                    <ul class="header-nav navbar-right">
+
+                        <!-- Profile -->
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="typcn typcn-cog"></span></a>
+                            <ul class="dropdown-menu dropdown-arrow pull-right">
+                                <li><a href="#"><span class="typcn typcn-edit"></span> Edit profile</a></li>
+                                <li><a href="#"><span class="typcn typcn-cog"></span> Settings</a></li>
+                                <li><a href="#"><span class="typcn typcn-contacts"></span> Contacts</a></li>
+                                <li class="divider"></li>
+                                <li><a href="#"><span class="typcn typcn-power"></span> Sign out</a></li>
+                            </ul>
+                        </li>
+                        <!-- /Profile -->
+                    </ul>
+                    <!-- /Header navigation / icons -->
+                </div>
+            </nav>
+        </script>
+
+
+        <script id="sidebar-template" type="text/x-handlebars-template">
+        <!-- Sidebar -->
+        <aside id="sidebar">
+            <!-- Sidebar header -->
+            <header class="sidebar-header">
+                <h1>Bonamango.se</h1>
+                <a href="#" id="make-compact"><span class="typcn typcn-th-menu"></span></a>
+                <a href="#" id="hide-menu"><span class="fa fa-caret-square-o-left"></span></a>
+            </header>
+            <!-- /Sidebar header -->
+            <ul class="sidebar-group">
+                <li class="sidebar-group-header">NAVIGATION</li>
+                <li class="has-submenu active">
+                    <a href="#"><i class="typcn typcn-th-list"></i> <span>Restaurants</span></a>
+                    <div class="sidebar-link-addon"><i class="typcn typcn-plus"></i></div>
+                    <ul class="sidebar-submenu">
+                        <li data-url="/restaurants/list"><a href="#/restaurants/list">List</a></li>
+                        <li data-url="/restaurants/add"><a href="#/restaurants/add">Add new restaurant</a></li>
+                    </ul>
+                </li>
+                <li class="has-submenu">
+                    <a href="#"><i class="typcn typcn-group"></i> <span>Users</span></a>
+                    <div class="sidebar-link-addon"><i class="typcn typcn-plus"></i></div>
+                    <ul class="sidebar-submenu">
+                        <li><a href="#">List</a></li>
+                        <li><a href="#">Add new user</a></li>
+                    </ul>
+                </li>
+                <li class="has-submenu">
+                    <a href="#"><i class="typcn typcn-contacts"></i> <span>Customers</span></a>
+                    <div class="sidebar-link-addon"><i class="typcn typcn-plus"></i></div>
+                    <ul class="sidebar-submenu">
+                        <li><a href="#">List</a></li>
+                    </ul>
+                </li>
+                <li class="has-submenu">
+                    <a href="#"><i class="typcn typcn-shopping-cart"></i> <span>Orders</span></a>
+                    <div class="sidebar-link-addon"><i class="typcn typcn-plus"></i></div>
+                    <ul class="sidebar-submenu">
+                        <li><a href="#">List</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </aside>
+        <!-- /Sidebar -->
+        </script>
+
+
+
+        <script id="content-template" type="text/x-handlebars-template">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            {{#if title}}
+                            <header class="panel-heading">{{title}}</header>
+                            <div class="panel-body" id="alert-container" style="display:none">
+                                <div class="alert alert-danger"></div>
+                            </div>
+                            {{/if}}
+                            <div class="panel-body">
+                                {{{content}}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+
+        <script id="restaurantList-template" type="text/x-handlebars-template">
+            <table id="restaurantList" class="table table-striped table-hover footable">
+                <thead>
+                <tr>
+                    <th data-toggle="true">Name</th>
+                    <th data-hide="phone">Address</th>
+                    <th data-hide="phone,tablet">Description</th>
+                    <th>Status</th>
+                    <th data-sort-ignore="true">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div class="preloader">
+                <img src="saltkin/img/loaders/loader8.gif" />
+            </div>
+            <a href="#/restaurants/add" class="btn btn-success">Add a new restaurant</a>
+        </script>
+
+        <script id="restaurantListElement-template" type="text/x-handlebars-template">
+            <tr id="restaurantListElement-{{_id}}">
+                <td><a href="#/restaurants/{{key}}">{{name}}</a></td>
+                <td><a href="#/restaurants/{{key}}">{{address}}</a></td>
+                <td>{{description}}</td>
+                <td data-value="1">
+                    {{#if isActive}}
+                    <span class="label label-success">Active</span>
+                    {{else}}
+                    <span class="label label-danger">Disabled</span>
+                    {{/if}}
+                </td>
+                <td> <a href="#/restaurants/{{key}}" class="btn btn-success" type="button">Edit</a></td>
+            </tr>
+        </script>
+
+        <script id="restaurantCreate-template" type="text/x-handlebars-template">
+            <form role="form" onsubmit="return false" id="add-rest-form">
+                <div class="form-group">
+                    <label for="{{mode}}-rest-name">Name (*)</label>
+                    <input id="{{mode}}-rest-name" type="text" class="form-control" value="{{name}}"/>
+                </div>
+                <div class="form-group">
+                    <label for="{{mode}}-rest-address">Address</label>
+                    <input  id="{{mode}}-rest-address" type="text" class="form-control" value="{{address}}"/>
+                </div>
+                <div class="form-group">
+                    <label for="{{mode}}-rest-lat">Latitude/Longitude</label>
+                    <div  class="form-inline">
+                        <input id="{{mode}}-rest-lat" type="text" class="form-control" placeholder="Latitude" value="{{lat}}"/>
+                        <input id="{{mode}}-rest-lon" type="text" class="form-control" placeholder="Longitude" value="{{lon}}"/>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="{{mode}}-rest-description">Description</label>
+                    <textarea id="{{mode}}-rest-description" type="text" class="form-control">{{description}}</textarea>
+                </div>
+                <div class="form-group">
+                    <label for="{{mode}}-rest-email">Manager's email address</label>
+                    <input type="email" class="form-control" id="{{mode}}-rest-email" placeholder="Enter email" value="{{manager}}"/>
+                </div>
+                <div class="form-group">
+                    <label for="{{mode}}-rest-password">Manager's password (for a new user)</label>
+                    <input type="password" class="form-control" id="{{mode}}-rest-password" placeholder="Password" value=""/>
+                </div>
+                {{#if isCreate}}
+                    <button type="submit" class="btn btn-default" onclick="Models.restaurant.create()">Submit</button>
+                {{else}}
+                    <button type="submit" class="btn btn-default" onclick="Models.restaurant.update('{{_id}}')">Update</button>
+                <button type="submit" class="btn btn-default" onclick="Models.restaurant.remove('{{_id}}')">Remove</button>
+                {{/if}}
+            </form>
+        </script>
+
+        <script id="restaurantInfo-template" type="text/x-handlebars-template">
+            <ul class="nav nav-tabs" role="tablist" id="restaurantInfoTabBar">
+                <li class="active"><a href="#restaurantInfo-main" role="tab" data-toggle="tab">Main</a></li>
+                <li><a href="#restaurantInfo-menu" role="tab" data-toggle="tab">Menu</a></li>
+                <li><a href="#restaurantInfo-staff" role="tab" data-toggle="tab">Staff members</a></li>
+                <li><a href="#restaurantInfo-orders" role="tab" data-toggle="tab">Orders</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="restaurantInfo-main"></div>
+                <div class="tab-pane" id="restaurantInfo-menu"></div>
+                <div class="tab-pane" id="restaurantInfo-staff"></div>
+                <div class="tab-pane" id="restaurantInfo-orders"></div>
+            </div>
+        </script>
+
+    </head>
+    <body>
+
+
+    <!-- Page container -->
+    <div class="page-container">
+        <div id="sidebar-container"></div>
+        <div id="content">
+            <div id="header-container"></div>
+            <div id="content-container"></div>
+        </div>
+    </div>
+    <!-- /Page container -->
+
+        <!-- PLUGINS -->
+        <script src="saltkin/js/plugins/jquery.min.js"></script>
+        <script src="saltkin/js/plugins/modernizr.min.js"></script>
+        <!-- Bootstrap core -->
+        <script src="saltkin/js/plugins/bootstrap.min.js"></script>
+        <!-- Dynamic tables -->
+        <script src="saltkin/js/plugins/footable.min.js"></script>
+        <!-- Site -->
+        <script src="saltkin/js/main.js"></script>
+    
+        <script src="js/vendor/zepto.min.js"></script>
+        <script src="js/vendor/fastclick.js"></script>
+        <script src="js/vendor/handlebars-v2.0.0.js"></script>
+        <script src="js/vendor/director.min.js"></script>
+        <script src="https://cdn.firebase.com/js/client/1.0.24/firebase.js"></script>
+        <script src="https://cdn.firebase.com/js/simple-login/1.6.4/firebase-simple-login.js"></script>
+        <script src="js/main.js"></script>
+    </body>
+</html>
