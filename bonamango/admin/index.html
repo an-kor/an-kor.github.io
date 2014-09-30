@@ -23,6 +23,8 @@
         <!-- Template -->
         <link href="saltkin/css/main.css" rel="stylesheet">
 
+        <link href="css/leaflet.css" rel="stylesheet">
+
         <script id="header-template" type="text/x-handlebars-template">
             <nav class="header-site">
                 <div class="container-fluid">
@@ -59,7 +61,6 @@
                 </div>
             </nav>
         </script>
-
 
         <script id="sidebar-template" type="text/x-handlebars-template">
         <!-- Sidebar -->
@@ -107,8 +108,6 @@
         </aside>
         <!-- /Sidebar -->
         </script>
-
-
 
         <script id="content-template" type="text/x-handlebars-template">
             <div class="container-fluid">
@@ -167,20 +166,42 @@
         </script>
 
         <script id="restaurantCreate-template" type="text/x-handlebars-template">
-            <form role="form" onsubmit="return false" id="add-rest-form">
+            <form role="form" onsubmit="return false" id="{{mode}}-rest-form">
+                <div class="alert alert-success" role="alert" style="display:none">Information updated successfully</div>
                 <div class="form-group">
                     <label for="{{mode}}-rest-name">Name (*)</label>
                     <input id="{{mode}}-rest-name" type="text" class="form-control" value="{{name}}"/>
                 </div>
                 <div class="form-group">
                     <label for="{{mode}}-rest-address">Address</label>
-                    <input  id="{{mode}}-rest-address" type="text" class="form-control" value="{{address}}"/>
+                    <div  class="form-inline">
+                        <input  id="{{mode}}-rest-address" type="text" class="form-control input-address" value="{{address}}" style="width:50%"/>
+                        <button class="btn btn-default" data-toggle="modal" data-target="#map-modal">Select on map</button>
+                        <!-- Modal -->
+                        <div class="modal fade" id="map-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                        <h4 class="modal-title">Restaurant's location</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div id="map_canvas" class="map_canvas"></div>
+                                        <small>Drag the marker to the desired location</small>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="{{mode}}-rest-lat">Latitude/Longitude</label>
                     <div  class="form-inline">
-                        <input id="{{mode}}-rest-lat" type="text" class="form-control" placeholder="Latitude" value="{{lat}}"/>
-                        <input id="{{mode}}-rest-lon" type="text" class="form-control" placeholder="Longitude" value="{{lon}}"/>
+                        <input id="{{mode}}-rest-lat" type="text" class="form-control input-lat" placeholder="Latitude" value="{{lat}}"/>
+                        <input id="{{mode}}-rest-lon" type="text" class="form-control input-lon" placeholder="Longitude" value="{{lon}}"/>
                     </div>
                 </div>
                 <div class="form-group">
@@ -196,59 +217,302 @@
                     <input type="password" class="form-control" id="{{mode}}-rest-password" placeholder="Password" value=""/>
                 </div>
                 {{#if isCreate}}
-                    <button type="submit" class="btn btn-default" onclick="Models.restaurant.create()">Submit</button>
+                    <button type="submit" class="btn btn-primary" onclick="Models.restaurant.create()">Submit</button>
                 {{else}}
-                    <button type="submit" class="btn btn-default" onclick="Models.restaurant.update('{{_id}}')">Update</button>
+                    <button type="submit" class="btn btn-primary" onclick="Models.restaurant.update('{{_id}}')">Update</button>
                 <button type="submit" class="btn btn-default" onclick="Models.restaurant.remove('{{_id}}')">Remove</button>
                 {{/if}}
             </form>
         </script>
 
         <script id="restaurantInfo-template" type="text/x-handlebars-template">
-            <ul class="nav nav-tabs" role="tablist" id="restaurantInfoTabBar">
-                <li class="active"><a href="#restaurantInfo-main" role="tab" data-toggle="tab">Main</a></li>
-                <li><a href="#restaurantInfo-menu" role="tab" data-toggle="tab">Menu</a></li>
-                <li><a href="#restaurantInfo-staff" role="tab" data-toggle="tab">Staff members</a></li>
-                <li><a href="#restaurantInfo-orders" role="tab" data-toggle="tab">Orders</a></li>
+            <input type="hidden" id="restaurant-key" value="{{key}}" />
+            <ul class="nav nav-tabs" id="restaurantInfoTabBar">
+                <li {{#if isMain}}class="active"{{/if}}><a href="#/restaurants/{{key}}">Main</a></li>
+                <li {{#if isMenu}}class="active"{{/if}}><a href="#/restaurants/{{key}}/menu">Menu</a></li>
+                <li {{#if isStaff}}class="active"{{/if}}><a href="#/restaurants/{{key}}/staff">Staff members</a></li>
+                <li {{#if isOrders}}class="active"{{/if}}><a href="#restaurantInfo-orders">Orders</a></li>
             </ul>
             <div class="tab-content">
-                <div class="tab-pane active" id="restaurantInfo-main"></div>
-                <div class="tab-pane" id="restaurantInfo-menu"></div>
-                <div class="tab-pane" id="restaurantInfo-staff"></div>
-                <div class="tab-pane" id="restaurantInfo-orders"></div>
+                <div class="tab-pane {{#if isMain}}active{{/if}}" id="restaurantInfo-main"></div>
+                <div class="tab-pane {{#if isMenu}}active{{/if}}" id="restaurantInfo-menu"></div>
+                <div class="tab-pane {{#if isStaff}}active{{/if}}" id="restaurantInfo-staff"></div>
+                <div class="tab-pane {{#if isOrders}}active{{/if}}" id="restaurantInfo-orders"></div>
             </div>
+        </script>
+
+        <script id="restaurantMenu-template" type="text/x-handlebars-template">
+            <div id="menu-sections"></div>
+            {{#if isEmpty}}
+                <div class="alert alert-warning" role="alert">No sections were added yet</div>
+            {{/if}}
+            <button type="submit" class="btn btn-primary" data-toggle="modal" data-target="#new-section-modal">Add new section</button>
+            <div id="menu-item-modal" class="modal fade">
+                <input type="hidden" id="menu-item-section-key" value="" />
+                <input type="hidden" id="menu-item-key" value="" />
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <h4 class="modal-title">New menu item</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="menu-item-name">Name</label>
+                                <input type="text" autofocus="true" class="form-control" id="menu-item-name" placeholder=""/>
+                            </div>
+                            <div class="form-group">
+                                <label for="menu-item-ingredients">Ingredients</label>
+                                <input type="text" class="form-control" id="menu-item-ingredients" placeholder=""/>
+                            </div>
+                            <div class="form-group">
+                                <label for="menu-item-variants">Variants (comma-separated list)</label>
+                                <input type="text" class="form-control" id="menu-item-variants" placeholder=""/>
+                            </div>
+                            <div class="form-group">
+                                <label for="menu-item-prices">Prices (comma-separated list)</label>
+                                <input type="text" class="form-control" id="menu-item-prices" placeholder=""/>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" checked id="menu-item-pickup"> Available for pickup
+                                </label>
+                            </div>
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox" checked id="menu-item-delivery"> Available for delivery
+                                </label>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="modal-dialog-edit-btn" onclick="Models.menuItem.update()" style="display:none">Edit</button>
+                            <button type="button" class="btn btn-primary" id="modal-dialog-add-btn" onclick="Models.menuItem.create()">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="new-section-modal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="new-section-input">Add new section</label>
+                                <input type="text" autofocus="true" class="form-control" id="new-section-input" placeholder=""/>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="Models.menuSection.create()">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+
+        <script id="restaurantMenuSections-template" type="text/x-handlebars-template">
+            {{#each this}}
+            <div class="list-group" id="menu-section-group-{{@key}}">
+                <div class="list-group-item">
+                    <span><h4 style="margin: 5px 0;" id="menu-section-name-{{@key}}">{{this.name}}</h4></span>
+                    <div class="btn-group btn-group">
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#menu-item-modal" onclick="$('#modal-dialog-add-btn').show(); $('#modal-dialog-edit-btn').hide(); $('#menu-item-section-key').val('{{@key}}')">Add new item</button>
+                        <button class="btn btn-primary" onclick="Models.menuSection.prepareUpdate('{{@key}}')">Change section name</button>
+                        <button class="btn btn-primary" onclick="Models.menuSection.remove('{{@key}}')">Remove</button>
+                    </div>
+                </div>
+                <div id="menu-section-items-{{@key}}" class="panel-collapse collapse in"></div>
+            </div>
+            {{/each}}
+        </script>
+
+        <script id="restaurantMenuSectionItems-template" type="text/x-handlebars-template">
+            {{#if this.items}}
+                <table id="menu-section-{{key}}" class="table table-striped table-bordered">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Ingredients</th>
+                        <th>Options</th>
+                        <th>Price</th>
+                        <th style="width:125px">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each items}}
+                        <tr id="menu-section-item-{{@key}}">
+                            <td>{{name}}</td>
+                            <td>{{ingredients}}</td>
+                            <td>{{variants}}</td>
+                            <td>{{prices}}</td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-success" onclick="Models.menuItem.edit('{{@key}}')">Edit</button>
+                                    <button class="btn" onclick="Models.menuItem.remove('{{@key}}')">Remove</button>
+                                </div>
+                            </td>
+                        </tr>
+                    {{/each}}
+                    </tbody>
+                </table>
+            {{else}}
+            <div class="alert" role="alert">No items yet</div>
+            {{/if}}
+        </script>
+
+        <script id="staffList-template" type="text/x-handlebars-template">
+            <table id="staffList" class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th>E-mail</th>
+                    <th>Password</th>
+                    <th data-sort-ignore="true">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each staff}}
+                <tr id="staffListElement-{{@key}}">
+                    <td>{{email}}</td>
+                    <td>{{password}}</td>
+                    <td>
+                        <a href="#" class="btn" type="button">Remove</a>
+                    </td>
+                </tr>
+                {{/each}}
+                </tbody>
+            </table>
+            <div class="row">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <form class="form-inline" autocomplete="off">
+                            <div class="form-group">
+                                <label class="sr-only" for="staff-add-email">Email address</label>
+                                <input autocomplete="off" class="form-control" id="staff-add-email" placeholder="Enter email">
+                            </div>
+                            <div class="form-group">
+                                <label class="sr-only" for="staff-add-password">Password</label>
+                                <input autocomplete="off" class="form-control" id="staff-add-password" placeholder="Password">
+                            </div>
+                            <button class="btn btn-default" onclick="Models.staff.create()">Add a new staff member</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </script>
+
+        <script id="login-template" type="text/x-handlebars-template">
+            <!-- Page container -->
+            <div class="container" style="text-align: center;">
+                <p class="text-center">
+                    <h2>Bonamango.se Admin area</h2>
+                    Welcome to your admin dashboard, please choose an option below:
+                </p>
+                <div class="login-buttons">
+                    <button class="btn btn-login" data-toggle="modal" data-target="#loginModal">Sign in</button>
+                    <strong>or</strong>
+                    <button class="btn btn-login" data-toggle="modal" data-target="#signUpModal">Sign up</button>
+                </div>
+            </div>
+            <!-- /Page container -->
+
+            <!-- Login modal -->
+            <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModal" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Please sign in</h4>
+                        </div>
+                        <form action="#" onsubmit="Models.login(); return false;">
+                        <div class="modal-body">
+
+                                <div id="login-error" class="alert alert-warning" role="alert" style="display:none;">Wrong email or password</div>
+
+                                <div class="form-group">
+                                    <input type="email" id="login-email" class="form-control" value="admin@example.com" placeholder="Email address" required autofocus>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" id="login-password" class="form-control" value="admin" placeholder="Password" required>
+                                </div>
+                                <label class="checkbox">
+                                    <input type="checkbox" value="remember-me"> Remember me
+                                </label>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" onclick="Models.login();">Sign in</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sign up modal -->
+            <div class="modal fade" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="signUpModal" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Create an account</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form role="form">
+                                <div class="form-group">
+                                    <input type="email" class="form-control" placeholder="Username" required autofocus>
+                                </div>
+                                <div class="form-group">
+                                    <input type="email" class="form-control" placeholder="Email address" required autofocus>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" placeholder="Password" required>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" placeholder="Repeat password" required>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary">Register</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </script>
 
     </head>
     <body>
 
-
-    <!-- Page container -->
-    <div class="page-container">
+    <div id="login" class="login-page" style="position:absolute; top:0;bottom:0;left:0;right:0;">
+    </div>
+    <div id="main" class="page-container" style="display:none">
         <div id="sidebar-container"></div>
         <div id="content">
             <div id="header-container"></div>
             <div id="content-container"></div>
         </div>
     </div>
-    <!-- /Page container -->
 
-        <!-- PLUGINS -->
-        <script src="saltkin/js/plugins/jquery.min.js"></script>
-        <script src="saltkin/js/plugins/modernizr.min.js"></script>
-        <!-- Bootstrap core -->
-        <script src="saltkin/js/plugins/bootstrap.min.js"></script>
-        <!-- Dynamic tables -->
-        <script src="saltkin/js/plugins/footable.min.js"></script>
-        <!-- Site -->
-        <script src="saltkin/js/main.js"></script>
-    
-        <script src="js/vendor/zepto.min.js"></script>
-        <script src="js/vendor/fastclick.js"></script>
-        <script src="js/vendor/handlebars-v2.0.0.js"></script>
-        <script src="js/vendor/director.min.js"></script>
-        <script src="https://cdn.firebase.com/js/client/1.0.24/firebase.js"></script>
-        <script src="https://cdn.firebase.com/js/simple-login/1.6.4/firebase-simple-login.js"></script>
-        <script src="js/main.js"></script>
+    <script src="http://maps.googleapis.com/maps/api/js?sensor=false&amp;libraries=places"></script>
+    <script src="saltkin/js/plugins/jquery.min.js"></script>
+    <script src="saltkin/js/plugins/modernizr.min.js"></script>
+    <script src="saltkin/js/plugins/bootstrap.min.js"></script>
+    <script src="saltkin/js/plugins/footable.min.js"></script>
+
+    <script src="js/vendor/leaflet.js"></script>
+
+    <script src="js/vendor/fastclick.js"></script>
+    <script src="js/vendor/handlebars-v2.0.0.js"></script>
+    <script src="js/vendor/director.min.js"></script>
+
+    <script src="js/vendor/jquery.geocomplete.min.js"></script>
+    <script src="https://cdn.firebase.com/js/client/1.0.24/firebase.js"></script>
+    <script src="https://cdn.firebase.com/js/simple-login/1.6.4/firebase-simple-login.js"></script>
+
+    <script src="js/main.js"></script>
+    <script src="js/Utils.js"></script>
+    <script src="js/Models.js"></script>
+    <script src="js/Pages.js"></script>
     </body>
 </html>
