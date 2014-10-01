@@ -16,84 +16,20 @@
             <div class="toolbar-inner">
                 <a href="#" style="width: 25%;">
                     <div style="font-size: 14px; color:#333;">Products</div>
-                    <div>3</div>
+                    <div class="cartNumber">0</div>
                 </a>
                 <a href="#"  style="width: 25%;">
                     <div style="font-size: 14px; color:#333;">Total</div>
-                    <div>100 KR</div>
+                    <div class="cartPrice">0 KR</div>
                 </a>
 
-                <a href="checkout.html" class="button active"  style="width: 50%;">TILL KASSAN</a>
+                <a href="#" class="button active"  style="width: 50%;" onclick="if (App.checkCart()) App.views[0].loadPage('checkout.html')">TILL KASSAN</a>
             </div>
         </div>
         <div class="page-content">
             <div class="content-block list-block">
                 <div class="list-group">
-                    <ul style="font-size:14px;">
-                        <li class="list-group-title">Juiceverket</li>
-                        <li class="swipeout">
-                            <div class="swipeout-content item-content">
-                                <div class="item-inner">
-                                    <div class="edit"><i class="icon ion-edit" style="font-size:18px; line-height:25px;"></i></div>
-                                    <div class="edit item-title">Shirazisallad (standart)</div>
-                                    <div class="item-after">
-                                        1 x 40 kr
-                                        <div class="item-plus">
-                                            <i class="icon ion-plus-circled"></i>
-                                            <i class="icon ion-close-circled color-red"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="swipeout-actions">
-                                <div class="swipeout-actions-inner">
-                                    <!-- Add this button and item will be deleted automatically -->
-                                    <a href="#" class="swipeout-delete">Delete</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="swipeout">
-                            <div class="swipeout-content item-content">
-                                <div class="item-inner">
-                                    <div class="edit"><i class="icon ion-edit" style="font-size:18px; line-height:25px;"></i></div>
-                                    <div class="edit item-title">Season Salad (standart)</div>
-                                    <div class="item-after">
-                                        1 x 40 kr
-                                        <div class="item-plus">
-                                            <i class="icon ion-plus-circled"></i>
-                                            <i class="icon ion-close-circled color-red"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="swipeout-actions">
-                                <div class="swipeout-actions-inner">
-                                    <!-- Add this button and item will be deleted automatically -->
-                                    <a href="#" class="swipeout-delete">Delete</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="swipeout">
-                            <div class="swipeout-content item-content">
-                                <div class="item-inner">
-                                    <div class="edit"><i class="icon ion-edit" style="font-size:18px; line-height:25px;"></i></div>
-                                    <div class="edit item-title">Sholé zard (standart)</div>
-                                    <div class="item-after">
-                                        1 x 30 kr
-                                        <div class="item-plus">
-                                            <i class="icon ion-plus-circled"></i>
-                                            <i class="icon ion-close-circled color-red"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="swipeout-actions">
-                                <div class="swipeout-actions-inner">
-                                    <!-- Add this button and item will be deleted automatically -->
-                                    <a href="#" class="swipeout-delete">Delete</a>
-                                </div>
-                            </div>
-                        </li>
+                    <ul style="font-size:14px;" id="cart-container">
                     </ul>
                 </div>
             </div>

@@ -8,7 +8,7 @@ var Events = [];
 var App = {
     data: {},
     breadcrunbs: [],
-    renderPage: function(notClearEvents){
+    renderPage: function(){
         if (App.breadcrunbs.length) {
             App.breadcrunbs[App.breadcrunbs.length-1].last = 1;
         }
@@ -16,22 +16,6 @@ var App = {
             title: App.title,
             breadcrunbs: App.breadcrunbs
         }));
-
-        if (!notClearEvents) {
-            $.map(Events, function(el){
-                el.off("child_added");
-                el.off("child_changed");
-                el.off("child_removed");
-            });
-        } else {
-            $.map(Events, function(el, key){
-                if (key != Events.length-2) {
-                    el.off("child_added");
-                    el.off("child_changed");
-                    el.off("child_removed");
-                }
-            });
-        }
 
         var route = window.location.hash.substr(1);
         //$('.sidebar-group').find('.active').removeClass('active');

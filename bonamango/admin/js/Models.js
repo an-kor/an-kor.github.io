@@ -183,88 +183,90 @@ var Models = {
         },
 
         getMenu: function(key, callback){
-            var ref = Data.fb.child('menuSections')
-                .startAt(key)
-                .endAt(key);
-            ref.once('value', function(snap) {
+                var ref = Data.fb.child('menuSections')
+                    .startAt(key)
+                    .endAt(key);
+                ref.once('value', function (snap) {
                     var sections = snap.val();
                     callback(sections);
-                    if(sections) {
-                        $.each(sections, function(key, el){
+                    if (sections) {
+                        $.each(sections, function (key, el) {
                             var menuRef = Data.fb.child('menuItems')
                                 .startAt(key)
                                 .endAt(key);
-                            menuRef.once('value', function(snap) {
-
-                                console.log($('#menu-section-items-'+key))
+                            menuRef.once('value', function (snap) {
                                 if (snap) {
-                                    $('#menu-section-items-'+key).html(Templates.restaurantMenuSectionItems({
+                                    $('#menu-section-items-' + key).html(Templates.restaurantMenuSectionItems({
                                         key: key,
                                         items: snap.val()
                                     }));
                                 }
                             });
 
-                            menuRef.on('child_added', function (snap) {
-                                if ($('#menu-section-'+key+' tbody').length) {
-                                    $('#menu-section-'+key+' tbody').append(
-                                        '<tr id="menu-section-item-'+key+'">'+
-                                        '<td>'+snap.val().name+'</td>'+
-                                        '<td>'+snap.val().ingredients+'</td>'+
-                                        '<td>'+snap.val().variants+'</td>'+
-                                        '<td>'+snap.val().prices+'</td>'+
+                            if (!Events['#menu-section-items-' + key]) {
+                                menuRef.on('child_added', function (snap) {
+                                    if ($('#menu-section-' + key + ' tbody').length) {
+                                        $('#menu-section-' + key + ' tbody').append(
+                                            '<tr id="menu-section-item-' + key + '">' +
+                                            '<td>' + snap.val().name + '</td>' +
+                                            '<td>' + snap.val().ingredients + '</td>' +
+                                            '<td>' + snap.val().variants + '</td>' +
+                                            '<td>' + snap.val().prices + '</td>' +
 
-                                        '<td>'+
-                                        '<div class="btn-group btn-group-sm">'+
-                                            '<button class="btn btn-success" onclick="Models.menuItem.edit(\''+snap.name()+'\')">Edit</button>'+
-                                            '<button class="btn" onclick="Models.menuItem.remove(\''+snap.name()+'\')">Remove</button>'+
-                                        '</div>'+
-                                        '</td>'+
+                                            '<td>' +
+                                            '<div class="btn-group btn-group-sm">' +
+                                            '<button class="btn btn-success" onclick="Models.menuItem.edit(\'' + snap.name() + '\')">Edit</button>' +
+                                            '<button class="btn" onclick="Models.menuItem.remove(\'' + snap.name() + '\')">Remove</button>' +
+                                            '</div>' +
+                                            '</td>' +
+                                            '</tr>'
+                                        );
+                                    } else {
+                                        var items = {};
+                                        items[snap.name()] = snap.val();
+                                        $('#menu-section-items-' + key).html(Templates.restaurantMenuSectionItems({
+                                            key: key,
+                                            items: items
+                                        }));
+                                    }
+                                });
+
+                                menuRef.on('child_changed', function (snap) {
+                                    $('#menu-section-item-' + snap.name()).replaceWith(
+                                        '<tr id="menu-section-item-' + snap.name() + '">' +
+                                        '<td>' + snap.val().name + '</td>' +
+                                        '<td>' + snap.val().ingredients + '</td>' +
+                                        '<td>' + snap.val().variants + '</td>' +
+                                        '<td>' + snap.val().prices + '</td>' +
+                                        '<td>' +
+                                        '<div class="btn-group btn-group-sm">' +
+                                        '<button class="btn btn-success" onclick="Models.menuItem.edit(\'' + snap.name() + '\')">Edit</button>' +
+                                        '<button class="btn" onclick="Models.menuItem.remove(\'' + snap.name() + '\')">Remove</button>' +
+                                        '</div>' +
+                                        '</td>' +
                                         '</tr>'
                                     );
-                                } else {
-                                    var items = {};
-                                    items[snap.name()] = snap.val();
-                                    $('#menu-section-items-'+key).html(Templates.restaurantMenuSectionItems({
-                                        key: key,
-                                        items: items
-                                    }));
-                                }
-                            });
+                                });
 
-                            menuRef.on('child_changed', function (snap) {
-                                $('#menu-section-item-'+snap.name()).replaceWith(
-                                    '<tr id="menu-section-item-'+snap.name()+'">'+
-                                        '<td>'+snap.val().name+'</td>'+
-                                        '<td>'+snap.val().ingredients+'</td>'+
-                                        '<td>'+snap.val().variants+'</td>'+
-                                        '<td>'+snap.val().prices+'</td>'+
-                                        '<td>'+
-                                        '<div class="btn-group btn-group-sm">'+
-                                            '<button class="btn btn-success" onclick="Models.menuItem.edit(\''+snap.name()+'\')">Edit</button>'+
-                                            '<button class="btn" onclick="Models.menuItem.remove(\''+snap.name()+'\')">Remove</button>'+
-                                        '</div>'+
-                                        '</td>'+
-                                    '</tr>'
-                                );
-                            });
-
-                            menuRef.on('child_removed', function (snap) {
-                                $('#menu-section-item-'+snap.name()).remove();
-                            });
-                            Events.push(menuRef);
+                                menuRef.on('child_removed', function (snap) {
+                                    $('#menu-section-item-' + snap.name()).remove();
+                                });
+                                Events['#menu-section-items-' + key] = true;
+                            }
                         });
                     }
                 });
 
-            ref.on('child_changed', function (snap) {
-                $('#menu-section-name-'+snap.name()).html(snap.val().name);
-            });
+                if (!Events['menuSections' + key]) {
+                    ref.on('child_changed', function (snap) {
+                        $('#menu-section-name-' + snap.name()).html(snap.val().name);
+                    });
 
-            ref.on('child_removed', function (snap) {
-                $('#menu-section-group-'+snap.name()).remove();
-            });
-            Events.push(ref);
+                    ref.on('child_removed', function (snap) {
+                        $('#menu-section-group-' + snap.name()).remove();
+                    });
+                    Events['menuSections' + key] = true;
+                }
         },
 
         getInfo: function(key, callback){
@@ -281,33 +283,38 @@ var Models = {
                 });
         },
         list: function(){
-            var ref = Data.fb.child('restaurants');
-            var prepareElement =  function(snapshot){
-                var message = snapshot.val();
-                message.isActive = (message.status == 'active');
-                message._id = snapshot.name();
-                return message;
-            };
-            ref.on('child_added', function (snapshot) {
-                $('.preloader').hide();
-                var message = prepareElement(snapshot);
-                $('#restaurantList').find('tbody').append(Templates.restaurantListElement(message));
-                $('.footable').data('footable').redraw();
-            });
 
-            ref.on('child_changed', function (snapshot) {
-                var message = prepareElement(snapshot);
-                $('#restaurantListElement-'+snapshot.name()).replaceWith(Templates.restaurantListElement(message));
-                $('.footable').data('footable').redraw();
-            });
-
-            ref.on('child_removed', function (snapshot) {
-                $('#restaurantListElement-'+snapshot.name()).slideUp(400, function(){
-                    $(this).remove();
+                var ref = Data.fb.child('restaurants');
+                var prepareElement = function (k, message) {
+                    message.isActive = 1;//(message.status == 'active');
+                    message._id = k;
+                    return message;
+                };
+                ref.on('value', function (snapshot) {
+                    $('.preloader').hide();
+                    var val = snapshot.val();
+                    $.each(val, function(k, message){
+                        var message = prepareElement(k, message);
+                        $('#restaurantList').find('tbody').append(Templates.restaurantListElement(message));
+                    });
                     $('.footable').data('footable').redraw();
-                })
-            });
-            Events.push(ref);
+                });
+
+            if (!Events['restaurants']) {
+                ref.on('child_changed', function (snapshot) {
+                    var message = prepareElement(snapshot);
+                    $('#restaurantListElement-' + snapshot.name()).replaceWith(Templates.restaurantListElement(message));
+                    $('.footable').data('footable').redraw();
+                });
+
+                ref.on('child_removed', function (snapshot) {
+                    $('#restaurantListElement-' + snapshot.name()).slideUp(400, function () {
+                        $(this).remove();
+                        $('.footable').data('footable').redraw();
+                    })
+                });
+                Events['restaurants'] = true;
+            }
         },
         update: function(restaurantId) {
             var newRecord = Data.fb.child('restaurants/'+restaurantId);

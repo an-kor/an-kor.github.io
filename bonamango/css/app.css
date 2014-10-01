@@ -187,7 +187,7 @@ i.ion-compose {
   padding: 10px;
 }
 .popup .buttons-block {
-  padding: 80px 0 0 0;
+  padding: 40px 0 0 0;
 }
 .popup-overlay {
   background: rgba(128, 128, 128, 0.2);
@@ -195,6 +195,10 @@ i.ion-compose {
 .popup .navbar {
   -webkit-transform-style: preserve-3d;
   -webkit-backface-visibility: hidden;
+}
+.slider-pagination {
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.75);
 }
 .statusbar-overlay {
   background: #1c57ff;
