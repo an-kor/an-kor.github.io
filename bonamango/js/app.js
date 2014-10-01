@@ -34,7 +34,11 @@ App.onPageInit('contact', function (page) {
 
 App.onPageInit('index', function (page) {
     //$$('#map').height(window.innerHeight);
+    if (Map) {
+       Map.remove();
+    }
     Map = L.map('map').setView([59.335597, 18.063498], 12);
+
     L.tileLayer('https://mts0.google.com/vt/lyrs=m@240000000&hl=sv&src=app&x={x}&y={y}&z={z}&s=Ga', {
         attribution: '',
         maxZoom: 18,
@@ -48,10 +52,6 @@ App.onPageInit('index', function (page) {
             .bindPopup("You are within " + radius + " meters from this point");
 
     }
-    App.changePage = function(key){
-        localStorage.setItem('key', key);
-        mainView.loadPage('contact.html');
-    };
 
     function onLocationError(e) {
         console.log(e.message);
@@ -61,6 +61,12 @@ App.onPageInit('index', function (page) {
     Map.on('locationerror', onLocationError);
 
     Map.locate({setView: true, maxZoom: 12});
+
+    App.changePage = function(key){
+        localStorage.setItem('key', key);
+        mainView.loadPage('contact.html');
+    };
+
     function restaurants(){
         var ref = Data.fb.child('restaurants');
         var colors = ['orange', 'green', 'purple', 'darkpurple', 'darkgreen'];
