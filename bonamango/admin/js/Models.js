@@ -8,7 +8,11 @@ var Models = {
                 var staff = snap.val();
                 $.each(staff,function(key, val){
                     if (val.email == email && val.password == password) {
-                        App.userRole = 'admin';
+                        if (val.email == "niklas@juiceverket.se") {
+                            App.userRole = 'juiceverket';
+                        } else {
+                            App.userRole = 'admin';
+                        }
                         $('#main').show();
                         $('#login').fadeOut();
                         $('#loginModal').modal('hide');
@@ -409,8 +413,15 @@ var Models = {
                     $('.preloader').hide();
                     var val = snapshot.val();
                     $.each(val, function(k, message){
-                        var message = prepareElement(k, message);
-                        $('#restaurantList').find('tbody').append(Templates.restaurantListElement(message));
+                        if (App.userRole == 'juiceverket') {
+                            if (message.key != 'ichaicha' && message.key != 'testrestaurant') {
+                                var message = prepareElement(k, message);
+                                $('#restaurantList').find('tbody').append(Templates.restaurantListElement(message));
+                            }
+                        } else {
+                            var message = prepareElement(k, message);
+                            $('#restaurantList').find('tbody').append(Templates.restaurantListElement(message));
+                        }
                     });
                     $('.footable').data('footable').redraw();
                 });
