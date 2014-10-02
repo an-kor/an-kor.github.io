@@ -12,7 +12,7 @@ var Models = {
                         $('#main').show();
                         $('#login').fadeOut();
                         $('#loginModal').modal('hide');
-                        App.router.setRoute('/restaurants/list');
+                        App.router.setRoute('/dashboard');
                     }
                 });
                 if (!App.userRole) {
@@ -20,6 +20,111 @@ var Models = {
                 }
             });
         return false;
+    },
+    orders: {
+        cache: {},
+        changeStatus: function(key, status){
+            var newRecord = Data.fb.child('orders/'+key);
+            newRecord.update({
+                status: status
+            }, function(){
+                //Models.orders.cache[key].status = status;
+                //$('#ordersListElement-' + key).replaceWith(Templates.ordersListElement(Models.orders.prepareElement(key, Models.orders.cache[key])));
+                //$('.footable').data('footable').redraw();
+            });
+        },
+        prepareElement: function (k, order) {
+            var prepareCart = function (cart) {
+                var result = [];
+                $.each(cart, function(k, el){
+                    result.push(el.name + " " + el.price + "kr")
+                });
+                return result.join("; ")
+            };
+            var result = {
+                "_id": k,
+                "id": order.id,
+                "customerPhone": order.customerPhone,
+                "restaurantTitle": order.restaurantTitle,
+                "cartString": prepareCart(order.cart),
+                "total": order.total,
+                "customer": order.customerName,
+                "comment": order.comment,
+                "payment": (order.payment=="card"?"By card":"By cash"),
+                "delivery": (order.delivery=="pickup"?"Pick up":"Seating"),
+                "isConfirmed": (order.status=="confirmed"?1:0),
+                "isRejected": (order.status=="rejected"?1:0),
+                "isCancelled": (order.status=="cancelled"?1:0),
+                "isCompleted": (order.status=="completed"?1:0),
+                "isPending": (order.status=="waiting"?1:0)
+            };
+            console.log(result)
+            return result;
+        },
+        list: function(){
+            var ref = Data.fb.child('orders');
+
+            ref.once('value', function (snapshot) {
+                var orders = snapshot.val();
+
+                var pendingCount = 0;
+                var count = 0;
+                var sum = 0;
+                $.each(orders, function(k, order){
+                    if (!$('#ordersListElement-' + k).length){
+                        count++;
+                        if (order.status=="completed") sum += parseInt(order.total);
+                        if (order.status=="waiting") pendingCount++;
+                        $('#ordersList').find('tbody').prepend(Templates.ordersListElement(Models.orders.prepareElement(k, order)));
+                    }
+                });
+                $('.pendingCount').html(pendingCount);
+                $('.ordersCount').html(count);
+                $('.ordersSum').html(sum);
+                $('.footable').data('footable').redraw();
+            });
+
+            if (!Events['orders']) {
+                ref.on('value', function (snapshot) {
+                    var pendingCount = 0;
+                    var count = 0;
+                    var sum = 0;
+                    var orders = snapshot.val();
+                    $.each(orders, function(k, order){
+                        count++;
+                        if (order.status=="completed") sum += parseInt(order.total);
+                        if (order.status=="waiting") pendingCount++;
+                    });
+                    $('.pendingCount').html(pendingCount);
+                    $('.ordersCount').html(count);
+                    $('.ordersSum').html(sum);
+                });
+
+                ref.on('child_added', function (snapshot) {
+                    var k = snapshot.name();
+                    var order = snapshot.val();
+                    Models.orders.cache[k] = order;
+                    if (!$('#ordersListElement-' + k).length){
+                        $('#ordersList').find('tbody').prepend(Templates.ordersListElement(Models.orders.prepareElement(k, order)));
+                    }
+                    $('.footable').data('footable').redraw();
+                });
+
+                ref.on('child_changed', function (snapshot) {
+                    $('#ordersListElement-' + snapshot.name()).replaceWith(Templates.ordersListElement(Models.orders.prepareElement(snapshot.name(), snapshot.val())));
+                    $('.footable').data('footable').redraw();
+                });
+
+                ref.on('child_removed', function (snapshot) {
+                    $('#ordersListElement-' + snapshot.name()).slideUp(400, function () {
+                        $(this).remove();
+                        $('.footable').data('footable').redraw();
+                    })
+                });
+
+                Events['orders'] = true;
+            }
+        }
     },
     menuSection: {
         create: function(){
@@ -117,8 +222,8 @@ var Models = {
                     ingredients: $('#menu-item-ingredients').val(),
                     variants: $('#menu-item-variants').val(),
                     pickup: ($('#menu-item-pickup').val()=='on'?1:0),
-                    delivery: ($('#menu-item-delivery').val()=='on'?1:0),
-                }, sectionKey, function(snap){
+                    delivery: ($('#menu-item-delivery').val()=='on'?1:0)
+                }, sectionKey, function(){
                     $("#menu-item-modal").modal('hide');
                 });
             }

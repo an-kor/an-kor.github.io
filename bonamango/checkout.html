@@ -18,34 +18,33 @@
     <div data-page="checkout" class="page contact-page">
         <div class="toolbar" style="height: 60px;">
             <div class="toolbar-inner">
-                <a href="#" class="button active"  style="width: 100%;" onclick="if (App.checkCart()) App.views[0].loadPage('thankyou.html')">CHECKOUT</a>
+                <a href="#" class="button active"  style="width: 100%;" onclick="App.validateCheckout()">CHECKOUT</a>
             </div>
         </div>
         <div class="page-content">
-            <div class="content-block list-block">
+            <div class="list-block">
                 <div class="list-group">
                     <ul style="font-size:14px;">
                         <li class="list-group-title">Options</li>
                         <li>
-                                <a href="#" class="item-link smart-select">
-                                    <select name="fruits">
-                                        <option value="apple" selected>Pick up</option>
-                                        <option value="pineapple">Seating</option>
-                                        <option value="pineapple">By courier</option>
-                                    </select>
-                                    <div class="item-content">
-                                        <div class="item-inner">
-                                            <div class="item-title">Delivery</div>
-                                            <div class="item-after">Pick up</div>
-                                        </div>
+                            <a href="#" class="item-link smart-select" data-back-onselect="true">
+                                <select id="delivery-select">
+                                    <option value="pickup" selected>Pick up</option>
+                                    <option value="seating">Seating</option>
+                                </select>
+                                <div class="item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title">Delivery</div>
+                                        <div class="item-after">Pick up</div>
                                     </div>
-                                </a>
+                                </div>
+                            </a>
                         </li>
                         <li>
-                            <a href="#" class="item-link smart-select">
-                                <select name="payment">
-                                    <option value="apple" selected>Credit card</option>
-                                    <option value="pineapple">By cash</option>
+                            <a href="#" class="item-link smart-select" data-back-onselect="true">
+                                <select id="payment-select">
+                                    <option value="card" selected>Credit card</option>
+                                    <option value="cash">By cash</option>
                                 </select>
                                 <div class="item-content">
                                     <div class="item-inner">
@@ -57,26 +56,27 @@
                         </li>
                         <li class="list-group-title">Personal info</li>
                         <li>
-                                        <div class="item-content">
-                                            <div class="item-inner">
-                                                <div class="item-title label">Phone (*)</div>
-                                                <div class="item-input">
-                                                    <input type="text" name="name" placeholder="Phone number">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="item-content">
-                                            <div class="item-inner">
-                                                <div class="item-title label">Name</div>
-                                                <div class="item-input">
-                                                    <input type="text" name="name" placeholder="Your name">
-                                                </div>
-                                            </div>
-                                        </div>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title label">Phone (*)</div>
+                                    <div class="item-input">
+                                        <input type="tel" name="name" placeholder="Phone number" id="phone">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="item-content">
+                                <div class="item-inner">
+                                    <div class="item-title label">Name</div>
+                                    <div class="item-input">
+                                        <input type="text" name="name" placeholder="Your name" id="customerName">
+                                    </div>
+                                </div>
+                            </div>
                         </li>
                         <li class="list-group-title">Order items</li>
                         <div id="checkout-cart"></div>
-                        <li class="list-group-title">Estimated preparation time: 20 min.</li>
+                        <li class="list-group-title">Total: <span style="float:right"><span class="cartPrice">0</span> KR</span></li>
+                        <li class="list-group-title">Estimated preparation time: <span style="float:right">20 min.</span></li>
                     </ul>
                 </div>
             </div>

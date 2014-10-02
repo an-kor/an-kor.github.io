@@ -12,22 +12,25 @@
     <div data-page="thankyou" class="page contact-page">
         <div class="toolbar" style="height: 60px;" id="reject">
             <div class="toolbar-inner">
-                <a href="checkout.html" class="button active color-red"  style="width: 100%;">CANCEL THE ORDER</a>
+                <a href="#" class="button active color-red"  style="width: 100%;" onclick="App.cancelOrder();">CANCEL THE ORDER</a>
             </div>
         </div>
         <div class="page-content">
             <div class="content-block">
                 <div>
-                    <h3 style="text-align: center">Order ID: 25</h3>
-                    <div class="content-block" id="waiting" style="">
-                        <div class="content-block-inner" style="margin:0">Your order has been sent to the restaurant. Estimated preparation time: 20 min. Waiting for the confirmation... </div>
+                    <h3 style="text-align: center">Order ID: <span class="orderId"></span></h3>
+
+                    <div class="content-block" id="waiting">
+                        <div class="content-block-inner" style="margin:0" id="order-message">Loading...</div>
                     </div>
 
-                    <div class="content-block" id="confirmed" style="display:none">
-                        <div class="content-block-inner" style="margin:0">Your order has been confirmed. <p>Preparation time is <b>26 minutes</b></p>
-                            <p><a class="button open-popover" href="#" data-popover=".popover-qr">Order's QR code</a></p>
+                    <div class="list-block">
+                        <div class="list-group">
+                            <ul style="font-size:14px;" id="confirmed-order-container">
+                            </ul>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>

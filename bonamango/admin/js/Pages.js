@@ -1,6 +1,29 @@
 var Pages = {
+    dashboard: function(){
+        if (!App.userRole) {App.router.setRoute('/login'); return;}
+        $('#login').hide();
+        $('#main').show();
+        App.breadcrunbs = [{
+            name: 'Main page',
+            url: '/'
+        }];
+        App.title = 'Dashboard';
+
+        $('#content-container').html(Templates.dashboard());
+
+        $('#restaurants-container').html(Templates.restaurantList());
+
+        $('#orders-container').html(Templates.ordersList());
+        $('.footable').footable();
+
+        App.renderPage();
+        Models.restaurant.list();
+        Models.orders.list();
+    },
     restaurantsList: function(){
         if (!App.userRole) {App.router.setRoute('/login'); return;}
+        $('#login').hide();
+        $('#main').show();
         App.breadcrunbs = [{
             name: 'Restaurants',
             url: '/restaurants/list'

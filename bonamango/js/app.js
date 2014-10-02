@@ -8,10 +8,11 @@ var Data = {
 var $$ = Dom7;
 var App = new Framework7({
     modalTitle: 'Bonamango',
-    fastClicks:false,
-    swipePanel: 'left',
+    fastClicks: true,
+    //swipePanel: 'left',
     animateNavBackIcon: true,
-    init: false
+    init: false,
+    swipeBackPage: false
 });
 var mainView = App.addView('.view-main', {
     dynamicNavbar: true
@@ -67,6 +68,40 @@ App.onPageInit('index', function (page) {
         mainView.loadPage('contact.html');
     };
 
+    var order = JSON.parse(localStorage.getItem('order'));
+    if (order && !App.orderTracker) {
+        var ref = new Firebase(order.path);
+        ref.once('value', function (order) {
+            order = order.val();
+            if (order.status == 'waiting') {
+                $$('#status-badge').show();
+                $$('#status-badge span').html('new');
+            } else {
+                $$('#status-badge').show();
+                $$('#status-badge span').html(order.status);
+            }
+        });
+
+        App.orderTracker = ref.on('child_changed', function (order) {
+            if (order.name() == 'status') {
+                if (order.val() == 'waiting') {
+                    $$('#status-badge').show(); $$('#status-badge span').html('new');
+                    var message = 'Your order has been set as Pending by the restaurant';
+                } else {
+                    $$('#status-badge').show(); $$('#status-badge span').html(order.status);
+                    var message = 'Your order has been '+order.val();
+                }
+            }
+            App.addNotification({
+                title: 'Order status changed',
+                message: message,
+                hold: 5000
+            });
+            $$('#order-message').html(message);
+
+        });
+    }
+
     function restaurants(){
         var ref = Data.fb.child('restaurants');
         var colors = ['orange', 'green', 'purple', 'darkpurple', 'darkgreen'];
@@ -79,6 +114,15 @@ App.onPageInit('index', function (page) {
             el.logoId = Math.ceil(Math.random()*2);
             if (el.key == 'ichaicha') {
                 el.logoId = '-ichaicha';
+            }
+            if (el.key == 'steam') {
+                el.logoId = '-steam';
+            }
+            if (el.name == 'Juiceverket') {
+                el.logoId = '-juiceverket';
+            }
+            if (el.name == 'Steam') {
+                el.logoId = '-steam';
             }
             return el;
         };
@@ -143,7 +187,7 @@ App.updateCart = function(){
             }
         }
     });
-    $('.cartNumber').html(currentItems.length);
+    $('.cartNumber').html(number);
     $('.cartPrice').html(price);
 };
 
@@ -200,6 +244,7 @@ App.checkCart = function(){
         return true;
     }
 };
+
 
 App.onPageBeforeInit('contact', function (page) {
     var key = localStorage.getItem('key');
@@ -409,34 +454,114 @@ App.onPageBeforeInit('checkout', function (page) {
     }
     result.items = items;
     $('#checkout-cart').html(Templates.restaurantCart(result));
-});
+    if (localStorage.getItem('phone')) {
+        $('#phone').val(localStorage.getItem('phone'));
+    }
+    $('#phone').on('blur', function(){
+        localStorage.setItem('phone', $('#phone').val());
+    });
 
+    App.updateCart();
+});
 var showModals = false;
-App.onPageInit('thankyou', function (page) {
-    if (!showModals) {
-        setTimeout(function(){
-            showModals = true;
+
+App.validateCheckout = function(){
+    if (!App.checkCart()) return false;
+    if ($('#phone').val() == "") {
+        App.alert('You need to enter phone number', function(){
+            $('#phone').focus()
+        });
+        return false;
+    }
+    var restaurantKey = localStorage.getItem('key');
+    var order = {
+        id: Math.ceil(Math.random()*1000),
+        customerPhone: $('#phone').val(),
+        customerName: $('#customerName').val(),
+        delivery: $("#delivery-select").val(),
+        payment: $("#payment-select").val(),
+        cart: JSON.parse(localStorage.getItem('cart')),
+        restaurant: restaurantKey,
+        created_at: new Date().toUTCString(),
+        status: 'waiting',
+        restaurantTitle: localStorage.getItem('restaurant-title'),
+        total: $('.cartPrice').html()
+    };
+
+    var newRecord = Data.fb.child('orders').push();
+    newRecord.setWithPriority(order, restaurantKey, function(){
+        localStorage.removeItem('cart');
+        order.path = newRecord.toString();
+        localStorage.setItem('order', JSON.stringify(order));
+        mainView.loadPage('thankyou.html')
+    });
+
+    //mainView.loadPage('thankyou.html')
+};
+
+App.onPageBeforeInit('thankyou', function (page) {
+
+    var order = JSON.parse(localStorage.getItem('order'));
+    $('.orderId').html(order.id);
+    var ref = new Firebase(order.path);
+    ref.once('value', function (order) {
+        order = order.val();
+        if (order.status == 'waiting') {
+            var message = 'Your order has been sent to the restaurant. Waiting for the confirmation.';
+        } else {
+            var message = 'Your order has been '+order.status+' by the restaurant';
+        }
+        $('#confirmed-order-container').html(Templates.restaurantCart({
+            restaurantTitle: order.restaurantTitle,
+            items: order.cart,
+            withoutRemove: true,
+            message: message
+        }));
+        $$('#order-message').html(message);
+        if (order.status == 'waiting') {
+            $$('#status-badge').show();
+            $$('#status-badge span').html('new');
+        } else {
+            $$('#status-badge').show();
+            $$('#status-badge span').html(order.status);
+        }
+
+    });
+    if (!App.orderTracker) {
+        App.orderTracker = ref.on('child_changed', function (order) {
+            var message = '';
+            if (order.name() == 'status') {
+                if (order.val() == 'waiting') {
+                    message = 'Your order has been set as Pending by the restaurant';
+                } else {
+                    message = 'Your order has been '+order.val();
+                }
+            }
             App.addNotification({
                 title: 'Order status changed',
-                message: 'Your order has been confirmed by the restaurant',
-                hold: 2000
+                message: message,
+                hold: 5000
             });
-            $$('#reject').hide();
-        }, 1500);
-
-        setTimeout(function(){
-            App.modal({
-                text: 'Preparation time is 26 minutes. Do you accept this?',
-                title: 'Order 123456 confirmed',
-                buttons: [
-                    {text: 'Reject it', onClick: function() {}},
-                    {text: 'OK', bold: true, onClick:  function() {}}
-                ]
-            });
-            $$('#waiting').hide();
-            $$('#confirmed').show();
-        }, 5000);
+            $$('#order-message').html(message);
+            if (order.status == 'waiting') {
+                $$('#status-badge').show();
+                $$('#status-badge span').html('new');
+            } else {
+                $$('#status-badge').show();
+                $$('#status-badge span').html(order.status);
+            }
+        });
     }
 });
-
+App.cancelOrder = function(){
+    var order = JSON.parse(localStorage.getItem('order'));
+    var ref = new Firebase(order.path);
+    ref.update({
+        status: 'cancelled'
+    }, function(){
+        localStorage.removeItem('order');
+    });
+    $$('#status-badge').hide();
+    mainView.loadPage('index.html');
+};
 App.init();

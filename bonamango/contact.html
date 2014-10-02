@@ -13,7 +13,6 @@
     <div data-page="contact" class="page contact-page">
 
         <form class="searchbar">
-            <!-- Buttons row as tabs controller -->
             <div class="buttons-row bottom-line" style="background: white">
                 <a href="#tab1" class="tab-link active button">Menu</a>
                 <a href="#tab2" class="tab-link button">Info</a>
@@ -24,18 +23,18 @@
             <div class="toolbar-inner">
                 <a href="order.html" style="width: 25%;">
                     <div style="font-size: 14px; color:#333;">Products</div>
-                    <div class="cartNumber">0</div>
+                    <span class="cartNumber">0</span>
                 </a>
                 <a href="order.html"  style="width: 25%;">
                     <div style="font-size: 14px; color:#333;">Total</div>
-                    <div class="cartPrice">0 KR</div>
+                    <span class="cartPrice">0</span>&nbsp;KR
                 </a>
 
                 <a href="order.html" class="link icon-only" style="width: 10%;">
                     <i class="icon ion-ios7-cart-outline"></i>
                 </a>
 
-                <a href="#" class="tillKassan button" style="width: 40%;" onclick="if (App.checkCart()) App.views[0].loadPage('checkout.html')">TILL KASSAN</a>
+                <a href="#" class="tillKassan button" style="width: 40%;" onclick="if (App.checkCart()) mainView.loadPage('checkout.html')">TILL KASSAN</a>
             </div>
         </div>
         <div class="page-content messages-content">
