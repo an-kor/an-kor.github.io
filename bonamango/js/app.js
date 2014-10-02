@@ -83,22 +83,42 @@ App.onPageInit('index', function (page) {
         });
 
         App.orderTracker = ref.on('child_changed', function (order) {
-            if (order.name() == 'status') {
-                if (order.val() == 'waiting') {
-                    $$('#status-badge').show(); $$('#status-badge span').html('new');
-                    var message = 'Your order has been set as Pending by the restaurant';
+            var message = '';
+            ref.once('value', function (order) {
+                order = order.val();
+                if (order.status == 'confirmed') {
+                    message = 'Your order has been confirmed by the restaurant. Preparation time is ' + (isNaN(parseInt(order.preparationTime))?10:order.preparationTime) + ' minutes.';
+                    App.confirm(message + ' Do you agree with that or want to cancel the order?',
+                        function () {
+                            $$('#order-message').html(message);
+                            $$('#reject').hide();
+                        },
+                        function () {
+                            App.cancelOrder();
+                        }
+                    );
                 } else {
-                    $$('#status-badge').show(); $$('#status-badge span').html(order.status);
-                    var message = 'Your order has been '+order.val();
+                    if (order.status == 'waiting') {
+                        message = 'Your order has been set as Pending by the restaurant';
+                    } else {
+                        message = 'Your order has been '+order.status;
+                    }
+                    App.addNotification({
+                        title: 'Order status changed',
+                        message: message,
+                        hold: 5000
+                    });
+                    $$('#order-message').html(message);
+                    $$('#reject').show();
                 }
-            }
-            App.addNotification({
-                title: 'Order status changed',
-                message: message,
-                hold: 5000
+                if (order.status == 'waiting') {
+                    $$('#status-badge').show();
+                    $$('#status-badge span').html('new');
+                } else {
+                    $$('#status-badge').show();
+                    $$('#status-badge span').html(order.status);
+                }
             });
-            $$('#order-message').html(message);
-
         });
     }
 
@@ -317,43 +337,48 @@ App.onPageBeforeInit('contact', function (page) {
                         .endAt(sectionKey);
                     menuRef.once('value', function (snap) {
                         if (snap) {
-                            section.key = sectionKey;
-                            section.items = snap.val();
-                            $.each(snap.val(), function(k, el){
-                                section.items[k] = preparePrices(el);
-                                section.items[k].logoId = Math.ceil(Math.random()*10);
-                            });
-                            $('#menu-list').append(Templates.restaurantMenu(section));
-                            $.each(snap.val(), function(k, el){
-                                el = preparePrices(el);
-                                el = prepareVariants(el);
-                                $$('#menu-item-'+k).on('click', function () {
-                                    var popupHTML = function(){
-                                        localStorage.setItem('currentVariant', $.trim(el.variants.split(',')[0]));
-                                        return '<div class="popup">'+
-
-                                        '<div class="content-block">'+
-                                        '<div class="popup-image"><img src="http://www.delivery-club.ru/pcs/777/3882746_s.jpg"></div>'+
-                                        '<div class="popup-header1 curName">'+ el.name +'</div>'+
-                                        '<div class="popup-text">'+ el.ingredients +'</div>'+
-                                         el.variantButtons+
-                                        '<div class="buttons-block row">'+
-                                        '<div class="col-50">'+
-                                        '<a href="#" class="close-popup button button-big color-black">Cancel</a>'+
-                                        '</div>'+
-                                        '<div class="col-50">'+
-                                        '<a href="#" class="close-popup button button-big button-fill color-green" onclick="App.addItemToCart()"><span class="curPrice">'+ el.prices[0] +'</span> KR</a>'+
-                                        '</div>'+
-                                        '</div>'+
-                                        '</div>'+
-                                        '</div>'+
-
-                                        '</div>';
-                                    };
-                                    App.popup(popupHTML());
+                            if (snap.val()) {
+                                section.key = sectionKey;
+                                section.items = snap.val();
+                                $.each(snap.val(), function(k, el){
+                                    section.items[k] = preparePrices(el);
+                                    section.items[k].logoId = Math.ceil(Math.random()*10);
                                 });
-                            });
-                            if ($('#menu-list > li').length == Object.keys(sections).length){
+                                $('#menu-list').append(Templates.restaurantMenu(section));
+                                $.each(snap.val(), function(k, el){
+                                    el = preparePrices(el);
+                                    el = prepareVariants(el);
+                                    $$('#menu-item-'+k).on('click', function () {
+                                        var popupHTML = function(){
+                                            localStorage.setItem('currentVariant', $.trim(el.variants.split(',')[0]));
+                                            return '<div class="popup">'+
+
+                                            '<div class="content-block">'+
+                                            '<div class="popup-image"><img src="http://www.delivery-club.ru/pcs/777/3882746_s.jpg"></div>'+
+                                            '<div class="popup-header1 curName">'+ el.name +'</div>'+
+                                            '<div class="popup-text">'+ el.ingredients +'</div>'+
+                                            el.variantButtons+
+                                            '<div class="buttons-block row">'+
+                                            '<div class="col-50">'+
+                                            '<a href="#" class="close-popup button button-big color-black">Cancel</a>'+
+                                            '</div>'+
+                                            '<div class="col-50">'+
+                                            '<a href="#" class="close-popup button button-big button-fill color-green" onclick="App.addItemToCart()"><span class="curPrice">'+ el.prices[0] +'</span> KR</a>'+
+                                            '</div>'+
+                                            '</div>'+
+                                            '</div>'+
+                                            '</div>'+
+
+                                            '</div>';
+                                        };
+                                        App.popup(popupHTML());
+                                    });
+                                });
+                                if ($('#menu-list > li').length == Object.keys(sections).length){
+                                    $('#menu-list-preloader').hide();
+                                    $('#menu-list').show();
+                                }
+                            } else {
                                 $('#menu-list-preloader').hide();
                                 $('#menu-list').show();
                             }
@@ -506,10 +531,15 @@ App.onPageBeforeInit('thankyou', function (page) {
     var ref = new Firebase(order.path);
     ref.once('value', function (order) {
         order = order.val();
-        if (order.status == 'waiting') {
-            var message = 'Your order has been sent to the restaurant. Waiting for the confirmation.';
+        if (order.status == 'confirmed') {
+            message = 'Your order has been confirmed by the restaurant. Preparation time is ' + (isNaN(parseInt(order.preparationTime))?10:order.preparationTime) + ' minutes.';
+            $$('#reject').hide();
         } else {
-            var message = 'Your order has been '+order.status+' by the restaurant';
+            if (order.status == 'waiting') {
+                var message = 'Your order has been sent to the restaurant. Waiting for the confirmation.';
+            } else {
+                var message = 'Your order has been '+order.status+' by the restaurant';
+            }
         }
         $('#confirmed-order-container').html(Templates.restaurantCart({
             restaurantTitle: order.restaurantTitle,
@@ -530,26 +560,42 @@ App.onPageBeforeInit('thankyou', function (page) {
     if (!App.orderTracker) {
         App.orderTracker = ref.on('child_changed', function (order) {
             var message = '';
-            if (order.name() == 'status') {
-                if (order.val() == 'waiting') {
-                    message = 'Your order has been set as Pending by the restaurant';
+            ref.once('value', function (order) {
+                order = order.val();
+
+                if (order.status == 'confirmed') {
+                    message = 'Your order has been confirmed by the restaurant. Preparation time is ' + (isNaN(parseInt(order.preparationTime))?10:order.preparationTime) + ' minutes.';
+                    App.confirm(message + ' Do you agree with that or want to cancel the order?',
+                        function () {
+                            $$('#order-message').html(message);
+                            $$('#reject').hide();
+                        },
+                        function () {
+                            App.cancelOrder();
+                        }
+                    );
                 } else {
-                    message = 'Your order has been '+order.val();
+                    if (order.status == 'waiting') {
+                        message = 'Your order has been set as Pending by the restaurant';
+                    } else {
+                        message = 'Your order has been '+order.status;
+                    }
+                    App.addNotification({
+                        title: 'Order status changed',
+                        message: message,
+                        hold: 5000
+                    });
+                    $$('#order-message').html(message);
+                    $$('#reject').show();
                 }
-            }
-            App.addNotification({
-                title: 'Order status changed',
-                message: message,
-                hold: 5000
+                if (order.status == 'waiting') {
+                    $$('#status-badge').show();
+                    $$('#status-badge span').html('new');
+                } else {
+                    $$('#status-badge').show();
+                    $$('#status-badge span').html(order.status);
+                }
             });
-            $$('#order-message').html(message);
-            if (order.status == 'waiting') {
-                $$('#status-badge').show();
-                $$('#status-badge span').html('new');
-            } else {
-                $$('#status-badge').show();
-                $$('#status-badge span').html(order.status);
-            }
         });
     }
 });

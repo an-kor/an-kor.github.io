@@ -212,6 +212,9 @@ i.ion-compose {
 .statusbar-overlay {
   background: #1c57ff;
 }
+.back.link {
+  width: 70px;
+}
 .contacts-list {
   margin: 0;
 }

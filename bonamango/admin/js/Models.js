@@ -24,14 +24,24 @@ var Models = {
     orders: {
         cache: {},
         changeStatus: function(key, status){
-            var newRecord = Data.fb.child('orders/'+key);
-            newRecord.update({
-                status: status
-            }, function(){
-                //Models.orders.cache[key].status = status;
-                //$('#ordersListElement-' + key).replaceWith(Templates.ordersListElement(Models.orders.prepareElement(key, Models.orders.cache[key])));
-                //$('.footable').data('footable').redraw();
-            });
+            if (status == 'confirmed') {
+                var val = prompt('Please enter preparation time for the order', 10)
+                var newRecord = Data.fb.child('orders/'+key);
+                newRecord.update({
+                    status: status,
+                    preparationTime: val
+                }, function(){
+                });
+            } else {
+                var newRecord = Data.fb.child('orders/'+key);
+                newRecord.update({
+                    status: status
+                }, function(){
+                    //Models.orders.cache[key].status = status;
+                    //$('#ordersListElement-' + key).replaceWith(Templates.ordersListElement(Models.orders.prepareElement(key, Models.orders.cache[key])));
+                    //$('.footable').data('footable').redraw();
+                });
+            }
         },
         prepareElement: function (k, order) {
             var prepareCart = function (cart) {
