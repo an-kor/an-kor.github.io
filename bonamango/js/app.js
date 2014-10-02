@@ -87,7 +87,7 @@ App.onPageInit('index', function (page) {
             ref.once('value', function (order) {
                 order = order.val();
                 if (order.status == 'confirmed') {
-                    message = 'Your order has been confirmed by the restaurant. Preparation time is ' + (isNaN(parseInt(order.preparationTime))?10:order.preparationTime) + ' minutes.';
+                    message = 'Your order has been confirmed by the restaurant. Preparation time is ' + order.preparationTime + ' minutes.';
                     App.confirm(message + ' Do you agree with that or want to cancel the order?',
                         function () {
                             $$('#order-message').html(message);
@@ -532,7 +532,7 @@ App.onPageBeforeInit('thankyou', function (page) {
     ref.once('value', function (order) {
         order = order.val();
         if (order.status == 'confirmed') {
-            message = 'Your order has been confirmed by the restaurant. Preparation time is ' + (isNaN(parseInt(order.preparationTime))?10:order.preparationTime) + ' minutes.';
+            message = 'Your order has been confirmed by the restaurant. Preparation time is ' + order.preparationTime + ' minutes.';
             $$('#reject').hide();
         } else {
             if (order.status == 'waiting') {
@@ -564,7 +564,7 @@ App.onPageBeforeInit('thankyou', function (page) {
                 order = order.val();
 
                 if (order.status == 'confirmed') {
-                    message = 'Your order has been confirmed by the restaurant. Preparation time is ' + (isNaN(parseInt(order.preparationTime))?10:order.preparationTime) + ' minutes.';
+                    message = 'Your order has been confirmed by the restaurant. Preparation time is ' + order.preparationTime + ' minutes.';
                     App.confirm(message + ' Do you agree with that or want to cancel the order?',
                         function () {
                             $$('#order-message').html(message);
