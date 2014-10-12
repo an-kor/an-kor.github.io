@@ -131,7 +131,7 @@ App.onPageInit('index', function (page) {
                 el.lat = 0;
                 el.lon = 0;
             }
-            el.logoId = Math.ceil(Math.random()*2);
+            el.logoId = '-empty';
             if (el.key == 'ichaicha') {
                 el.logoId = '-ichaicha';
             }
