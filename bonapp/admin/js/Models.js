@@ -10,6 +10,8 @@ var Models = {
                     if (val.email == email && val.password == password) {
                         if (val.email == "niklas@juiceverket.se") {
                             App.userRole = 'juiceverket';
+                        } else if (val.email == "info@martinsgrona.com") {
+                            App.userRole = 'martinsgrona';
                         } else {
                             App.userRole = 'admin';
                         }
@@ -409,12 +411,17 @@ var Models = {
                     message._id = k;
                     return message;
                 };
-                ref.on('value', function (snapshot) {
+                ref.once('value', function (snapshot) {
                     $('.preloader').hide();
                     var val = snapshot.val();
                     $.each(val, function(k, message){
                         if (App.userRole == 'juiceverket') {
-                            if (message.key != 'ichaicha' && message.key != 'testrestaurant') {
+                            if (message.key == 'juiceverket') {
+                                var message = prepareElement(k, message);
+                                $('#restaurantList').find('tbody').append(Templates.restaurantListElement(message));
+                            }
+                        } else if (App.userRole == 'martinsgrona') {
+                            if (message.key == 'martinsgrona') {
                                 var message = prepareElement(k, message);
                                 $('#restaurantList').find('tbody').append(Templates.restaurantListElement(message));
                             }
