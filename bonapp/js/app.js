@@ -144,6 +144,9 @@ App.onPageInit('index', function (page) {
             if (el.name == 'Steam') {
                 el.logoId = '-steam';
             }
+            if (el.key == 'martinsgrona') {
+                el.logoId = '-martinsgrona';
+            }
             return el;
         };
         var setMarker = function (k, el) {
