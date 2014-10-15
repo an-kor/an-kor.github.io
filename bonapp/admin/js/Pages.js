@@ -1,5 +1,6 @@
 var Pages = {
     dashboard: function(){
+        console.log(App.userRole);
         if (!App.userRole) {App.router.setRoute('/login'); return;}
         $('#login').hide();
         $('#main').show();
@@ -101,6 +102,7 @@ var Pages = {
             title: App.title,
             content: Templates.restaurantCreate({
                 mode: 'add',
+                manager: localStorage.getItem('email'),
                 isCreate: true
             })
         }));
@@ -199,5 +201,11 @@ var Pages = {
     },
     login: function(restaurantKey){
         $('#login').html(Templates.login());
+    },
+    logout: function(){
+        localStorage.removeItem('email');
+        localStorage.removeItem('password');
+        location.hash = '';
+        location.reload();
     }
 };

@@ -69,11 +69,16 @@ var App = {
             '/restaurants/add': Pages.restaurantCreate,
             '/restaurants/:restaurantId': Pages.restaurantInfo,
             '/restaurants/:restaurantId/menu': Pages.restaurantMenu,
-            '/restaurants/:restaurantId/staff': Pages.restaurantStaff
+            '/restaurants/:restaurantId/staff': Pages.restaurantStaff,
+            '/logout': Pages.logout
         };
 
         App.router = Router(routes);
-        App.router.init('/login');
+        if (localStorage.getItem('email')) {
+            Models.login(localStorage.getItem('email'), localStorage.getItem('password'));
+        } else {
+            App.router.init('/login');
+        }
     }
 };
 

@@ -1,27 +1,48 @@
 
 var Models = {
-    login: function(){
-        var email = $('#login-email').val();
-        var password = $('#login-password').val();
+    availableRestaurants: [],
+    login: function(email, password, stored){
+        if (!email) {
+            var email = $('#login-email').val();
+            var password = $('#login-password').val();
+            var stored = 0;
+        } else {
+            var stored = 1;
+        }
+        var rememberMe = $('#remember-me').val();
         Data.fb.child('users')
             .once('value', function(snap) {
                 var staff = snap.val();
                 $.each(staff,function(key, val){
                     if (val.email == email && val.password == password) {
-                        if (val.email == "niklas@juiceverket.se") {
+                        if (rememberMe == 'on') {
+                            localStorage.setItem('email', email);
+                            localStorage.setItem('password', password);
+                        }
+                        /*if (val.email == "niklas@juiceverket.se") {
                             App.userRole = 'juiceverket';
-                        } else if (val.email == "info@martinsgrona.com") {
-                            App.userRole = 'martinsgrona';
                         } else {
                             App.userRole = 'admin';
+                        }*/
+                        if (val.role == 'admin') {
+                            App.userRole = val.role;
+                        } else {
+                            App.userRole = 'manager';
                         }
                         $('#main').show();
                         $('#login').fadeOut();
                         $('#loginModal').modal('hide');
-                        App.router.setRoute('/dashboard');
+                        if (stored) {
+                            App.router.init('/dashboard');
+                            Pages.dashboard();
+                            $('.modal-backdrop').hide();
+                        } else {
+                            App.router.setRoute('/dashboard');
+                        }
                     }
                 });
                 if (!App.userRole) {
+                    App.router.setRoute('/login');
                     $('#login-error').show();
                 }
             });
@@ -74,7 +95,6 @@ var Models = {
                 "isCompleted": (order.status=="completed"?1:0),
                 "isPending": (order.status=="waiting"?1:0)
             };
-            console.log(result)
             return result;
         },
         list: function(){
@@ -82,16 +102,18 @@ var Models = {
 
             ref.once('value', function (snapshot) {
                 var orders = snapshot.val();
-
                 var pendingCount = 0;
                 var count = 0;
                 var sum = 0;
+                //Models.availableRestaurants
                 $.each(orders, function(k, order){
-                    if (!$('#ordersListElement-' + k).length){
-                        count++;
-                        if (order.status=="completed") sum += parseInt(order.total);
-                        if (order.status=="waiting") pendingCount++;
-                        $('#ordersList').find('tbody').prepend(Templates.ordersListElement(Models.orders.prepareElement(k, order)));
+                    if ($.inArray(order.restaurant, Models.availableRestaurants)>-1) {
+                        if (!$('#ordersListElement-' + k).length){
+                            count++;
+                            if (order.status=="completed") sum += parseInt(order.total);
+                            if (order.status=="waiting") pendingCount++;
+                            $('#ordersList').find('tbody').prepend(Templates.ordersListElement(Models.orders.prepareElement(k, order)));
+                        }
                     }
                 });
                 $('.pendingCount').html(pendingCount);
@@ -101,7 +123,7 @@ var Models = {
             });
 
             if (!Events['orders']) {
-                ref.on('value', function (snapshot) {
+                ref.once('value', function (snapshot) {
                     var pendingCount = 0;
                     var count = 0;
                     var sum = 0;
@@ -120,8 +142,10 @@ var Models = {
                     var k = snapshot.name();
                     var order = snapshot.val();
                     Models.orders.cache[k] = order;
-                    if (!$('#ordersListElement-' + k).length){
-                        $('#ordersList').find('tbody').prepend(Templates.ordersListElement(Models.orders.prepareElement(k, order)));
+                    if ($.inArray(order.restaurant, Models.availableRestaurants)>-1) {
+                        if (!$('#ordersListElement-' + k).length) {
+                            $('#ordersList').find('tbody').prepend(Templates.ordersListElement(Models.orders.prepareElement(k, order)));
+                        }
                     }
                     $('.footable').data('footable').redraw();
                 });
@@ -411,24 +435,18 @@ var Models = {
                     message._id = k;
                     return message;
                 };
-                ref.once('value', function (snapshot) {
+                ref.on('value', function (snapshot) {
                     $('.preloader').hide();
                     var val = snapshot.val();
                     $.each(val, function(k, message){
-                        if (App.userRole == 'juiceverket') {
-                            if (message.key == 'juiceverket') {
-                                var message = prepareElement(k, message);
-                                $('#restaurantList').find('tbody').append(Templates.restaurantListElement(message));
-                            }
-                        } else if (App.userRole == 'martinsgrona') {
-                            if (message.key == 'martinsgrona') {
-                                var message = prepareElement(k, message);
-                                $('#restaurantList').find('tbody').append(Templates.restaurantListElement(message));
-                            }
-                        } else {
+                        if (App.userRole == 'admin' || message.manager == localStorage.getItem('email')) {
+                            message = prepareElement(k, message);
+                            $('#restaurantList').find('tbody').append(Templates.restaurantListElement(message));
+                            Models.availableRestaurants.push(message.key);
+                        }/* else {
                             var message = prepareElement(k, message);
                             $('#restaurantList').find('tbody').append(Templates.restaurantListElement(message));
-                        }
+                        }*/
                     });
                     $('.footable').data('footable').redraw();
                 });
@@ -451,12 +469,32 @@ var Models = {
         },
         update: function(restaurantId) {
             var newRecord = Data.fb.child('restaurants/'+restaurantId);
+
+            var userEmail = $('#edit-rest-email').val();
+            var userPassword = $('#edit-rest-password').val();
+            Data.fb.child('usersIndex/'+Utils.escapeEmail(userEmail)).once('value', function (snap) {
+                if (snap.val() === null) {
+                    if (userPassword == "") {
+                        $('#edit-rest-password').closest(".form-group").addClass("has-error");
+                        Utils.showAlert('User not found, provide the password to create a new one');
+                    } else {
+                        var newUserRecord = Data.fb.child('users').push({
+                            email: userEmail,
+                            password: userPassword
+                        }, function(){
+                            var userId = newUserRecord.name();
+                            Data.fb.child('usersIndex/'+Utils.escapeEmail(userEmail)).set(userId);
+                        });
+                    }
+                }
+            });
             newRecord.update({
                 name: $('#edit-rest-name').val(),
                 address: $('#edit-rest-address').val(),
                 lat: $('#edit-rest-lat').val(),
                 lon: $('#edit-rest-lon').val(),
-                description: $('#edit-rest-description').val()
+                description: $('#edit-rest-description').val(),
+                manager: $('#edit-rest-email').val()
             }, function(){
                 $('#edit-rest-form .alert-success').show();
                 setTimeout(function(){
@@ -536,5 +574,27 @@ var Models = {
 
             //ref.push({ 'title': title, 'parent': parent });
         }
+    },
+    createUser: function(){
+        var email = $('#signup-email').val();
+        var password = $('#signup-password').val();
+
+        Data.fb.child('usersIndex/'+Utils.escapeEmail(email)).once('value', function (snap) {
+            if (snap.val() === null) {
+                $('#signup-error').hide();
+                localStorage.setItem('email', email);
+                localStorage.setItem('password', password);
+                var newUserRecord = Data.fb.child('users').push({
+                    email: email,
+                    password: password
+                }, function(){
+                    var userId = newUserRecord.name();
+                    Data.fb.child('usersIndex/'+Utils.escapeEmail(email)).set(userId);
+                    Models.login(email, password, 1);
+                });
+            } else {
+                $('#signup-error').show();
+            }
+        });
     }
 };
