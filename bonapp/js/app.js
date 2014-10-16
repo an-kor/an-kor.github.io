@@ -132,19 +132,16 @@ App.onPageInit('index', function (page) {
                 el.lon = 0;
             }
             el.logoId = '-empty';
-            if (el.key == 'ichaicha') {
+            if (el.key.indexOf('ichaicha')>-1) {
                 el.logoId = '-ichaicha';
             }
-            if (el.key == 'steam') {
+            if (el.key.indexOf('steam')>-1) {
                 el.logoId = '-steam';
             }
-            if (el.name == 'Juiceverket') {
+            if (el.key.indexOf('uiceverk')>-1 ) {
                 el.logoId = '-juiceverket';
             }
-            if (el.name == 'Steam') {
-                el.logoId = '-steam';
-            }
-            if (el.key == 'martinsgrona') {
+            if (el.key.indexOf('martinsgrona')>-1) {
                 el.logoId = '-martinsgrona';
             }
             return el;
