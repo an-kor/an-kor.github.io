@@ -122,7 +122,7 @@ App.onPageInit('index', function (page) {
         });
     }
 
-    function restaurants(){
+    function restaurants(filter){
         var ref = Data.fb.child('restaurants');
         var colors = ['orange', 'green', 'purple', 'darkpurple', 'darkgreen'];
         var prepareEl = function(el){
@@ -153,13 +153,15 @@ App.onPageInit('index', function (page) {
                 Markers[k].setLatLng([el.lat, el.lon]).on('click', function(){App.changePage(el.key)})
             }
         };
-        ref.on('value', function (snapshot) {
+        ref.once('value', function (snapshot) {
             var val = snapshot.val();
             $.each(val, function(k, el){
-                el = prepareEl(el);
-                if (!$('#restaraunt-list-item-'+ el.key).length) {
-                    setMarker(k, el);
-                    $('#restaurants-list').append(Templates.restaurantListItem(el));
+                if (!filter || (filter && el.name.indexOf(filter)>-1)) {
+                    el = prepareEl(el);
+                    if (!$('#restaraunt-list-item-'+ el.key).length) {
+                        setMarker(k, el);
+                        $('#restaurants-list').append(Templates.restaurantListItem(el));
+                    }
                 }
             });
         });
@@ -167,17 +169,21 @@ App.onPageInit('index', function (page) {
         if (!Events['restaurants']) {
 
             ref.on('child_added', function (snapshot) {
-                var el = prepareEl(snapshot.val());
-                if (!$('#restaraunt-list-item-'+ el.key).length) {
-                    setMarker(snapshot.name(), el);
-                    $('#restaurants-list').append(Templates.restaurantListItem(el));
+                if (!filter || (filter && (snapshot.val()).name.indexOf(filter)>-1)) {
+                    var el = prepareEl(snapshot.val());
+                    if (!$('#restaraunt-list-item-'+ el.key).length) {
+                        setMarker(snapshot.name(), el);
+                        $('#restaurants-list').append(Templates.restaurantListItem(el));
+                    }
                 }
             });
 
             ref.on('child_changed', function (snapshot) {
-                var el = prepareEl(snapshot.val());
-                setMarker(snapshot.name(), el);
-                $('#restaraunt-list-item-'+ el.key).replaceWith(Templates.restaurantListItem(el));
+                if (!filter || (filter && (snapshot.val()).name.indexOf(filter)>-1)) {
+                    var el = prepareEl(snapshot.val());
+                    setMarker(snapshot.name(), el);
+                    $('#restaraunt-list-item-'+ el.key).replaceWith(Templates.restaurantListItem(el));
+                }
             });
 
             ref.on('child_removed', function (snapshot) {
@@ -188,7 +194,11 @@ App.onPageInit('index', function (page) {
             Events['restaurants'] = true;
         }
     }
-    restaurants();
+    if (location.hash.indexOf('juiceverk')>-1) {
+        restaurants('uiceverk');
+    } else {
+        restaurants();
+    }
 
 });
 
