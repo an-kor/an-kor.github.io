@@ -129,9 +129,11 @@ var Models = {
                     var sum = 0;
                     var orders = snapshot.val();
                     $.each(orders, function(k, order){
-                        count++;
-                        if (order.status=="completed") sum += parseInt(order.total);
-                        if (order.status=="waiting") pendingCount++;
+                        if ($.inArray(order.restaurant, Models.availableRestaurants)>-1) {
+                            count++;
+                            if (order.status=="completed") sum += parseInt(order.total);
+                            if (order.status=="waiting") pendingCount++;
+                        }
                     });
                     $('.pendingCount').html(pendingCount);
                     $('.ordersCount').html(count);
