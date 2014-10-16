@@ -518,6 +518,9 @@ App.validateCheckout = function(){
         localStorage.removeItem('cart');
         order.path = newRecord.toString();
         localStorage.setItem('order', JSON.stringify(order));
+        if (App.orderTracker) {
+            App.orderTracker = 0;
+        }
         mainView.loadPage('thankyou.html')
     });
 
@@ -525,7 +528,6 @@ App.validateCheckout = function(){
 };
 
 App.onPageBeforeInit('thankyou', function (page) {
-
     var order = JSON.parse(localStorage.getItem('order'));
     $('.orderId').html(order.id);
     var ref = new Firebase(order.path);
