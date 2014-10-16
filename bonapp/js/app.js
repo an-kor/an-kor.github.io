@@ -135,7 +135,7 @@ App.onPageInit('index', function (page) {
             if (el.key.indexOf('ichaicha')>-1) {
                 el.logoId = '-ichaicha';
             }
-            if (el.key.indexOf('steam')>-1) {
+            if (el.name.indexOf('team')>-1) {
                 el.logoId = '-steam';
             }
             if (el.name.indexOf('uiceverk')>-1 ) {
