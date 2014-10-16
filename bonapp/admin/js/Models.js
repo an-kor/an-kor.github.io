@@ -422,6 +422,7 @@ var Models = {
                 .endAt(key)
                 .once('value', function(snap) {
                     var restaurant = snap.val();
+                    console.log(restaurant);
                     restaurant = restaurant[Object.keys(restaurant)[0]];
                     restaurant._id = Object.keys(snap.val())[0];
                     restaurant.mode = 'edit';
@@ -526,8 +527,21 @@ var Models = {
                 });
             };
 
+            var makeSortString = (function() {
+                var translate_re = /[öäüÖÄÜ]/g;
+                var translate = {
+                    "ä": "a", "ö": "o", "ü": "u",
+                    "Ä": "A", "Ö": "O", "Ü": "U"   // probably more to come
+                };
+                return function(s) {
+                    return ( s.replace(translate_re, function(match) {
+                        return translate[match];
+                    }) );
+                }
+            })();
+
             var createRestaurant =  function(userId) {
-                var restaurantKey = ($('#add-rest-name').val()).toLowerCase().replace(' ', '');
+                var restaurantKey = makeSortString($('#add-rest-name').val()).toLowerCase().replace(' ', '');
                 var newRecord = Data.fb.child('restaurants').push();
                 newRecord.setWithPriority({
                     key: restaurantKey,
