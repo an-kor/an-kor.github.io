@@ -98,7 +98,7 @@ var Models = {
             return result;
         },
         list: function(){
-            var ref = Data.fb.child('orders');
+            var ref = Data.fb.child('orders').startAt().limit(500);
 
             ref.once('value', function (snapshot) {
                 var orders = snapshot.val();
@@ -435,7 +435,7 @@ var Models = {
                     message._id = k;
                     return message;
                 };
-                ref.on('value', function (snapshot) {
+                ref.once('value', function (snapshot) {
                     $('.preloader').hide();
                     var val = snapshot.val();
                     $.each(val, function(k, message){
