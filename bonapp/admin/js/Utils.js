@@ -1,9 +1,9 @@
 var Utils = {
     escapeEmail: function(email) {
-        return (email || '').replace('.', ',');
+        return (email || '').replace(/\./g, ',');
     },
     unescapeEmail: function(email) {
-        return (email || '').replace(',', '.');
+        return (email || '').replace(/,/g, '.');
     },
     showAlert: function(text){
         $('#alert-container > div').html(text);
