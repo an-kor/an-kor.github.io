@@ -441,7 +441,9 @@ var Models = {
                     $.each(val, function(k, message){
                         if (App.userRole == 'admin' || message.manager == localStorage.getItem('email')) {
                             message = prepareElement(k, message);
-                            $('#restaurantList').find('tbody').append(Templates.restaurantListElement(message));
+                            if (!$('#restaurantListElement-' + k).length) {
+                                $('#restaurantList').find('tbody').append(Templates.restaurantListElement(message));
+                            }
                             Models.availableRestaurants.push(message.key);
                         }/* else {
                             var message = prepareElement(k, message);
