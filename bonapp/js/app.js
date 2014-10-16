@@ -138,7 +138,7 @@ App.onPageInit('index', function (page) {
             if (el.key.indexOf('steam')>-1) {
                 el.logoId = '-steam';
             }
-            if (el.key.indexOf('uiceverk')>-1 ) {
+            if (el.name.indexOf('uiceverk')>-1 ) {
                 el.logoId = '-juiceverket';
             }
             if (el.key.indexOf('martinsgrona')>-1) {
