@@ -135,6 +135,9 @@ App.onPageInit('index', function (page) {
             if (el.key.indexOf('ichaicha')>-1) {
                 el.logoId = '-ichaicha';
             }
+            if (el.name.indexOf('reen dr')>-1) {
+                el.logoId = '-green';
+            }
             if (el.name.indexOf('team')>-1) {
                 el.logoId = '-steam';
             }
