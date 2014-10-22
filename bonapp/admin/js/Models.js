@@ -330,6 +330,7 @@ var Models = {
         },
 
         getMenu: function(key, callback){
+            if (key == 'steam') key = 'testrestaurant';
                 var ref = Data.fb.child('menuSections')
                     .startAt(key)
                     .endAt(key);

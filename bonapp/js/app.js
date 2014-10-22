@@ -7,7 +7,7 @@ var Data = {
 
 var $$ = Dom7;
 var App = new Framework7({
-    modalTitle: 'Bonamango',
+    modalTitle: 'Bonapp',
     fastClicks: true,
     //swipePanel: 'left',
     animateNavBackIcon: true,
@@ -303,6 +303,7 @@ App.onPageBeforeInit('contact', function (page) {
         }
     });
     var getMenu = function(key){
+        if (key == 'steam') key = 'testrestaurant';
         var ref = Data.fb.child('menuSections')
             .startAt(key)
             .endAt(key);
@@ -511,31 +512,35 @@ App.validateCheckout = function(){
         });
         return false;
     }
-    var restaurantKey = localStorage.getItem('key');
-    var order = {
-        id: Math.ceil(Math.random()*1000),
-        customerPhone: $('#phone').val(),
-        customerName: $('#customerName').val(),
-        delivery: $("#delivery-select").val(),
-        payment: $("#payment-select").val(),
-        cart: JSON.parse(localStorage.getItem('cart')),
-        restaurant: restaurantKey,
-        created_at: new Date().toUTCString(),
-        status: 'waiting',
-        restaurantTitle: localStorage.getItem('restaurant-title'),
-        total: $('.cartPrice').html()
-    };
+    if (!App.checkoutStarted) {
+        App.checkoutStarted = true;
+        var restaurantKey = localStorage.getItem('key');
+        var order = {
+            id: Math.ceil(Math.random()*1000),
+            customerPhone: $('#phone').val(),
+            customerName: $('#customerName').val(),
+            delivery: $("#delivery-select").val(),
+            payment: $("#payment-select").val(),
+            cart: JSON.parse(localStorage.getItem('cart')),
+            restaurant: restaurantKey,
+            created_at: new Date().toUTCString(),
+            status: 'waiting',
+            restaurantTitle: localStorage.getItem('restaurant-title'),
+            total: $('.cartPrice').html()
+        };
 
-    var newRecord = Data.fb.child('orders').push();
-    newRecord.setWithPriority(order, restaurantKey, function(){
-        localStorage.removeItem('cart');
-        order.path = newRecord.toString();
-        localStorage.setItem('order', JSON.stringify(order));
-        if (App.orderTracker) {
-            App.orderTracker = 0;
-        }
-        mainView.loadPage('thankyou.html')
-    });
+        var newRecord = Data.fb.child('orders').push();
+        newRecord.setWithPriority(order, restaurantKey, function(){
+            App.checkoutStarted = false;
+            localStorage.removeItem('cart');
+            order.path = newRecord.toString();
+            localStorage.setItem('order', JSON.stringify(order));
+            if (App.orderTracker) {
+                App.orderTracker = 0;
+            }
+            mainView.loadPage('thankyou.html')
+        });
+    }
 
     //mainView.loadPage('thankyou.html')
 };
