@@ -79,7 +79,7 @@
                                 <div class="item-inner">
                                     <div class="item-title label">Preorder time</div>
                                     <div class="item-input">
-                                        <input type="time" name="name" placeholder="Preorder Time" id="preorder-time" style="float:right">
+                                        <input type="time" id="preorder-time" style="float:right" onchange="App.checkDiscount()">
                                     </div>
                                 </div>
                             </div>
@@ -98,6 +98,7 @@
                         </li>
                         <li class="list-group-title">Order items</li>
                         <div id="checkout-cart"></div>
+                        <li class="list-group-title" id="discount-block" style="display:none">Discount: <span style="float:right">15%</span></li>
                         <li class="list-group-title">Total: <span style="float:right"><span class="cartPrice">0</span> KR</span></li>
                         <li class="list-group-title">Estimated preparation time: <span style="float:right">20 min.</span></li>
                     </ul>

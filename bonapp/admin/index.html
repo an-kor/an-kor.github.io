@@ -292,9 +292,9 @@
                         <div class="modal-body">
                             <div style="width:50%;float:left;border-right:1px solid silver;">
                                 <h4>Order info</h4>
+                                <div id="order-booked-div"><b>Preorder time: <span id="order-booked"></span></b> </div>
                                 <div><b>Restaurant:</b> <span id="order-restaurant"></span></div>
                                 <div><b>Created at:</b> <span id="order-created"></span></div>
-                                <div id="order-booked-div"><b>Preorder time: <span id="order-booked"></span></b> </div>
                                 <div><b>Customer's phone:</b> <span id="order-c-phone"></span></div>
                                 <div><b>Customer's name:</b> <span id="order-c-name"></span></div>
                                 <div><b>Delivery:</b> <span id="order-delivery"></span></div>
@@ -303,6 +303,7 @@
                             <div style="width:50%;padding-left:20px;float: left;">
                                 <h4>Order items</h4>
                                 <ul id="order-items"></ul>
+                                <div id="order-discount-div">Discount: <span id="order-discount"></span>%</div>
                                 <div><b>Total price: <span id="order-total"></span>kr</b></div>
                             </div>
                             <div style="clear:both"></div>
@@ -340,7 +341,7 @@
 
         <script id="ordersListStaffElement-template" type="text/x-handlebars-template">
             <tr id="ordersListElement-{{_id}}" data-id="{{_id}}">
-                <td></td>
+                <td>{{#if preorder_time}}<span class="typcn typcn-watch" title="{{preorder_time}}"></span>{{/if}}</td>
                 <td>{{id}}</td>
                 <td class="created_at" data-time="{{created_at_raw}}">{{created_at}}</td>
                 <td>{{customerPhone}}</td>

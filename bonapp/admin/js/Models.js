@@ -75,8 +75,10 @@ var Models = {
             };
             var date = new Date(order.created_at);
             var order_time = date;
-            if (order.order_time) {
-                order_time = new Date(order.order_time);
+            var preorder_time = 0;
+            if (order.preorder_time) {
+                preorder_time = new Date(order.preorder_time);
+                console.log(order.id);
             }
             var result = {
                 "_id": k,
@@ -84,6 +86,7 @@ var Models = {
                 "created_at": date.toString().substr(16,5)+" "+date.getDate()+"/"+(date.getMonth()+1),
                 "created_at_raw": date.getTime(),
                 "order_time": order_time.toString().substr(16,5)+" "+order_time.getDate()+"/"+(order_time.getMonth()+1),
+                "preorder_time": (preorder_time)?preorder_time.toString().substr(16,5)+" "+preorder_time.getDate()+"/"+(preorder_time.getMonth()+1):0,
                 "customerPhone": order.customerPhone,
                 "restaurantTitle": order.restaurantTitle,
                 "cartString": prepareCart(order.cart),
@@ -148,6 +151,14 @@ var Models = {
                 $('#order-status').html(order.status);
 
                 $('#order-total').html(order.total);
+
+                if (order.discount) {
+                    $('#order-discount-div').show();
+                    $('#order-discount').html(order.discount);
+                } else {
+                    $('#order-discount-div').hide();
+                }
+
                 $("#product-modal").modal('show');
             });
         },

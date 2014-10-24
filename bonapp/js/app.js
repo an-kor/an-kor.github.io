@@ -185,7 +185,6 @@ App.onPageInit('index', function (page) {
         });
 
         if (!Events['restaurants']) {
-
             ref.on('child_added', function (snapshot) {
                 if (!filter || (filter && (snapshot.val()).name.indexOf(filter)>-1)) {
                     var el = prepareEl(snapshot.val());
@@ -237,6 +236,7 @@ App.updateCart = function(){
     });
     $('.cartNumber').html(number);
     $('.cartPrice').html(price);
+    App.totalPrice = price;
 };
 
 App.addItemToCart = function(){
@@ -554,6 +554,7 @@ App.validateCheckout = function(){
             id: Math.ceil(Math.random()*1000),
             customerPhone: $('#phone').val(),
             customerName: $('#customerName').val(),
+            discount: App.checkDiscount(),
             delivery: $("#delivery-select").val(),
             payment: $("#payment-select").val(),
             cart: JSON.parse(localStorage.getItem('cart')),
@@ -667,5 +668,47 @@ App.cancelOrder = function(){
     });
     $$('#status-badge').hide();
     mainView.loadPage('index.html');
+};
+App.checkDiscount = function(){
+    var key = localStorage.getItem('key');
+    var currentHours = new Date().getHours();
+
+    var preorderTime = 0;
+    if ($('#preorder-time').val()!='') {
+        preorderTime = new Date();
+        if ($('#preorder-date').val() == 'tomorrow') {
+            preorderTime = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+        }
+        var time = $('#preorder-time').val().split(':');
+        if (!time[0]) {
+            time[0] = '0';
+        }
+        if (!time[1]) {
+            time[1] = '0';
+        }
+        preorderTime.setHours(parseInt(time[0]));
+        preorderTime.setMinutes(parseInt(time[1]));
+    }
+    var discount = 0;
+    if (key.indexOf('kalori')>-1){
+        if (!preorderTime) {
+            if (currentHours >=19 && currentHours < 23){
+                discount = 15;
+            }
+        } else {
+            if (preorderTime.getHours() >=19 && preorderTime.getHours() < 23){
+                discount = 15;
+            }
+        }
+    }
+    console.log(discount)
+    if (discount) {
+        $("#discount-block").show();
+        $(".cartPrice").html(Math.round(App.totalPrice*0.85));
+    } else {
+        $("#discount-block").hide();
+        $(".cartPrice").html(App.totalPrice);
+    }
+    return discount;
 };
 App.init();
