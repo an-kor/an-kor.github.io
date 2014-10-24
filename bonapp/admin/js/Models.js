@@ -33,11 +33,11 @@ var Models = {
                         $('#login').fadeOut();
                         $('#loginModal').modal('hide');
                         if (stored) {
-                            App.router.init('/dashboard');
+                            App.router.init('/staff-dashboard');
                             //Pages.staffDashboard();
                             $('.modal-backdrop').hide();
                         } else {
-                            App.router.setRoute('/dashboard');
+                            App.router.setRoute('/staff-dashboard');
                         }
                     }
                 });
