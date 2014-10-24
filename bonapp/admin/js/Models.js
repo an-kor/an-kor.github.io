@@ -69,7 +69,7 @@ var Models = {
             var prepareCart = function (cart) {
                 var result = [];
                 $.each(cart, function(k, el){
-                    if (el.name) {
+                    if (el) {
                         result.push(el.name + " " + el.price + "kr")
                     }
                 });
@@ -134,8 +134,9 @@ var Models = {
                 }
                 $("#order-items").empty();
                 $.map(order.cart, function(el){
-                    console.log(el)
-                    $("#order-items").append('<li>'+el.name+' <i>'+el.price+'kr</i></li>')
+                    if (el) {
+                        $("#order-items").append('<li>' + el.name + ' <i>' + el.price + 'kr</i></li>')
+                    }
                 });
                 $('#order-btn-pending, #order-btn-confirmed, #order-btn-completed, #order-btn-rejected, #order-save').attr('data-key', key);
                 $('#order-btn-pending, #order-btn-confirmed, #order-btn-completed, #order-btn-rejected').hide();
