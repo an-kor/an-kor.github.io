@@ -120,8 +120,12 @@ var Models = {
                 if (order.comment) {
                     $('#order-comment').val(order.comment);
                 }
-                if (!order.booked || order.booked == order.created_at ) {
+                if (!order.preorder_time || order.preorder_time == order.created_at ) {
                     $('#order-booked-div').hide();
+                } else {
+                    $('#order-booked-div').show();
+                    var preorder_time = new Date(order.preorder_time);
+                    $('#order-booked').html(preorder_time.toString().substr(16,5)+" "+preorder_time.getDate()+"/"+(preorder_time.getMonth()+1));
                 }
                 $("#order-items").empty();
                 $.map(order.cart, function(el){

@@ -147,6 +147,21 @@ App.onPageInit('index', function (page) {
             if (el.key.indexOf('martinsgrona')>-1) {
                 el.logoId = '-martinsgrona';
             }
+            if (el.name.toLowerCase().indexOf('ho')==0 ) {
+                el.logoId = '-ho';
+            }
+            if (el.name.toLowerCase().indexOf('falafel')==0 ) {
+                el.logoId = '-falafel';
+            }
+            if (el.name.toLowerCase().indexOf('chutney')==0 ) {
+                el.logoId = '-chutney';
+            }
+            if (el.name.toLowerCase().indexOf('bagel')==0 ) {
+                el.logoId = '-bagel';
+            }
+            if (el.name.toLowerCase().indexOf('kalori')==0 ) {
+                el.logoId = '-kalori';
+            }
             return el;
         };
         var setMarker = function (k, el) {
@@ -515,6 +530,26 @@ App.validateCheckout = function(){
     if (!App.checkoutStarted) {
         App.checkoutStarted = true;
         var restaurantKey = localStorage.getItem('key');
+
+        var currentTime = new Date();
+        var preorderTime = 0;
+        if ($('#preorder-time').val()!='') {
+            preorderTime = currentTime;
+            if ($('#preorder-date').val() == 'tomorrow') {
+                preorderTime = new Date(new Date().getTime() + 24 * 60 * 60 * 1000);
+            }
+            var time = $('#preorder-time').val().split(':');
+            if (!time[0]) {
+                time[0] = '0';
+            }
+            if (!time[1]) {
+                time[1] = '0';
+            }
+            console.log(parseInt(time[0]))
+            console.log(parseInt(time[1]))
+            preorderTime.setHours(parseInt(time[0]));
+            preorderTime.setMinutes(parseInt(time[1]));
+        }
         var order = {
             id: Math.ceil(Math.random()*1000),
             customerPhone: $('#phone').val(),
@@ -529,6 +564,9 @@ App.validateCheckout = function(){
             total: $('.cartPrice').html()
         };
 
+        if (preorderTime) {
+            order.preorder_time = preorderTime.toUTCString();
+        }
         var newRecord = Data.fb.child('orders').push();
         newRecord.setWithPriority(order, restaurantKey, function(){
             App.checkoutStarted = false;

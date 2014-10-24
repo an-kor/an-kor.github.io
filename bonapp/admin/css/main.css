@@ -108,11 +108,11 @@ textarea {
     display: table !important;
 }
 
-.table.tablet thead tr {
+.table.tablets thead tr {
     font-size:18px;
 }
 
-.table.tablet tbody tr {
+.table.tablets tbody tr {
     font-size:20px;
 }
 
