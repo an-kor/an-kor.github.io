@@ -604,9 +604,15 @@ App.onPageBeforeInit('thankyou', function (page) {
                 var message = 'Your order has been '+order.status+' by the restaurant';
             }
         }
+        var items = [];
+        $.map(order.cart, function(el){
+            if (el) {
+                items.push(el);
+            }
+        });
         $('#confirmed-order-container').html(Templates.restaurantCart({
             restaurantTitle: order.restaurantTitle,
-            items: order.cart,
+            items: items,
             withoutRemove: true,
             message: message
         }));
