@@ -739,7 +739,7 @@ var Models = {
             })();
 
             var createRestaurant =  function(userId) {
-                var restaurantKey = (makeSortString($('#add-rest-name').val()).toLowerCase()).split(' ').join('');
+                var restaurantKey = (makeSortString($('#add-rest-name').val()).toLowerCase()).replace(/[^a-z0-9]/gi,'');
                 var newRecord = Data.fb.child('restaurants').push();
                 newRecord.setWithPriority({
                     key: restaurantKey,
