@@ -226,8 +226,8 @@ label {
 .sidebar-header {
   background: #283758;
   overflow: hidden;
-  height: 70px;
-  line-height: 70px;
+  min-height: 70px;
+  padding-top: 15px;
 }
 .sidebar-header h1 {
   margin: 26px 0 0 20px;
@@ -1255,68 +1255,13 @@ label {
 @media screen and (max-width: 768px) {
   body {
     overflow-x: hidden;
-    position: relative;
-    left: 0;
     -webkit-transition: all 0.3s ease;
     -moz-transition: all 0.3s ease;
     transition: all 0.3s ease;
   }
 
-  #make-compact {
-    display: none;
-  }
-
   .page-container {
     padding-left: 0;
-  }
-
-  #sidebar {
-    left: -280px;
-  }
-
-  .show-menu {
-    left: 280px;
-  }
-
-  .show-menu #sidebar {
-    left: -280px;
-  }
-
-  .header-site {
-    height: 50px;
-  }
-
-  .header-nav {
-    height: 50px;
-  }
-  .header-nav > li > a {
-    min-height: 50px;
-    min-width: 50px;
-    line-height: 45px;
-    padding: 0 10px;
-    font-size: 30px;
-  }
-  .header-nav > li .badge {
-    position: absolute;
-    top: 8px;
-    right: 5px;
-  }
-
-  .page-title h4 {
-    margin: 13px 0 0 0;
-  }
-  .page-title nav {
-    display: none;
-  }
-  .page-title #toggle-menu {
-    display: inline-block;
-  }
-
-  .sidebar-header {
-    height: 50px;
-  }
-  .sidebar-header h1 {
-    margin: 8px 0 0 20px;
   }
 
   .login-page .login-buttons strong {

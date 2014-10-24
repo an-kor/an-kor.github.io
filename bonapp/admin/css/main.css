@@ -107,3 +107,15 @@ textarea {
 .table.collapse.in {
     display: table !important;
 }
+
+.table.tablet thead tr {
+    font-size:18px;
+}
+
+.table.tablet tbody tr {
+    font-size:20px;
+}
+
+.table tbody tr td{
+    vertical-align: middle !important;
+}

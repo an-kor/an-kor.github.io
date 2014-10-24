@@ -1,6 +1,29 @@
 var Pages = {
+    staffDashboard: function(){
+        if (!App.userRole) {App.router.setRoute('/login'); return;}
+        $('#login').hide();
+        $('#main').show();
+        App.breadcrunbs = [{
+            name: 'Main page',
+            url: '/'
+        }];
+        App.title = 'Staff Dashboard';
+        $('#content-container').html(Templates.staffDashboard());
+        $('#orders-container').html(Templates.ordersListStaff());
+        App.renderPage();
+        var ref = Data.fb.child('restaurants');
+        ref.once('value', function (snapshot) {
+            var val = snapshot.val();
+            $.each(val, function(k, message){
+                if (App.userRole == 'admin' || message.manager == localStorage.getItem('email')) {
+                    Models.availableRestaurants.push(message.key);
+                }
+            });
+
+            Models.ordersStaff.list();
+        });
+    },
     dashboard: function(){
-        console.log(App.userRole);
         if (!App.userRole) {App.router.setRoute('/login'); return;}
         $('#login').hide();
         $('#main').show();

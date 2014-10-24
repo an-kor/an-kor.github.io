@@ -34,7 +34,7 @@ var Models = {
                         $('#loginModal').modal('hide');
                         if (stored) {
                             App.router.init('/dashboard');
-                            Pages.dashboard();
+                            //Pages.staffDashboard();
                             $('.modal-backdrop').hide();
                         } else {
                             App.router.setRoute('/dashboard');
@@ -47,6 +47,194 @@ var Models = {
                 }
             });
         return false;
+    },
+    ordersStaff: {
+        cache: {},
+        changeStatus: function(key, status){
+            var val = $('#order-preparation').val();
+            var comment = $('#order-comment').val();
+            var newRecord = Data.fb.child('orders/'+key);
+            var update = {
+                preparationTime: val,
+                comment: comment
+            };
+            if (status) {
+                update.status = status
+            }
+            newRecord.update(update, function(){
+                $("#product-modal").modal('hide');
+            });
+        },
+        prepareElement: function (k, order) {
+            var prepareCart = function (cart) {
+                var result = [];
+                $.each(cart, function(k, el){
+                    result.push(el.name + " " + el.price + "kr")
+                });
+                return result.join("; ")
+            };
+            var date = new Date(order.created_at);
+            var order_time = date;
+            if (order.order_time) {
+                order_time = new Date(order.order_time);
+            }
+            var result = {
+                "_id": k,
+                "id": order.id,
+                "created_at": date.toString().substr(16,5)+" "+date.getDate()+"/"+(date.getMonth()+1),
+                "created_at_raw": date.getTime(),
+                "order_time": order_time.toString().substr(16,5)+" "+order_time.getDate()+"/"+(order_time.getMonth()+1),
+                "customerPhone": order.customerPhone,
+                "restaurantTitle": order.restaurantTitle,
+                "cartString": prepareCart(order.cart),
+                "total": order.total,
+                "customer": order.customerName,
+                "comment": order.comment,
+                "payment": (order.payment=="card"?"By card":"By cash"),
+                "delivery": (order.delivery=="pickup"?"Pick up":"Seating"),
+                "isConfirmed": (order.status=="confirmed"?1:0),
+                "isRejected": (order.status=="rejected"?1:0),
+                "isCancelled": (order.status=="cancelled"?1:0),
+                "isCompleted": (order.status=="completed"?1:0),
+                "isPending": (order.status=="waiting"?1:0)
+            };
+            return result;
+        },
+        showOrderModal: function(key){
+            var ref = Data.fb.child('orders/'+key);
+            ref.once('value', function (snapshot) {
+                var order = snapshot.val();
+                console.log(order);
+                var order_time = new Date(order.created_at);
+                $('#order-number').html(order.id);
+                $('#order-restaurant').html(order.restaurantTitle);
+                $('#order-created').html(order_time.toString().substr(16,5)+" "+order_time.getDate()+"/"+(order_time.getMonth()+1));
+                $('#order-c-phone').html(order.customerPhone);
+                $('#order-c-name').html(order.customerName);
+                $('#order-delivery').html(order.delivery);
+                $('#order-payment').html(order.payment);
+                if (order.preparationTime) {
+                    $('#order-preparation').val(order.preparationTime);
+                }
+                $('#order-comment').val('');
+                if (order.comment) {
+                    $('#order-comment').val(order.comment);
+                }
+                if (!order.booked || order.booked == order.created_at ) {
+                    $('#order-booked-div').hide();
+                }
+                $("#order-items").empty();
+                $.map(order.cart, function(el){
+                    console.log(el)
+                    $("#order-items").append('<li>'+el.name+' <i>'+el.price+'kr</i></li>')
+                });
+                $('#order-btn-pending, #order-btn-confirmed, #order-btn-completed, #order-btn-rejected, #order-save').attr('data-key', key);
+                $('#order-btn-pending, #order-btn-confirmed, #order-btn-completed, #order-btn-rejected').hide();
+                if (order.status == 'waiting') {
+                    $('#order-btn-confirmed, #order-btn-rejected').show();
+                }
+                if (order.status == 'confirmed') {
+                    $('#order-btn-pending, #order-btn-completed, #order-btn-rejected').show();
+                }
+                if (order.status == 'rejected') {
+                    $('#order-btn-pending, #order-btn-confirmed').show();
+                }
+
+                if (order.status == 'waiting') order.status = 'pending';
+                $('#order-status').html(order.status);
+
+                $('#order-total').html(order.total);
+                $("#product-modal").modal('show');
+            });
+        },
+        list: function(){
+            var ref = Data.fb.child('orders').limit(500);
+            ref.once('value', function (snapshot) {
+                var orders = snapshot.val();
+                var pendingCount = 0;
+                var count = 0;
+                var sum = 0;
+                $.each(orders, function(k, order){
+                    if (order.status!='cancelled' && $.inArray(order.restaurant, Models.availableRestaurants)>-1) {
+                        if (!$('#ordersListElement-' + k).length){
+                            count++;
+                            if (order.status=="completed") sum += parseInt(order.total);
+                            if (order.status=="waiting") pendingCount++;
+                            $('#ordersList').find('tbody').prepend(Templates.ordersListStaffElement(Models.ordersStaff.prepareElement(k, order)));
+                        }
+                    }
+                });
+                Utils.sortTable();
+                $('#ordersList').on('click', 'tbody tr', function(){
+                    Models.ordersStaff.showOrderModal($(this).attr('data-id'));
+                });
+                $('.pendingCount').html(pendingCount);
+                $('.ordersCount').html(count);
+                $('.ordersSum').html(sum);
+            });
+
+
+            if (!Events['orders']) {
+                ref.once('value', function (snapshot) {
+                    var pendingCount = 0;
+                    var count = 0;
+                    var sum = 0;
+                    var orders = snapshot.val();
+                    $.each(orders, function(k, order){
+                        if (order.status!='cancelled' && $.inArray(order.restaurant, Models.availableRestaurants)>-1) {
+                            count++;
+                            if (order.status=="completed") sum += parseInt(order.total);
+                            if (order.status=="waiting") pendingCount++;
+                        }
+                    });
+                    $('.pendingCount').html(pendingCount);
+                    $('.ordersCount').html(count);
+                    $('.ordersSum').html(sum);
+                    Models.ordersStaff.firstRun = new Date().getTime();
+                });
+
+                ref.on('child_added', function (snapshot) {
+                    if (location.hash == "#/staff-dashboard") {
+                        var k = snapshot.name();
+                        var order = snapshot.val();
+                        Models.ordersStaff.cache[k] = order;
+                        if (order.status!='cancelled' && $.inArray(order.restaurant, Models.availableRestaurants)>-1) {
+                            if (!$('#ordersListElement-' + k).length) {
+                                $('#ordersList').find('tbody').prepend(Templates.ordersListStaffElement(Models.ordersStaff.prepareElement(k, order)));
+                                Utils.sortTable();
+                            }
+                        }
+
+                        if (order.status=='waiting' && ((new Date().getTime()) - Models.ordersStaff.firstRun > 10000)) {
+                            Models.ordersStaff.showOrderModal(k);
+                        }
+                    }
+                });
+
+                ref.on('child_changed', function (snapshot) {
+                    var order = snapshot.val();
+                    if (location.hash == "#/staff-dashboard") {
+                        if (order.status != 'cancelled') {
+                            $('#ordersListElement-' + snapshot.name()).replaceWith(Templates.ordersListStaffElement(Models.ordersStaff.prepareElement(snapshot.name(), snapshot.val())));
+                        } else {
+                            $('#ordersListElement-' + snapshot.name()).slideUp(400, function () {
+                                $(this).remove();
+                            })
+                        }
+                    }
+                });
+
+                ref.on('child_removed', function (snapshot) {
+                    if (location.hash == "#/staff-dashboard") {
+                        $('#ordersListElement-' + snapshot.name()).slideUp(400, function () {
+                            $(this).remove();
+                        })
+                    }
+                });
+
+                Events['orders'] = true;
+            }
+        }
     },
     orders: {
         cache: {},
@@ -64,6 +252,7 @@ var Models = {
                 newRecord.update({
                     status: status
                 }, function(){
+                    $("#product-modal").modal('hide');
                     //Models.orders.cache[key].status = status;
                     //$('#ordersListElement-' + key).replaceWith(Templates.ordersListElement(Models.orders.prepareElement(key, Models.orders.cache[key])));
                     //$('.footable').data('footable').redraw();
@@ -98,10 +287,12 @@ var Models = {
             return result;
         },
         list: function(){
-            var ref = Data.fb.child('orders').startAt().limit(500);
+            console.log('orders')
+            var ref = Data.fb.child('orders').limit(500);
 
             ref.once('value', function (snapshot) {
                 var orders = snapshot.val();
+                console.log(orders);
                 var pendingCount = 0;
                 var count = 0;
                 var sum = 0;
@@ -141,27 +332,33 @@ var Models = {
                 });
 
                 ref.on('child_added', function (snapshot) {
-                    var k = snapshot.name();
-                    var order = snapshot.val();
-                    Models.orders.cache[k] = order;
-                    if ($.inArray(order.restaurant, Models.availableRestaurants)>-1) {
-                        if (!$('#ordersListElement-' + k).length) {
-                            $('#ordersList').find('tbody').prepend(Templates.ordersListElement(Models.orders.prepareElement(k, order)));
+                    if (location.hash == "#/dashboard") {
+                        var k = snapshot.name();
+                        var order = snapshot.val();
+                        Models.orders.cache[k] = order;
+                        if ($.inArray(order.restaurant, Models.availableRestaurants)>-1) {
+                            if (!$('#ordersListElement-' + k).length) {
+                                $('#ordersList').find('tbody').prepend(Templates.ordersListElement(Models.orders.prepareElement(k, order)));
+                            }
                         }
+                        $('.footable').data('footable').redraw();
                     }
-                    $('.footable').data('footable').redraw();
                 });
 
                 ref.on('child_changed', function (snapshot) {
-                    $('#ordersListElement-' + snapshot.name()).replaceWith(Templates.ordersListElement(Models.orders.prepareElement(snapshot.name(), snapshot.val())));
-                    $('.footable').data('footable').redraw();
+                    if (location.hash == "#/dashboard") {
+                        $('#ordersListElement-' + snapshot.name()).replaceWith(Templates.ordersListElement(Models.orders.prepareElement(snapshot.name(), snapshot.val())));
+                        $('.footable').data('footable').redraw();
+                    }
                 });
 
                 ref.on('child_removed', function (snapshot) {
+                    if (location.hash == "#/dashboard") {
                     $('#ordersListElement-' + snapshot.name()).slideUp(400, function () {
                         $(this).remove();
                         $('.footable').data('footable').redraw();
                     })
+                    }
                 });
 
                 Events['orders'] = true;

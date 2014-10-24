@@ -44,6 +44,7 @@ var App = {
         Templates.header = Handlebars.compile($('#header-template').html());
         Templates.content = Handlebars.compile($('#content-template').html());
         Templates.dashboard = Handlebars.compile($('#dashboard-template').html());
+        Templates.staffDashboard = Handlebars.compile($('#staff-dashboard-template').html());
         Templates.restaurantList  = Handlebars.compile($('#restaurantList-template').html());
         Templates.restaurantListElement  = Handlebars.compile($('#restaurantListElement-template').html());
         Templates.restaurantInfo  = Handlebars.compile($('#restaurantInfo-template').html());
@@ -54,6 +55,8 @@ var App = {
         Templates.staffList = Handlebars.compile($('#staffList-template').html());
         Templates.ordersList = Handlebars.compile($('#ordersList-template').html());
         Templates.ordersListElement  = Handlebars.compile($('#ordersListElement-template').html());
+        Templates.ordersListStaff = Handlebars.compile($('#ordersListStaff-template').html());
+        Templates.ordersListStaffElement  = Handlebars.compile($('#ordersListStaffElement-template').html());
         Templates.login = Handlebars.compile($('#login-template').html());
 
         $('#sidebar-container').html($('#sidebar-template').html());
@@ -64,6 +67,7 @@ var App = {
         var routes = {
             '/login': Pages.login,
             '/dashboard': Pages.dashboard,
+            '/staff-dashboard': Pages.staffDashboard,
             '/restaurants': Pages.restaurantsList,
             '/restaurants/list': Pages.restaurantsList,
             '/restaurants/add': Pages.restaurantCreate,
@@ -78,6 +82,10 @@ var App = {
             Models.login(localStorage.getItem('email'), localStorage.getItem('password'));
         } else {
             App.router.init('/login');
+        }
+        if (window.innerWidth < 1100) {
+            $("#h-logo").toggle();
+            $("body").toggleClass("compact-sidebar");
         }
     }
 };
