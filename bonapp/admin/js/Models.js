@@ -283,7 +283,9 @@ var Models = {
             var prepareCart = function (cart) {
                 var result = [];
                 $.each(cart, function(k, el){
-                    result.push(el.name + " " + el.price + "kr")
+                    if (el) {
+                        result.push(el.name + " " + el.price + "kr")
+                    }
                 });
                 return result.join("; ")
             };
