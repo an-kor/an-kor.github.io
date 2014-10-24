@@ -87,7 +87,7 @@ App.onPageInit('index', function (page) {
             ref.once('value', function (order) {
                 order = order.val();
                 if (order.status == 'confirmed') {
-                    message = 'Your order has been confirmed by the restaurant. Preparation time is ' + order.preparationTime + ' minutes.';
+                    message = 'Your order has been confirmed by the restaurant.'+((order.preorder_time)?'':+' Preparation time is ' + order.preparationTime + ' minutes.');
                     App.confirm(message + ' Do you agree with that or want to cancel the order?',
                         function () {
                             $$('#order-message').html(message);

@@ -127,7 +127,9 @@ var Models = {
                 }
                 if (!order.preorder_time || order.preorder_time == order.created_at ) {
                     $('#order-booked-div').hide();
+                    $('#order-preparation-div').show();
                 } else {
+                    $('#order-preparation-div').hide();
                     $('#order-booked-div').show();
                     var preorder_time = new Date(order.preorder_time);
                     $('#order-booked').html(preorder_time.toString().substr(16,5)+" "+preorder_time.getDate()+"/"+(preorder_time.getMonth()+1));

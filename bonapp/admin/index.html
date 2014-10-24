@@ -290,9 +290,8 @@
                             <h4 class="modal-title">Order #<span id="order-number"></span></h4>
                         </div>
                         <div class="modal-body">
-                            <div style="width:50%;float:left;border-right:1px solid silver;">
+                            <div style="width:40%;float:left;border-right:1px solid silver;">
                                 <h4>Order info</h4>
-                                <div id="order-booked-div"><b>Preorder time: <span id="order-booked"></span></b> </div>
                                 <div><b>Restaurant:</b> <span id="order-restaurant"></span></div>
                                 <div><b>Created at:</b> <span id="order-created"></span></div>
                                 <div><b>Customer's phone:</b> <span id="order-c-phone"></span></div>
@@ -300,7 +299,7 @@
                                 <div><b>Delivery:</b> <span id="order-delivery"></span></div>
                                 <div><b>Payment:</b> <span id="order-payment"></span></div>
                             </div>
-                            <div style="width:50%;padding-left:20px;float: left;">
+                            <div style="width:60%;padding-left:20px;float: left;">
                                 <h4>Order items</h4>
                                 <ul id="order-items"></ul>
                                 <div id="order-discount-div">Discount: <span id="order-discount"></span>%</div>
@@ -310,7 +309,8 @@
                             <hr>
 
                             <div>
-                                <div style="padding-bottom:20px;">
+                                <div style="font-size:20px;" id="order-booked-div"><b>Preorder time: <span id="order-booked"></span></b> </div>
+                                <div style="padding-bottom:20px;" id="order-preparation-div">
                                     <b>Preparation time, minutes:</b>
                                     <input type="number" id="order-preparation"  min="1" max="300" value="10" style="margin-left:20px;font-size:24px; padding-left:10px;"/>
                                 </div>
