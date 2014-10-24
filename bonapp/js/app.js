@@ -483,8 +483,10 @@ App.onPageBeforeInit('order', function (page) {
     };
     if (cart) {
         $.map(cart, function(el, i){
-            if (el.restaurant == localStorage.getItem('key')){
-                items.push(el);
+            if (el) {
+                if (el.restaurant == localStorage.getItem('key')) {
+                    items.push(el);
+                }
             }
         });
     }
@@ -501,8 +503,10 @@ App.onPageBeforeInit('checkout', function (page) {
     };
     if (cart) {
         $.map(cart, function(el, i){
-            if (el.restaurant == localStorage.getItem('key')){
-                items.push(el);
+            if (el) {
+                if (el.restaurant == localStorage.getItem('key')){
+                    items.push(el);
+                }
             }
         });
     }
