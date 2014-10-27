@@ -162,6 +162,9 @@ App.onPageInit('index', function (page) {
             if (el.name.toLowerCase().indexOf('kalori')==0 ) {
                 el.logoId = '-kalori';
             }
+            if (el.name.toLowerCase().indexOf('8t8')==0 ) {
+                el.logoId = '-8t8';
+            }
             return el;
         };
         var setMarker = function (k, el) {
@@ -549,10 +552,21 @@ App.validateCheckout = function(){
             if (!time[1]) {
                 time[1] = '0';
             }
-            console.log(parseInt(time[0]))
-            console.log(parseInt(time[1]))
             preorderTime.setHours(parseInt(time[0]));
             preorderTime.setMinutes(parseInt(time[1]));
+        }
+
+        if (restaurantKey.indexOf('green')>-1){
+            if (preorderTime) {
+                if (preorderTime.getDay()<6 && (preorderTime.getHours() == 7 && preorderTime.getMinutes() > 29) || (preorderTime.getHours() == 8 && preorderTime.getMinutes() == 0)){
+                    $('#preorder-warning').hide();
+                } else {
+                    $('#preorder-warning').show();
+                    return false;
+                }
+            } else {
+                $('#preorder-warning').hide();
+            }
         }
         var order = {
             id: Math.ceil(Math.random()*1000),
@@ -699,7 +713,19 @@ App.checkDiscount = function(){
         preorderTime.setHours(parseInt(time[0]));
         preorderTime.setMinutes(parseInt(time[1]));
     }
+
     var discount = 0;
+    if (key.indexOf('green')>-1){
+        if (preorderTime) {
+            if (preorderTime.getDay()<6 && (preorderTime.getHours() == 7 && preorderTime.getMinutes() > 29) || (preorderTime.getHours() == 8 && preorderTime.getMinutes() == 0)){
+                $('#preorder-warning').hide();
+            } else {
+                $('#preorder-warning').show();
+            }
+        } else {
+            $('#preorder-warning').hide();
+        }
+    }
     if (key.indexOf('kalori')>-1){
         if (!preorderTime) {
             if (currentHours >=19 && currentHours < 23){
@@ -711,7 +737,6 @@ App.checkDiscount = function(){
             }
         }
     }
-    console.log(discount)
     if (discount) {
         $("#discount-block").show();
         $(".cartPrice").html(Math.round(App.totalPrice*0.85));
