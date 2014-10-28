@@ -322,6 +322,7 @@ App.onPageBeforeInit('contact', function (page) {
     });
     var getMenu = function(key){
         if (key == 'steam') key = 'testrestaurant';
+        if (key == 'juiceverketgotgatasbacken') key = 'juiceverkethornstull';
         var ref = Data.fb.child('menuSections')
             .startAt(key)
             .endAt(key);
