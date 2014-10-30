@@ -165,6 +165,15 @@ App.onPageInit('index', function (page) {
             if (el.name.toLowerCase().indexOf('8t8')==0 ) {
                 el.logoId = '-8t8';
             }
+            if (el.name.toLowerCase().indexOf('babel')>-1 ) {
+                el.logoId = '-babel';
+            }
+            if (el.name.toLowerCase().indexOf('noodle')>-1 ) {
+                el.logoId = '-noodle';
+            }
+            if (el.name.toLowerCase().indexOf('organic green')>-1 ) {
+                el.logoId = '-ogreen';
+            }
             return el;
         };
         var setMarker = function (k, el) {
