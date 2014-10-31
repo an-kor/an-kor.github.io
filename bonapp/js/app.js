@@ -40,6 +40,14 @@ App.onPageInit('index', function (page) {
     }
     Map = L.map('map').setView([59.335597, 18.063498], 12);
 
+    if (window.Notification && Notification.permission !== "granted") {
+        Notification.requestPermission(function (status) {
+            if (Notification.permission !== status) {
+                Notification.permission = status;
+            }
+        });
+    }
+
     L.tileLayer('https://mts0.google.com/vt/lyrs=m@240000000&hl=sv&src=app&x={x}&y={y}&z={z}&s=Ga', {
         attribution: '',
         maxZoom: 18,
@@ -87,7 +95,7 @@ App.onPageInit('index', function (page) {
             ref.once('value', function (order) {
                 order = order.val();
                 if (order.status == 'confirmed') {
-                    message = 'Your order has been confirmed by the restaurant.'+((order.preorder_time)?'':+' Preparation time is ' + order.preparationTime + ' minutes.');
+                    message = 'Your order has been confirmed by the restaurant.'+((order.preorder_time)?'':' Preparation time is ' + order.preparationTime + ' minutes.');
                     App.confirm(message + ' Do you agree with that or want to cancel the order?',
                         function () {
                             $$('#order-message').html(message);
@@ -97,6 +105,12 @@ App.onPageInit('index', function (page) {
                             App.cancelOrder();
                         }
                     );
+                    if (window.Notification && Notification.permission === "granted") {
+                        if (navigator.vibrate) {
+                            navigator.vibrate([300,200,300]);
+                        }
+                        var n = new Notification('Your order has been confirmed by the restaurant');
+                    }
                 } else {
                     if (order.status == 'waiting') {
                         message = 'Your order has been set as Pending by the restaurant';
@@ -108,6 +122,13 @@ App.onPageInit('index', function (page) {
                         message: message,
                         hold: 5000
                     });
+                    if (window.Notification && Notification.permission === "granted") {
+                        if (navigator.vibrate) {
+                            navigator.vibrate([300,200,300]);
+                        }
+                        var n = new Notification('Order status changed', {body: message});
+
+                    }
                     $$('#order-message').html(message);
                     $$('#reject').show();
                 }
@@ -619,7 +640,7 @@ App.onPageBeforeInit('thankyou', function (page) {
     ref.once('value', function (order) {
         order = order.val();
         if (order.status == 'confirmed') {
-            message = 'Your order has been confirmed by the restaurant. Preparation time is ' + order.preparationTime + ' minutes.';
+            message = 'Your order has been confirmed by the restaurant.'+((order.preorder_time)?'':' Preparation time is ' + order.preparationTime + ' minutes.');
             $$('#reject').hide();
         } else {
             if (order.status == 'waiting') {
@@ -657,7 +678,7 @@ App.onPageBeforeInit('thankyou', function (page) {
                 order = order.val();
 
                 if (order.status == 'confirmed') {
-                    message = 'Your order has been confirmed by the restaurant. Preparation time is ' + order.preparationTime + ' minutes.';
+                    message = 'Your order has been confirmed by the restaurant.'+((order.preorder_time)?'':' Preparation time is ' + order.preparationTime + ' minutes.');
                     App.confirm(message + ' Do you agree with that or want to cancel the order?',
                         function () {
                             $$('#order-message').html(message);
@@ -667,6 +688,12 @@ App.onPageBeforeInit('thankyou', function (page) {
                             App.cancelOrder();
                         }
                     );
+                    if (window.Notification && Notification.permission === "granted") {
+                        var n = new Notification('Your order has been confirmed by the restaurant');
+                        if (navigator.vibrate) {
+                            navigator.vibrate(300);
+                        }
+                    }
                 } else {
                     if (order.status == 'waiting') {
                         message = 'Your order has been set as Pending by the restaurant';
@@ -678,6 +705,15 @@ App.onPageBeforeInit('thankyou', function (page) {
                         message: message,
                         hold: 5000
                     });
+
+                    if (window.Notification && Notification.permission === "granted") {
+                        if (navigator.vibrate) {
+                            navigator.vibrate([300,200,300]);
+                        }
+                        var n = new Notification('Order status changed', {body: message});
+
+                    }
+
                     $$('#order-message').html(message);
                     $$('#reject').show();
                 }

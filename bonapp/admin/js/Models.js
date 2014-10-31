@@ -227,6 +227,13 @@ var Models = {
 
                         if (order.status=='waiting' && ((new Date().getTime()) - Models.ordersStaff.firstRun > 10000)) {
                             Models.ordersStaff.showOrderModal(k);
+
+                            if (window.Notification && Notification.permission === "granted") {
+                                var n = new Notification('Bonapp.se', {body: 'New incoming order'});
+                                if (navigator.vibrate) {
+                                    navigator.vibrate([300,200,300]);
+                                }
+                            }
                         }
                     }
                 });
