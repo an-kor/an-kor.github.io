@@ -219,6 +219,9 @@ App.onPageInit('index', function (page) {
             if (el.key.indexOf('rossi')>-1 ) {
                 el.logoId = '-rossi';
             }
+            if (el.key.indexOf('mond')>-1 ) {
+                el.logoId = '-mond';
+            }
             return el;
         };
         var setMarker = function (k, el) {
