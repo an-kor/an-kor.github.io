@@ -195,6 +195,30 @@ App.onPageInit('index', function (page) {
             if (el.name.toLowerCase().indexOf('organic green')>-1 ) {
                 el.logoId = '-ogreen';
             }
+            if (el.key.indexOf('phobun')>-1 ) {
+                el.logoId = '-phobun';
+            }
+            if (el.key.indexOf('mama')>-1 ) {
+                el.logoId = '-kimama';
+            }
+            if (el.key.indexOf('matapoteket')>-1 ) {
+                el.logoId = '-matapoteket';
+            }
+            if (el.key.indexOf('orkid')>-1 ) {
+                el.logoId = '-orkide';
+            }
+            if (el.key.indexOf('vietnam')>-1 ) {
+                el.logoId = '-vietnam';
+            }
+            if (el.key.indexOf('seyhmus')>-1 ) {
+                el.logoId = '-seyhmus';
+            }
+            if (el.key.indexOf('arirang')>-1 ) {
+                el.logoId = '-arirang';
+            }
+            if (el.key.indexOf('rossi')>-1 ) {
+                el.logoId = '-rossi';
+            }
             return el;
         };
         var setMarker = function (k, el) {
