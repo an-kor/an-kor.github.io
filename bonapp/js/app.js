@@ -198,7 +198,7 @@ App.onPageInit('index', function (page) {
             if (el.key.indexOf('phobun')>-1 ) {
                 el.logoId = '-phobun';
             }
-            if (el.key.indexOf('mama')>-1 ) {
+            if (el.key.indexOf('kimama')>-1 ) {
                 el.logoId = '-kimama';
             }
             if (el.key.indexOf('matapoteket')>-1 ) {
@@ -221,6 +221,24 @@ App.onPageInit('index', function (page) {
             }
             if (el.key.indexOf('mond')>-1 ) {
                 el.logoId = '-mond';
+            }
+            if (el.key.indexOf('guru')>-1 ) {
+                el.logoId = '-guru';
+            }
+            if (el.key.indexOf('govinda')>-1 ) {
+                el.logoId = '-govindas';
+            }
+            if (el.key.indexOf('bliss')>-1 ) {
+                el.logoId = '-bliss';
+            }
+            if (el.key.indexOf('rio')>-1 ) {
+                el.logoId = '-rio';
+            }
+            if (el.key.indexOf('vurma')>-1 ) {
+                el.logoId = '-vurma';
+            }
+            if (el.key.indexOf('akki')>-1 ) {
+                el.logoId = '-akki';
             }
             return el;
         };
