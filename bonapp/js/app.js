@@ -240,6 +240,18 @@ App.onPageInit('index', function (page) {
             if (el.key.indexOf('akki')>-1 ) {
                 el.logoId = '-akki';
             }
+            if (el.key.indexOf('bonan')>-1 ) {
+                el.logoId = '-bonan';
+            }
+            if (el.key.indexOf('koffie')>-1 ) {
+                el.logoId = '-koffie';
+            }
+            if (el.key.indexOf('doctor')>-1 ) {
+                el.logoId = '-doctor';
+            }
+            if (el.key.indexOf('lemuria')>-1 ) {
+                el.logoId = '-halsokost';
+            }
             return el;
         };
         var setMarker = function (k, el) {
