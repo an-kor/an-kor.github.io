@@ -252,6 +252,21 @@ App.onPageInit('index', function (page) {
             if (el.key.indexOf('lemuria')>-1 ) {
                 el.logoId = '-halsokost';
             }
+            if (el.key.indexOf('flora')>-1 ) {
+                el.logoId = '-flora';
+            }
+            if (el.key.indexOf('reggev')>-1 ) {
+                el.logoId = '-reggev';
+            }
+            if (el.key.indexOf('manna')>-1 ) {
+                el.logoId = '-manna';
+            }
+            if (el.key.indexOf('sono')>-1 ) {
+                el.logoId = '-sono';
+            }
+            if (el.key.indexOf('raw')>-1 ) {
+                el.logoId = '-raw';
+            }
             return el;
         };
         var setMarker = function (k, el) {
