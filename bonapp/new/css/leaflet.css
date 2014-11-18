@@ -469,6 +469,6 @@
 	background: #fff;
 	border: 1px solid #666;
 	}
-.leaflet-control{
+.leaflet-control-attribution{
     display: none;
 }
