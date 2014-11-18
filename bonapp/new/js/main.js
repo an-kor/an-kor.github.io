@@ -248,7 +248,7 @@ var Actions = {
         show: function(catIndex, itemIndex){
             Data.set('currentItem', Data.get('menu').at(catIndex).items.at(itemIndex));
             T.byId("dish-content-info-count-input").value=1;
-            document.body.style.overflowY = 'hidden';
+            //document.body.style.overflowY = 'hidden';
             T.show('dish');
             T.async(function() {
                 T.removeClass('dish','bottom-side');
@@ -260,7 +260,7 @@ var Actions = {
                 T.addClass('dish','bottom-side');
                 T.async(function() {
                     T.hide('dish');
-                    document.body.style.overflowY = 'auto';
+                    //document.body.style.overflowY = 'auto';
                 }, 500);
             });
             T.hideOverlay('details');
@@ -618,7 +618,9 @@ var App = {
             if (Date.now() - App.lastScroll > 300) {
                 var _id = el.getAttribute('data-id');
                 Actions.restaurants.showDetails(_id);
-                Data.get('menu').reset([]);
+                if (Data.get('menu')) {
+                    Data.get('menu').reset([]);
+                }
 
                 Data.get('restaurants').map(function(el, i){
                     if (el._id == _id) {
