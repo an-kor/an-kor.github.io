@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui" />
+    <link rel="stylesheet" href="css/normalize.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/leaflet.css">
+    <script type="application/javascript" src="js/vendor/fastclick.js"></script>
+    <script type="application/javascript" src="js/vendor/ftscroller.js"></script>
+    <script type="application/javascript" src="js/vendor/paperclip.min.js"></script>
+    <script type="application/javascript" src="js/vendor/leaflet.js"></script>
+    <script type="application/javascript" src="js/vendor/architect.min.js"></script>
+    <script src="https://cdn.firebase.com/js/client/1.0.24/firebase.js"></script>
+
+    <script type="application/javascript" src="js/utils.js"></script>
+
+
+    <script id="restaurant-list-item-template" type="text/x-template">
+        <table cellpadding="0" cellspacing="0" class="main-map-restaurant-block-content" data-id="{{_id}}">
+            <tr>
+                <td rowspan="3" class="restaurant-list-item-logo" style="background-image:url({{logo}})"></td>
+                <td class="restaurant-list-item-name"><div>{{name}}</div></td>
+                <td class="restaurant-list-item-location">{{distance}} {{Data.messages.km}}</td>
+            </tr>
+            <tr>
+                <td class="restaurant-list-item-address" colspan="2"><div>{{address}}</div></td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="restaurant-list-item-starrating"><div class="restaurant-list-item-starrating-filled" style="width:{{rating}}%"></div></div>
+                    <div class="restaurant-list-item-features"></div>
+                </td>
+            </tr>
+        </table>
+    </script>
+
+    <script id="main-map-template" type="text/x-template">
+        <div id="main-map-layer"></div>
+        <div id="main-map-restaurants">
+            <div id="main-map-restaurant-wrapper">
+                <section><div><div class="main-map-restaurant-block"></div></div></section>
+                <section><div>
+                    <div class="main-map-restaurant-block" id="main-map-restaurant-prev"></div>
+                </div></section>
+                <section><div>
+                    <div class="main-map-restaurant-block" id="main-map-restaurant-current"></div>
+                </div></section>
+                <section><div>
+                    <div class="main-map-restaurant-block" id="main-map-restaurant-next"></div>
+                </div></section>
+                <section><div><div class="main-map-restaurant-block"></div></div></section>
+            </div>
+        </div>
+    </script>
+
+    <script id="main-tabpanel-template" type="text/x-template">
+        <div id="main-tabpanel-map" class="active" onclick="Actions.navigation.showMap()">{{messages.map}}</div>
+        <div id="main-tabpanel-list" onclick="Actions.navigation.showRestaurantsList()">{{messages.list}}</div>
+    </script>
+
+    <script id="main-header-template" type="text/x-template">
+        <div id="toggle-sidebar-btn" onclick="Actions.navigation.showSidebar()"></div>
+        <div id="header-logo"></div>
+        <div id="toggle-searchpanel-btn"></div>
+
+        <div class="border-bottom"></div>
+    </script>
+
+    <script id="sidebar-template" type="text/x-template">
+        <div>
+            <ul>
+                {{#each:sidebarLinks,as:"i"}}
+                <li><a href="#">{{i.name}}</a></li>
+                {{/}}
+            </ul>
+        </div>
+    </script>
+
+    <script id="main-list-template" type="text/x-template">
+        <div>
+            {{#each:restaurants,as:"i"}}
+            <div class="main-list-restaurant-block" data-id="{{i._id}}">
+                <table cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td rowspan="3" class="restaurant-list-item-logo" style="background-image:url({{i.logo}})"></td>
+                        <td class="restaurant-list-item-name"><div>{{i.name}}</div></td>
+                        <td class="restaurant-list-item-location">{{i.distance}} {{messages.km}}</td>
+                    </tr>
+                    <tr>
+                        <td class="restaurant-list-item-address" colspan="2"><div>{{i.address}}</div></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="restaurant-list-item-starrating"><div class="restaurant-list-item-starrating-filled" style="width:{{i.rating}}%"></div></div>
+                            <div class="restaurant-list-item-features"></div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            {{/}}
+        </div>
+    </script>
+
+    <script id="details-template" type="text/x-template">
+        <div id="details-wrapper">
+            <div id="details-header">
+                <div class="header-bg" style="background-image:url('img/logos/restaurant-big.jpg')"></div>
+                <div id="details-header-info">
+                    <div id="details-header-title">{{currentRestaurant.name}}</div>
+                    <div id="details-header-address">{{currentRestaurant.address}}</div>
+                    <div id="details-header-rating"><div class="restaurant-list-item-starrating"><div class="restaurant-list-item-starrating-filled" style="width:{{currentRestaurant.rating}}%"></div></div></div>
+                </div>
+                <div class="border-bottom"></div>
+            </div>
+            <div id="details-tabpanel" class="tabpanel">
+                <div id="details-tabpanel-menu" class="active">{{messages.menu}}</div>
+                <div id="details-tabpanel-info">{{messages.info}}</div>
+                <div id="details-tabpanel-reviews">{{messages.reviews}}</div>
+            </div>
+            <div id="details-content">
+                <div id="details-menu">
+                    {{#each:menu,as:"category"}}
+                    <div  class='menu-category {{!category.isOpen?"closed":"open"}}' onClick="{{category.isOpen = !category.isOpen}}" ontouchstart="T.addClass(this,'hover')" ontouchend="T.removeClass(this,'hover')">
+                        {{category.name}}
+                    </div>{{#if: category.isOpen}}
+                    <div class="menu-items-container">
+                        {{#each:category.items,as:"i"}}
+                        <table cellpadding="0" cellspacing="0" class="menu-item" onclick="Actions.dishes.show('{{category.index}}', '{{i.index}}')">
+                            <tr>
+                                <td rowspan="2" class="menu-item-img"><div style="background-image: url({{i.logo}})"></div></td>
+                                <td><div class="menu-item-name">{{i.name}}</div></td>
+                                <td rowspan="2" class="menu-item-btn" style="background-image:url(img/plus-icon.png)"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2"><div class="menu-item-price">{{i.pricesString}} kr</div></td>
+                            </tr>
+                        </table>
+                        {{/}}
+                    </div>
+                    {{/}}
+                    {{/}}
+                </div>
+                <div id="details-info" class="right-side"></div>
+                <div id="details-reviews" class="right-side"></div>
+            </div>
+        </div>
+    </script>
+
+    <script id="dish-template" type="text/x-template">
+        <div id="dish-wrapper"  class="page scroll">
+            <div id="dish-header">
+                <div class="header-bg" style="background-image:url('img/logos/2674_chili-sin-carne_vegetarmat-org.jpg')"></div>
+                <div class="border-bottom"></div>
+            </div>
+            <div id="dish-content">
+                <div id="dish-content-header"></div>
+                <div id="dish-content-description">
+                    <h3>{{currentItem.name}}</h3>
+                    <p>{{currentItem.ingredients}}</p>
+                </div>
+                <div id="dish-content-info">
+                    <div id="dish-content-info-price" class="menu-item-price">{{currentItem.pricesString}} kr</div>
+                    <div id="dish-content-info-count">
+                        <div id="dish-content-info-count-minus" onclick="if (T.byId('dish-content-info-count-input').value>1)  { T.byId('dish-content-info-count-input').value = parseInt(T.byId('dish-content-info-count-input').value)-1; Data.set('currentItem.totalPrice', parseInt(T.byId('dish-content-info-count-input').value)*Data.get('currentItem.price'))}">-</div>
+                        <div><input id="dish-content-info-count-input" value="1" type="number" min="1" max="10"/></div>
+                        <div id="dish-content-info-count-plus" onclick="if (T.byId('dish-content-info-count-input').value<10) { T.byId('dish-content-info-count-input').value = parseInt(T.byId('dish-content-info-count-input').value)+1; Data.set('currentItem.totalPrice', parseInt(T.byId('dish-content-info-count-input').value)*Data.get('currentItem.price'))}">+</div>
+                    </div>
+                    <div id="dish-content-info-time" class="menu-item-price">20 min</div>
+                </div>
+            </div>
+            {{#if:currentItem.hasVariants}}
+                <div id="dish-additives">
+                    <h4 class="subheader"><span>Additives</span></h4>
+                    <div class="dish-additives-list">
+                        {{#each:currentItem.variants,as:"i"}}
+                            <div onclick="this.className != 'checked'?(this.className = 'checked'):(this.className = '')">{{i}}</div>
+                        {{/}}
+                    </div>
+                </div>
+            {{/}}
+            <div style="clear: both"></div>
+        </div>
+        <div id="dish-bottom-panel">
+            <div id="dish-bottom-panel-submit-btn" class="bottom-panel-btn"><div>{{currentItem.totalPrice}} kr</div></div>
+            <div id="dish-bottom-panel-cancel-btn" class="bottom-panel-btn" onclick="Actions.dishes.hide()"><div class="plain">Cancel</div></div>
+        </div>
+    </script>
+    <!--h4 class="subheader"><span>Flavoring</span></h4>
+    <div class="dish-additives-list radio">
+        <div>Qwerty</div>
+        <div class="checked">Qwerty</div>
+    </div-->
+
+    <script id="cart-bottom-block-template" type="text/x-template">
+        <div id="cart-bottom-icon"></div>
+        <div id="cart-bottom-info">
+            <div id="cart-bottom-total">205 <span>kr</span></div>
+            <div id="cart-bottom-items">2 products</div>
+        </div>
+        <div id="cart-bottom-checkout-btn" class="bottom-panel-btn"><div>Till kassan</div></div>
+    </script>
+
+</head>
+<body class="st-menu">
+<div id="container">
+    <div id="sidebar"></div >
+    <div id="sidebar-screen-switcher" onmousedown="Actions.navigation.showSidebar()" ontouchstart="Actions.navigation.showSidebar()"></div >
+    <div id="sidebar-bg" class="overlay-bg"></div>
+    <div id="main" class="page">
+        <div id="searchpanel"></div>
+        <div id="main-header" class="header"></div>
+        <div id="main-tabpanel" class="tabpanel"></div>
+        <div id="main-content"><div>
+            <div id="main-map"></div>
+            <div id="main-list" class="right-side"></div>
+        </div></div>
+    </div>
+
+    <div id="details" class="page scroll right-side"></div>
+    <div id="cart-bottom-block" class="right-side"></div>
+    <div id="back-btn" class="left-side" onclick="Actions.restaurants.hideDetails()"></div>
+</div>
+<div id="dish" class="page bottom-side"></div>
+</body>
+<script type="application/javascript" src="js/main.js"></script>
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link rel="stylesheet" href="css/normalize.css">
+    <script src="js/vendor/ftscroller.js"></script>
+</head>
+<style>
+    html {
+        -webkit-font-smoothing: antialiased;
+    }
+    body {
+        font-size: 26px;
+        font-family: 'Georgia', 'Palatino Linotype', 'Book Antiqua', Palatino, FreeSerif, serif;
+        color: #333333;
+    }
+    div {
+        box-sizing: border-box;
+    }
+    #sidepanel {
+        position: absolute;
+        left:0;
+        top:0;
+        width:200px;
+        height:100%;
+    }
+    #searchpanel {
+        display:none;
+    }
+    #main{
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width:100%;
+        background: #fff;
+        -webkit-flex-direction: column;
+        flex-direction: column;
+
+        display: -webkit-flex;
+        display: flex;
+    }
+    #main header {
+        position: relative;
+        width:100%;
+        height:100px;
+        background-color: #78b33e;
+        background-image: url('img/header-bg.png');
+    }
+
+    .border-bottom
+    {
+        position: absolute;
+        bottom:0;
+        width: 100%;
+        height:6px;
+        background: url('img/header-border.png') repeat-x;
+    }
+    #main-tabpanel {
+        width:100%;
+        height:88px;
+        background-color: #fff;
+        display: -webkit-flex;
+        display: flex;
+    }
+    #main-tabpanel > div {
+        -webkit-flex: 0.5;
+        flex: 0.5;
+        font-size: 1em;
+        -webkit-align-items: center;
+        align-items: center;
+        -webkit-justify-content: center;
+        justify-content: center;
+        width:50%;
+        color: #b4b4b4;
+        border-bottom: 1px solid #ebebeb;
+
+        display: -webkit-flex;
+        display: flex;
+    }
+
+    #main-tabpanel div.active {
+        border-bottom: 3px solid #fed676;
+        color: #333333;
+    }
+    #main-content{
+        -webkit-flex: 1;
+        flex: 1;
+        position:relative;
+        overflow:hidden;
+    }
+    #main-map, #main-list {
+        position: absolute;
+        left:0;
+        top:0;
+        bottom:0;
+        width:100%;
+        background-color: #b4b4b4;
+        -webkit-transition:  -webkit-transform 0.2s linear;
+        transition: transform 0.2s linear;
+    }
+    #main-list {
+        display: none;
+        background: orangered;
+    }
+    .right-side {
+        -webkit-transform: translate3d(100%, 0, 0) ;
+        transform: translate3d(100%, 0, 0) ;
+    }
+
+    .left-side {
+        -webkit-transform: translate3d(-100%, 0, 0) ;
+        transform: translate3d(-100%, 0, 0) ;
+    }
+    #main-map-restaurants {
+        position: absolute;
+        bottom: 40px;
+        width:1360px;
+        height:170px;
+        display:block;
+    }
+    #main-map-restaurant-wrapper {
+        width: 10000px;
+        height:170px;
+        display: table;
+    }
+
+    #main-map-restaurant-wrapper section {
+        width:1360px;
+        height:100%;
+        float:left;
+    }
+    #main-map-restaurant-wrapper section div {
+        padding: 10px;
+        overflow: hidden;
+        width:100%;
+        height:100%;
+    }
+    .main-map-restaurant-block{
+        background: white;
+        -webkit-box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.2);
+        -moz-box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.2);
+        box-shadow: 0px 5px 10px 0px rgba(0,0,0,0.2);
+    }
+    .ftscroller_container {
+        overflow: hidden;
+        padding: 0 20px;
+        width: 1400px;
+    }
+</style>
+<body>
+<nav id="sidepanel">
+</nav >
+<div id="searchpanel">
+</div>
+<div id="main">
+    <header>
+        <div id="toggle-sidepanel-btn"></div>
+        <div id="header-logo"></div>
+        <div id="toggle-searchpanel-btn"></div>
+
+        <div class="border-bottom">
+        </div>
+    </header>
+    <div id="main-tabpanel">
+        <div onclick="changePage2()" class="active">map</div>
+        <div onclick="changePage()">list</div>
+    </div>
+    <div id="main-content">
+        <div id="main-map">
+            <div id="main-map-layer"></div>
+            <div id="main-map-restaurants">
+                <div id="main-map-restaurant-wrapper">
+                    <section><div>
+                        <div class="main-map-restaurant-block"></div>
+                    </div></section>
+                    <section><div>
+                        <div class="main-map-restaurant-block" id="prev"></div>
+                    </div></section>
+                    <section><div>
+                        <div class="main-map-restaurant-block" id="current"></div>
+                    </div></section>
+                    <section><div>
+                        <div class="main-map-restaurant-block" id="next"></div>
+                    </div></section>
+                    <section><div>
+                        <div class="main-map-restaurant-block"></div>
+                    </div></section>
+                    <section><div>
+                        <div class="main-map-restaurant-block"></div>
+                    </div></section>
+                </div>
+            </div>
+        </div>
+        <div id="main-list" class="right-side">
+        </div>
+    </div>
+</div>
+
+<script>
+    function changePage() {
+        document.getElementById("main-list").style.display = 'block';
+        setTimeout(function(){
+            document.getElementById("main-map").className = 'left-side';
+            document.getElementById("main-list").className = '';
+        }, 1000);
+
+    }
+    function changePage2(){
+        document.getElementById("main-list").className = 'right-side';
+        document.getElementById("main-map").className = '';
+        setTimeout(function(){
+            document.getElementById("main-list").style.display = 'none';
+        }, 200);
+
+    }
+    var refresh = function(i){
+        document.getElementById("current").innerHTML = i;
+        document.getElementById("next").innerHTML = i+1;
+        document.getElementById("prev").innerHTML = i-1;
+    };
+    var scroller = new FTScroller(document.getElementById('main-map-restaurants'), {
+        scrollingY: false,
+        snapping: true,
+        snapSizeX:1360,
+        singlePageScrolls: true,
+        scrollbars: false,
+        bouncing: false
+    });
+    scroller.scrollTo(1360*2,false,0);
+    var i = 1;
+    refresh(i);
+    scroller.addEventListener('segmentdidchange', function(e){
+        if(e.segmentX != 2) {
+            if (e.segmentX == 1) {
+                i--;
+                refresh(i);
+            } else {
+                i++;
+                refresh(i);
+            }
+            scroller.scrollTo(1360 * 2, false, 0);
+        }
+    })
+</script>
+</body>
+</html>
