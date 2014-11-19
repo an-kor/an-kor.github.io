@@ -602,6 +602,26 @@ var App = {
     },
     resizeScrollers: function(){
         App.mapRestaurantsScroller.setSnapSize(T.w()-T.p(40), null);
+        App.mapRestaurantsScroller.scrollTo((T.w()-T.p(40))*2, false, 0);
+        App.map.plainIcon = new L.Icon({
+            iconUrl: 'img/map-marker.png',
+            iconSize: [T.p(37.5), T.p(45)],
+            iconAnchor: [T.p(16.7), T.p(42)]
+        });
+        App.map.activeIcon = new L.Icon({
+            iconUrl: 'img/map-marker-active.png',
+            iconSize: [T.p(70), T.p(80)],
+            iconAnchor: [T.p(35), T.p(78)]
+        });
+        T.each(App.map.markers, function(marker){
+            if (typeof(marker)!='undefined') {
+                if (marker._icon.currentSrc.indexOf('active')>-1) {
+                    marker.setIcon(App.map.activeIcon);
+                } else {
+                    marker.setIcon(App.map.plainIcon);
+                }
+            }
+        })
     },
     initLiveEvents: function(){
         T.liveEvent(['mousedown','touchstart'], 'main-list-restaurant-block', function(e, el){
