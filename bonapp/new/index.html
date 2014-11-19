@@ -123,24 +123,25 @@
             <div id="details-content">
                 <div id="details-menu">
                     {{#each:menu,as:"category"}}
-                    <div  class='menu-category {{!category.isOpen?"closed":"open"}}' onClick="{{category.isOpen = !category.isOpen}}" ontouchstart="T.addClass(this,'hover')" ontouchend="T.removeClass(this,'hover')">
-                        {{category.name}}
-                    </div>{{#if: category.isOpen}}
-                    <div class="menu-items-container">
-                        {{#each:category.items,as:"i"}}
-                        <table cellpadding="0" cellspacing="0" class="menu-item" onclick="Actions.dishes.show('{{category.index}}', '{{i.index}}')">
-                            <tr>
-                                <td rowspan="2" class="menu-item-img"><div style="background-image: url({{i.logo}})"></div></td>
-                                <td><div class="menu-item-name">{{i.name}}</div></td>
-                                <td rowspan="2" class="menu-item-btn" style="background-image:url(img/plus-icon.png)"></td>
-                            </tr>
-                            <tr>
-                                <td colspan="2"><div class="menu-item-price">{{i.pricesString}} kr</div></td>
-                            </tr>
-                        </table>
-                        {{/}}
+                    <div>
+                        <div  class='menu-category' onclick="if (this.parentNode.className.indexOf('open')>0) {T.removeClass(this.parentNode, 'open');} else {T.addClass(this.parentNode, 'open');}" ontouchstart="T.addClass(this,'hover')" ontouchend="T.removeClass(this,'hover')">
+                            {{category.name}}
+                        </div>
+                        <div class="menu-items-container">
+                            {{#each:category.items,as:"i"}}
+                            <table cellpadding="0" cellspacing="0" class="menu-item" onclick="Actions.dishes.show('{{category.index}}', '{{i.index}}')">
+                                <tr>
+                                    <td rowspan="2" class="menu-item-img"><div style="background-image: url({{i.logo}})"></div></td>
+                                    <td><div class="menu-item-name">{{i.name}}</div></td>
+                                    <td rowspan="2" class="menu-item-btn" style="background-image:url(img/plus-icon.png)"></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2"><div class="menu-item-price">{{i.pricesString}} kr</div></td>
+                                </tr>
+                            </table>
+                            {{/}}
+                        </div>
                     </div>
-                    {{/}}
                     {{/}}
                 </div>
                 <div id="details-info" class="right-side"></div>

@@ -608,19 +608,26 @@ div {
     background-repeat: no-repeat;
     font-size:32px;
     font-weight: bold;
-    background-image: url('../img/up-icon.png');
+    background-image: url('../img/down-icon.png');
     -webkit-transition: background-color 0.15s;
 }
 
-.menu-category.closed {
-    background-image: url('../img/down-icon.png');
+.open > .menu-category {
+    background-image: url('../img/up-icon.png');
 }
 
 .menu-category.hover {
     background-color: #f5f5f5;
 }
-.menu-items-container.closed {
-    display:none;
+.menu-items-container {
+    max-height:0;
+    overflow: hidden;
+    -webkit-transition: max-height 0.3s;
+    transition: max-height 0.3s;
+}
+
+.open > .menu-items-container {
+    max-height: 2000px;
 }
 
 .menu-item{
