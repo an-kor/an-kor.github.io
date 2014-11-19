@@ -1,5 +1,6 @@
 var T = {
     isIOS: /iP(ad|hone|od)/.test(navigator.userAgent),
+    isIPhone: /iPhone/.test(navigator.userAgent),
     isIPad: /iPad/.test(navigator.userAgent),
     isWebkit: /WebKit/.test(navigator.userAgent),
     isDesktop: !("ontouchstart" in document.documentElement),
@@ -219,6 +220,9 @@ var T = {
         var windowH = 1136, windowW = 800;
         if (T.isAndroid && T.isChrome) {
             windowW = windowW * 2;
+        }
+        if (!T.isIPhone) {
+            windowH = windowH - 40;
         }
         if (!window.orientation || window.orientation == 180) {
             T.scale = T.h() / windowH;
