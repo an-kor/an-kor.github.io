@@ -267,6 +267,15 @@ App.onPageInit('index', function (page) {
             if (el.key.indexOf('raw')>-1 ) {
                 el.logoId = '-raw';
             }
+            if (el.key.indexOf('cumin')>-1 ) {
+                el.logoId = '-cumin';
+            }
+            if (el.key.indexOf('gudfadern')>-1 ) {
+                el.logoId = '-gudfadern';
+            }
+            if (el.key.indexOf('greenbean')>-1 ) {
+                el.logoId = '-greenbean';
+            }
             return el;
         };
         var setMarker = function (k, el) {
