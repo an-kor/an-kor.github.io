@@ -154,7 +154,7 @@ div {
     transition: transform 0.3s;
 }
 
-#cart-page .header, #checkout-page .header, #main .header {
+#cart-page .header, #checkout-page .header, #orders-page .header, #main .header {
     position: relative;
     width:100%;
     height:100.002px;
@@ -167,7 +167,7 @@ div {
     font-weight: bold;
     font-size: 30px;
 }
-#toggle-sidebar-btn{
+.toggle-sidebar-btn{
     height:100px;
     width: 75px;
     background-image: url(../img/header-sidebar-btn.png);
@@ -176,7 +176,7 @@ div {
     background-size: 12px 36px;
     float:left;
 }
-#toggle-searchpanel-btn{
+.toggle-searchpanel-btn{
     height:100px;
     width: 75px;
     background-image: url(../img/header-search-btn.png);
@@ -870,13 +870,13 @@ div {
     max-width: none;
 }
 
-#cart-page {
+#cart-page, #orders-page {
     z-index: 200;
 }
 #checkout-page {
     z-index: 300;
 }
-#cart-page, #checkout-page{
+#cart-page, #checkout-page, #orders-page{
     background: #f8f8f8;
 }
 .cart-items .menu-item{

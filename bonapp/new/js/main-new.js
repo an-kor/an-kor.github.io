@@ -116,10 +116,16 @@ var Views = {
     checkoutPage: function(){
 
         var currentCart = Data.cart[Data.currentRestaurant._id];
-        var total = 0, productsCount = currentCart?currentCart.length:0;
+        var total = 0, productsCount = currentCart?currentCart.length: 0, active = false;
         T.each(currentCart, function(el){
             total += el.totalPrice
         });
+        if (total){
+            if (Data.checkout.deliveryMethod == 'delivery') total += 10;
+            if (Data.checkout.phone && Data.checkout.name) {
+                active = true;
+            }
+        }
 
         return m('div[id="checkout-page-wrapper"]', [
 
@@ -131,8 +137,14 @@ var Views = {
 
                 m('div[class="sub-header"]', [Data.messages.personalInfo]),
                 m('div[class="inputs-section"]', [
-                    m('input[type="tel"][placeholder="'+Data.messages.phone+'"]'),
-                    m('input[type="text"][placeholder="'+Data.messages.name+'"]')
+                    m('input[type="tel"][placeholder="'+Data.messages.phone+' *"]', {value: Data.checkout.phone, onchange:function(){
+                        Data.checkout.phone = this.value;
+                        localStorage.setItem('phone', Data.checkout.phone);
+                    }}),
+                    m('input[type="text"][placeholder="'+Data.messages.name+' *"]', {value: Data.checkout.name, onchange:function(){
+                        Data.checkout.name = this.value;
+                        localStorage.setItem('name', Data.checkout.name);
+                    }})
                 ]),
 
                 m('div[class="sub-header"]', [Data.messages.deliveryMethod]),
@@ -140,24 +152,24 @@ var Views = {
                     T.removeClass(T.query('.delivery-method div.checked'), 'checked');
                     T.addClass(e.target, 'checked');
                     if (e.target.id == "delivery-pickup") {
-                        Data.deliveryMethod = 'pickup';
+                        Data.checkout.deliveryMethod = 'pickup';
                     }
                     if (e.target.id == "delivery-seating") {
-                        Data.deliveryMethod = 'seating';
+                        Data.checkout.deliveryMethod = 'seating';
                     }
                     if (e.target.id == "delivery-delivery") {
-                        Data.deliveryMethod = 'delivery';
+                        Data.checkout.deliveryMethod = 'delivery';
                     }
                 }},[
                     [
-                        m('div[id="delivery-pickup"]',{className: "input-radio-inline "+  (Data.deliveryMethod == 'pickup'?"checked":"")}, Data.messages.pickup),
-                        m('div[id="delivery-seating"]',{className: "input-radio-inline "+  (Data.deliveryMethod == 'seating'?"checked":"")}, Data.messages.seating),
-                        m('div[id="delivery-delivery"]',{className: "input-radio-inline "+  (Data.deliveryMethod == 'delivery'?"checked":"")}, Data.messages.delivery),
+                        m('div[id="delivery-pickup"]',{className: "input-radio-inline "+  (Data.checkout.deliveryMethod == 'pickup'?"checked":"")}, Data.messages.pickup),
+                        m('div[id="delivery-seating"]',{className: "input-radio-inline "+  (Data.checkout.deliveryMethod == 'seating'?"checked":"")}, Data.messages.seating),
+                        m('div[id="delivery-delivery"]',{className: "input-radio-inline "+  (Data.checkout.deliveryMethod == 'delivery'?"checked":"")}, Data.messages.delivery),
                         m('div[style="clear:both"]')
                     ]
                 ]),
 
-                Data.deliveryMethod == 'delivery'?[
+                Data.checkout.deliveryMethod == 'delivery'?[
                     m('div[class="sub-header"]', [Data.messages.deliveryAddress]),
                     m('div[class="inputs-section"]', [
                         m('input[type="text"][placeholder="'+Data.messages.address+'"]'),
@@ -172,17 +184,17 @@ var Views = {
                         T.removeClass(T.query('.payment-method div.checked'), 'checked');
                         T.addClass(e.target, 'checked');
                         if (e.target.id == "method-credit-card") {
-                            Data.paymentMethod = 'card';
+                            Data.checkout.paymentMethod = 'card';
                         } else {
-                            Data.paymentMethod = 'cash';
+                            Data.checkout.paymentMethod = 'cash';
                         }
                     }
                 }},[
                     [
-                        m('div',{className: "input-radio "+  (Data.paymentMethod == 'cash'?"checked":"")}, Data.messages.cash),
-                        m('div[id="method-credit-card"]',{className: "input-radio " +  (Data.paymentMethod == 'card'?"checked":"")}, Data.messages.creditCard),
+                        m('div',{className: "input-radio "+  (Data.checkout.paymentMethod == 'cash'?"checked":"")}, Data.messages.cash),
+                        m('div[id="method-credit-card"]',{className: "input-radio " +  (Data.checkout.paymentMethod == 'card'?"checked":"")}, Data.messages.creditCard),
 
-                        Data.paymentMethod == 'card'?[
+                        Data.checkout.paymentMethod == 'card'?[
                                 m('input[type="number"][placeholder="Card number"]'),
                                 m('input[type="text"][placeholder="Card owner"]'),
                                 m('input[type="month"][placeholder="MM/YY"]'),
@@ -195,8 +207,10 @@ var Views = {
             ]),
             m('div[id="checkout-bottom-block"]', [
                 m('div[id="checkout-bottom-checkout-btn"][class="bottom-panel-btn"]',[
-                    m('div', {className: productsCount?'active':'', onclick: function(){
-
+                    m('div', {className: active?'active':'', onclick: function(){
+                        if (this.className.indexOf('active')>-1) {
+                            Models.checkout(total);
+                        }
                     }}, [
                         Data.messages.checkoutBtn, total?[' (', total, ' ', Data.messages.kr, ')']:null
                     ])
@@ -213,36 +227,42 @@ var Views = {
             m('div[id="cart-page-content"]', Views.cartContent())
         ])
     },
-    cartContent: function(){
-        if (Data.cart && Data.cart[Data.currentRestaurant._id]) {
-            var cart = Data.cart[Data.currentRestaurant._id];
+    cartContent: function(cart){
+        if (Data.cart && Data.cart[Data.currentRestaurant._id] || cart) {
+            var restaurantTitle = Data.currentRestaurant.name, isCart = true;
+            if (!cart) {
+                cart = Data.cart[Data.currentRestaurant._id];
+            } else {
+                isCart = false;
+                restaurantTitle = Data.order.restaurantTitle;
+            }
             return [
-                m('div[class="sub-header"]', [m('span', Data.messages.restaurant), ' ', Data.currentRestaurant.name]),
+                m('div[class="sub-header"]', [m('span', Data.messages.restaurant), ' ', restaurantTitle]),
                 m('div[class="cart-items"]',
                     !cart.length?m('p', Data.messages.cartIsEmpty):T.map(cart, function(item, i){
                         return m('table[cellpadding="0"][cellspacing="0"][class="menu-item"]', [
                             m('tr', [
-                                m('td', {onclick: function(i){return function(e){
+                                m('td', isCart?{onclick: function(i){return function(e){
                                     Data.currentCartMeal = i;
                                     Data.savedStateMeal = T.clone(Data.cart[Data.currentRestaurant._id][i]);
                                     location.href = location.href+'/meal/'+i;
-                                }}(i)}, [
+                                }}(i)}:{}, [
                                     m('div[class="menu-item-name"]',[
                                         item.name,
-                                        (typeof(Data.cart[Data.currentRestaurant._id][i].variants[item.selectedVariant])!='undefined')?' ('+Data.cart[Data.currentRestaurant._id][i].variants[item.selectedVariant]+')':''
+                                        (typeof(item.variants[item.selectedVariant])!='undefined')?' ('+item.variants[item.selectedVariant]+')':''
                                     ])
                                 ]),
                                 m('td[rowspan="2"][class="cart-item-btns"]',[
-                                    m('input[type="number"][class="count-input"]]',{value:item.count, min:"1", max:"10", onchange:function(i){return function(e){
+                                    m('input[type="number"][class="count-input"]]',{disabled: !isCart, style: !isCart?'float:right':'',value:item.count, min:"1", max:"10", onchange:function(i){return function(e){
                                         var val = parseInt(e.target.value);
                                         if (!val) val = 1;
                                         if (val > 10) val = 10;
                                         Data.cart[Data.currentRestaurant._id][i].count = val;
                                         Data.cart[Data.currentRestaurant._id][i].totalPrice = val * Data.cart[Data.currentRestaurant._id][i].price;
 
-                                        window.localStorage.setItem("cart", JSON.stringify(Data.cart));
+                                        window.localStorage.setItem('bonapp-cart', JSON.stringify(Data.cart));
                                     }}(i)}),
-                                    m('div[class="remove-item-btn"]', {
+                                    isCart?m('div[class="remove-item-btn"]', {
                                         onclick:function(i){return function(){
                                             Data.modal.text = 'Are you sure want to remove this item?';
                                             Data.modal.rightButton.callback = function(){
@@ -253,7 +273,7 @@ var Views = {
                                         }}(i),
                                         style: {backgroundImage: 'url('+
                                     'img/remove-icon.png'
-                                    +')'}})
+                                    +')'}}):null
                                 ])
                             ]),
                             m('tr', [
@@ -272,9 +292,7 @@ var Views = {
             m('ul', [
                 Data.sidebarLinks.map(function (i) {
                     return m('li', [
-                        m('a[href="'+ i.href+'"]', [
-                            i.name
-                        ])
+                        m('a[href="'+ i.href+'"]', {onclick: function(){Actions.navigation.hideSidebar()}}, i.name)
                     ])
                 })
             ])
@@ -457,6 +475,25 @@ var Views = {
                 ])
             ])
         }
+    },
+    ordersPage: function(){
+        return m('div[id="orders-page-wrapper"]', [
+            m('div[id="orders-page-header"][class="header"]', [
+                m('div[class="toggle-sidebar-btn"]',{ onclick:Actions.navigation.showSidebar}),
+                m('div', Data.messages.currentOrder),
+                m('div[class="border-bottom"]')
+            ]),
+            Data.order?m('div[id="orders-page-content"]', [
+
+                m('div[class="sub-header"]', [Data.messages.currentOrder]),
+                m('div[class="inputs-section"]', [
+                    m('span', [Data.messages.waitingStatus])
+                ]),
+                Views.cartContent(Data.order.newCart)
+            ]):m('div[id="orders-page-content"]', [
+                m('div[class="sub-header"]', 'No orders')
+            ])
+        ])
     }
 };
 var Models = {
@@ -483,6 +520,7 @@ var Models = {
             yes: 'Yes',
             cartIsEmpty: 'Cart is empty',
             personalInfo: 'Personal info',
+            deliveryMethod: 'Delivery',
             name: 'Name',
             phone: 'Phone',
             delivery: 'Delivery (10kr)',
@@ -497,8 +535,10 @@ var Models = {
             preorderDateTime: 'Preorder date and time',
             preorderDate: 'Preorder date',
             preorderTime: 'Preorder time',
-            orderItems: 'Order items'
-
+            orderItems: 'Order items',
+            currentOrder: 'Current order',
+            status: 'Status',
+            waitingStatus: 'Your order has been sent to the restaurant. Waiting for the confirmation.'
         };
 
         Data.modal = {
@@ -514,7 +554,7 @@ var Models = {
             }
         };
         Data.sidebarLinks = [{name: 'Restaurants', href: '#/list'}, {name: 'My orders', href: '#/orders'}, {name: 'My account', href: '#/orders'}];
-        Data.cart = JSON.parse(window.localStorage.getItem("cart"));
+        Data.cart = JSON.parse(window.localStorage.getItem("bonapp-cart"));
         if (!Data.cart) {
             Data.cart = {};
         }
@@ -537,9 +577,14 @@ var Models = {
         Data.currentMeal = null;
         Data.currentCartMeal = 0;
         Data.savedStateMeal = {};
-        Date.paymentMethod = 'cash';
-        Data.deliveryMethod = 'pickup';
+        Data.checkout = {
+            paymentMethod: 'cash',
+            deliveryMethod: 'pickup',
+            name: localStorage.getItem('name'),
+            phone: localStorage.getItem('phone')
+        };
         this.initObservers();
+        Data.order = JSON.parse(localStorage.getItem('order'));
     },
     restaurants: {
         compareDistances: function(position){
@@ -613,6 +658,10 @@ var Models = {
                 }
             })
         });
+        Models.initOrderTracker();
+    },
+    initOrderTracker:function(){
+
     },
     initRestaurants: function(){
         var ref = Fb.fb.child('restaurants');
@@ -718,7 +767,7 @@ var Models = {
                 Data.cart[Data.currentRestaurant._id] = [];
             }
             Data.cart[Data.currentRestaurant._id].push(el);
-            window.localStorage.setItem("cart", JSON.stringify(Data.cart));
+            window.localStorage.setItem("bonapp-cart", JSON.stringify(Data.cart));
         },
         isInTheCart: function(_id){
             if (Data.cart) {
@@ -734,8 +783,45 @@ var Models = {
         },
         remove: function(i){
             T.removeFromArray(Data.cart[Data.currentRestaurant._id], i);
-            window.localStorage.setItem("cart", JSON.stringify(Data.cart));
+            window.localStorage.setItem("bonapp-cart", JSON.stringify(Data.cart));
         }
+    },
+    checkout: function(total){
+        var cart = [], el;
+        if (Data.cart[Data.currentRestaurant._id]) {
+            for (var i = 0; i < Data.cart[Data.currentRestaurant._id].length; i++) {
+                el = Data.cart[Data.currentRestaurant._id][i];
+                console.log(el)
+                cart.push({
+                    "name": el.name + ((typeof(el.variants[el.selectedVariant])!='undefined')?' ('+el.variants[el.selectedVariant]+')':''),
+                    "price": el.totalPrice,
+                    "restaurant": Data.currentRestaurant.key,
+                    "id": el._id
+                })
+            }
+        }
+        Data.order = {
+            id: Math.ceil(Math.random()*10000),
+            customerPhone: Data.checkout.phone,
+            customerName: Data.checkout.name,
+            discount: 0,
+            delivery: Data.checkout.deliveryMethod,
+            payment: Data.checkout.paymentMethod,
+            newCart: Data.cart[Data.currentRestaurant._id],
+            cart: cart,
+            restaurant: Data.currentRestaurant.key,
+            created_at: new Date().toUTCString(),
+            status: 'waiting',
+            restaurantTitle: Data.currentRestaurant.name,
+            total: total
+        };
+        var newRecord = Fb.fb.child('orders').push();
+        newRecord.setWithPriority(Data.order, Data.currentRestaurant.key, function(){
+            localStorage.removeItem('bonapp-cart');
+            Data.order.path = newRecord.toString();
+            localStorage.setItem('order', JSON.stringify(Data.order));
+            location.href = '#/orders';
+        });
     }
 };
 var Events = {};
@@ -776,6 +862,22 @@ var Actions = {
             /*setTimeout(function() {
                 T.hide("main-list");
             },400);*/
+        },
+        showOrders: function(){
+            T.async(function() {
+                T.showOverlay(110, 'main');
+                T.async(function () {
+                    T.removeClass('orders-page', 'right-side');
+                });
+            });
+        },
+        hideOrders: function(){
+            T.async(function() {
+                T.async(function() {
+                    T.addClass('orders-page','right-side');
+                });
+                T.hideOverlay('main');
+            });
         }
     },
     modal: {
@@ -1031,6 +1133,7 @@ var Pages = {
         m.module(T.byId('cart-page'), T.module(Views.cartPage));
         m.module(T.byId('checkout-page'), T.module(Views.checkoutPage));
         m.module(T.byId('modal'), T.module(Views.modal));
+        m.module(T.byId('orders-page'), T.module(Views.ordersPage));
 
         if (!App.map) {
             Actions.map.init();
@@ -1144,10 +1247,12 @@ var App = {
         m.route.mode = "hash";
         T.async(function(){
             Router.map("#/map").to(function(){
+                Actions.navigation.hideOrders();
                 Actions.restaurants.hideDetails();
                 Actions.navigation.showMap();
             });
             Router.map("#/list").to(function(){
+                Actions.navigation.hideOrders();
                 Actions.restaurants.hideDetails();
                 Actions.navigation.showRestaurantsList();
             });
@@ -1172,6 +1277,14 @@ var App = {
             };
             Router.map("#/restaurant/:id").to(preloadRestaurants);
 
+            Router.map("#/orders").to(function(){
+                Actions.checkout.hide();
+                Actions.cart.hide();
+                Actions.meals.hide();
+                Actions.restaurants.hideDetails();
+                Actions.navigation.showOrders();
+            });
+
             Router.map("#/restaurant/:id/cart").to(function(){
                 Actions.checkout.hide();
                 Actions.meals.hide();
@@ -1187,7 +1300,7 @@ var App = {
                 if (Object.keys(Data.restaurants).length) {
                     Actions.checkout.show();
                 } else {
-                //    setTimeout(Actions.checkout.show, 1000);
+                    setTimeout(Actions.checkout.show, 1000);
                 }
             });
 
