@@ -487,7 +487,7 @@ var Views = {
 
                 m('div[class="sub-header"]', [Data.messages.currentOrder]),
                 m('div[class="inputs-section"]', [
-                    m('span', [Data.messages.waitingStatus])
+                    m('span', [Data.order.statusMsg])
                 ]),
                 Views.cartContent(Data.order.newCart)
             ]):m('div[id="orders-page-content"]', [
@@ -583,8 +583,9 @@ var Models = {
             name: localStorage.getItem('name'),
             phone: localStorage.getItem('phone')
         };
-        this.initObservers();
         Data.order = JSON.parse(localStorage.getItem('order'));
+        Data.order.statusMsg = Data.messages.waitingStatus;
+        this.initObservers();
     },
     restaurants: {
         compareDistances: function(position){
@@ -661,7 +662,32 @@ var Models = {
         Models.initOrderTracker();
     },
     initOrderTracker:function(){
+        if (!Data.order) return false;
+        var order = Data.order;
+        var ref = new Firebase(order.path);
+        App.orderTracker = ref.on('child_changed', function (order) {
+            var message = '';
+            ref.once('value', function (order) {
+                order = order.val();
+                if (order.status == 'confirmed') {
+                    Data.order.statusMsg = 'Your order has been confirmed by the restaurant.'+((order.preorder_time)?'':' Preparation time is ' + order.preparationTime + ' minutes.');
+                } else {
+                    if (order.status == 'waiting') {
+                        Data.order.statusMsg = 'Your order has been sent to the restaurant. Waiting for the confirmation.';
+                    } else {
+                        Data.order.statusMsg = 'Your order has been '+order.status+' by the restaurant';
+                    }
 
+                    if (window.Notification && Notification.permission === "granted") {
+                        if (navigator.vibrate) {
+                            navigator.vibrate([300,200,300]);
+                        }
+                        var n = new Notification('Order status changed', {body: message});
+                    }
+                }
+                m.redraw();
+            });
+        });
     },
     initRestaurants: function(){
         var ref = Fb.fb.child('restaurants');
