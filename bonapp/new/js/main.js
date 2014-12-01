@@ -56,7 +56,7 @@ var Models = {
                 T.each(val, function(el, i){
                     el._id = i;
                     el.distance = 0;
-                    el.logo = T.getLogoUrl(el)
+                    el.logo = T.getLogoUrl(el);
                     if (typeof(el.lat)=='undefined' || !el.lat) {
                         el.lat = 0;
                         el.lon = 0;

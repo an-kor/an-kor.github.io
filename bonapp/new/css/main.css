@@ -154,7 +154,7 @@ div {
     transition: transform 0.3s;
 }
 
-#main .header {
+#cart-page .header, #checkout-page .header, #main .header {
     position: relative;
     width:100%;
     height:100.002px;
@@ -162,6 +162,10 @@ div {
     background-image: url('../img/header-bg.png');
     background-size: 86px 100px;
     text-align: center;
+    color:white;
+    line-height:100.002px;
+    font-weight: bold;
+    font-size: 30px;
 }
 #toggle-sidebar-btn{
     height:100px;
@@ -272,6 +276,11 @@ div {
     transform: translate3d(0, 100%, 0)  !important;
 }
 
+.top-side {
+    -webkit-transform: translate3d(0, -100%, 0) !important;
+    transform: translate3d(0, -100%, 0)  !important;
+}
+
 .page-center {
     -webkit-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
     -moz-box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
@@ -339,6 +348,8 @@ div {
 .main-map-restaurant-block table td, #main-list table td{
     white-space: nowrap;
 }
+.leaflet-marker-icon.active{
+}
 .restaurant-list-item-logo{
     width: 150px;
     height:170px;
@@ -361,7 +372,7 @@ div {
     color: #a2a2a2;
     width:80px;
     background-image: url(../img/location-marker.png);
-    background-position: 0 23px;
+    background-position: 0 50%;
     background-size: 21px 30px;
     background-repeat: no-repeat;
 }
@@ -405,7 +416,7 @@ div {
     z-index:200;
     background: #f8f8f8;
 }
-#details-header, #dish-header {
+#details-header, #meal-header {
     position: relative;
     width:100%;
     height:360.002px;
@@ -422,15 +433,15 @@ div {
     top: -252.002px;
 }
 #details-header-info.fixed {
-    height: 80px;
+    height: 78px;
     bottom: 15px;
 }
 #details-tabpanel.fixed {
     position: fixed;
-    top: 108px;
+    top: 108.002px;
 }
 
-#details-header .header-bg, #dish-header .header-bg {
+#details-header .header-bg, #meal-header .header-bg {
     position: absolute;
     top: 0;
     left:-2px;
@@ -535,7 +546,6 @@ div {
     -webkit-transition:  -webkit-transform 0.3s;
     transition: transform 0.3s;
     white-space: nowrap;
-
 }
 #cart-bottom-block > div {
     float:left;
@@ -576,14 +586,19 @@ div {
 
 .bottom-panel-btn div{
     height: 70px;
-    color: white;
+    color: #666;
     font-size:32px;
-    background-color: #aace63;
+    background-color: #f5f5f5;
     border-radius: 35px;
     line-height: 70px;
     margin-left:30px;
     margin-right:25px;
     margin-top:29px;
+}
+
+.bottom-panel-btn div.active{
+    color: white;
+    background-color: #aace63;
 }
 
 .bottom-panel-btn div.plain{
@@ -656,7 +671,7 @@ div {
 .menu-item-img{
     width: 130px;
     height:100%;
-    background-image: url(../img/dish-sm-icon.png);
+    background-image: url(../img/meal-sm-icon.png);
     background-repeat: no-repeat;
     background-position: 50% 50%;
     background-size: 80px 80px;
@@ -666,7 +681,7 @@ div {
     margin:0 auto;
     width: 66px;
     height: 66px;
-    background-image: url('../img/logos/dish.jpg');
+    background-image: url('../img/logos/meal.jpg');
     background-size: cover;
     border-radius: 33px;
 }
@@ -702,16 +717,16 @@ div {
     background-repeat: no-repeat;
     font-family: serif;
 }
-#dish {
-    z-index: 1300;
+#meal {
+    z-index: 500;
     display: none;
     -webkit-transform: translate3d(0, 0, 0);
 }
-#dish-header {
+#meal-header {
     background-image: url('../img/header-bg-white.png');
     background-color: #f5f5f5;
 }
-#dish-bottom-panel {
+#meal-bottom-panel {
     position: fixed;
     z-index: 5320;
     bottom: 0;
@@ -722,39 +737,40 @@ div {
     -webkit-transform: translate3d(0, 0, 0);
     transform: translate3d(0, 0, 0);
 }
-#dish-wrapper {
+#meal-wrapper {
     padding-bottom: 150px;
 }
-#dish-content{
+#meal-content{
     padding: 0 50px;
 }
-#dish-content h3 {
+#meal-content h3 {
     text-align: center;
 }
 
-#dish-content p {
+#meal-content p {
     font-family: serif;
 }
-#dish-content-info {
+#meal-content-info {
     width: 100%;
     height: 60px;
     text-align: center;
     line-height: 60px;
 }
-#dish-content-info-price{
+#meal-content-info-price{
+    white-space: nowrap;
     float:left;
-    min-width: 120px;
     height: 60px;
     padding-left:25px;
     color: #a2a2a2;
 }
-#dish-content-info-count{
+#meal-content-info-count{
+    white-space: nowrap;
     margin:0 auto;
     display:inline-block;
     height: 60px;
     padding-left:7px;
 }
-#dish-content-info-time{
+#meal-content-info-time{
     float:right;
     padding-left:25px;
     min-width: 120px;
@@ -763,16 +779,16 @@ div {
     background-image: url(../img/time-icon.png);
 }
 
-#dish-content-info-count div{
+#meal-content-info-count div{
     float:left;
 }
 
-#dish-content-info-count-plus, #dish-content-info-count-minus {
+#meal-content-info-count-plus, #meal-content-info-count-minus {
     font-size: 36px;
     padding:0 25px;
     cursor: pointer;
 }
-#dish-content-info-count-input {
+.count-input {
     height: 40px;
     border: 1.002px solid #ccc;
     border-radius: 25px;
@@ -783,7 +799,7 @@ div {
     line-height: 40px;
     box-shadow: inset 0px 0px 10px 0px rgba(0,0,0,0.1);
 }
-#dish-additives h4{
+#meal-additives h4{
     clear: both;
     text-align: center;
     background-image: url(../img/p-light.png);
@@ -792,54 +808,363 @@ div {
     background-repeat: repeat-x;
     margin:30px 0;
 }
-#dish-additives h4 span{
+#meal-additives h4 > span{
     background: white;
     padding: 0 20px;
 }
 
-.dish-additives-list{
+.meal-additives-list{
     padding: 0 50px;
     display: block;
-    float:left;
     width: 100%;
 }
 
-.dish-additives-list > div{
+.meal-additives-list > div{
     float:left;
     height: 55px;
     width:48%;
-    margin-bottom:20px;
+    margin-bottom: 20px;
+    padding-left: 50px;
     background-color: #f5f5f5;
     text-align: center;
     border-radius: 27px;
     line-height: 55px;
     font-family: serif;
-
     background-image: url(../img/btn-plus-icon.png);
     background-position: 20px 50%;
     background-size: 24px 24px;
     background-repeat: no-repeat;
 }
-.dish-additives-list > div.checked{
+.meal-additives-list > div.checked{
     color: white;
     background-color: #aace63;
     background-image: url(../img/btn-checked-icon.png);
 }
 
-.dish-additives-list.radio > div{
+.meal-additives-list.radio > div{
     background-image: url(../img/radio-plain-icon.png);
 }
-.dish-additives-list.radio > div.checked{
+
+.meal-additives-list.radio > div.checked{
     background-image: url(../img/radio-checked-icon.png);
 }
 
+.meal-additives-list > div span {
+    color: #a2a2a2;
+    font-weight: normal;
+    float:right;
+    padding-right:20px;
+}
 
-.dish-additives-list > div:nth-child(even){
+.meal-additives-list > div.checked span {
+    color: white;
+}
+
+.meal-additives-list > div:nth-child(even){
     margin-left:4%;
 }
-.dish-additives-list > div:last-child{
+.meal-additives-list > div:last-child{
     margin-bottom:40px;
 }
-#dish-bottom-panel .bottom-panel-btn{
+#meal-bottom-panel .bottom-panel-btn{
     max-width: none;
+}
+
+#cart-page {
+    z-index: 200;
+}
+#checkout-page {
+    z-index: 300;
+}
+#cart-page, #checkout-page{
+    background: #f8f8f8;
+}
+.cart-items .menu-item{
+    background: white;
+}
+.cart-items .menu-item:last-child{
+    border-bottom:none;
+}
+
+.cart-items {
+    padding: 0 20px;
+    background: white;
+}
+.cart-items > p {
+    text-align: center;
+    padding:40px;
+}
+.sub-header{
+    padding:20px;
+    font-size:24px;
+    font-weight:bold;
+    color:#000;
+    text-align: center;
+}
+.sub-header span{
+    color: #999999;
+}
+.cart-items .count-input{
+    float:left;
+    margin: 40px 0;
+}
+.cart-item-btns{
+    height: 100%;
+    width:200px;
+    vertical-align: middle;
+}
+.remove-item-btn{
+    width: 100px;
+    height: 100%;
+    float:left;
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    background-size: 50px 50px;
+    vertical-align: middle;
+}
+
+.inputs-section {
+    margin: 0 20px;
+    padding: 10px 20px;
+    background: white;
+    border-radius: 10px;
+    border: 1px solid #efefef;
+    box-sizing: border-box;
+}
+.inputs-section-inline {
+    padding: 0;
+    height: 80px;
+    overflow: hidden;
+}
+
+.inputs-section input, .input-radio, .input-radio-inline  {
+    box-sizing: border-box;
+    width:100%;
+    border-bottom: 1.002px solid #efefef;
+    height: 60px;
+    line-height: 60px;
+    margin-bottom:1px;
+}
+
+.input-radio {
+    color: #333;
+    padding-left: 50px;
+    background-image: url(../img/radio-off.png);
+    background-repeat: no-repeat;
+    background-position: 0 50%;
+    background-size: 30px 30px;
+    cursor: pointer;
+}
+
+.input-radio.checked{
+    background-image: url(../img/radio-on.png);
+}
+.inputs-section .input-radio:last-child {
+    border-bottom: none;
+}
+
+.inputs-section input:last-child {
+    border-bottom: none;
+}
+.input-radio-inline{
+    height: 80px;
+    padding-top: 10px;
+    width:33.3%;
+    text-align: center;
+    float:left;
+    border-bottom: none;
+    border-right: 1.002px solid #efefef;
+}
+
+.input-radio-inline.checked{
+    color: white;
+    background-color: #aace63;
+}
+
+.ns-box {
+    position: absolute;
+    top:0;
+    width:100%;
+    z-index:10000;
+    background: rgba(42,45,50,0.85);
+    padding: 30px;
+    line-height: 1.4;
+    color: rgba(250,251,255,0.95);
+    font-size: 90%;
+    -webkit-transition: -webkit-transform 0.3s;
+    transition: transform 0.3s;
+}
+
+.ns-box a {
+    color: inherit;
+    opacity: 0.7;
+    font-weight: 700;
+}
+
+.ns-box a:hover,
+.ns-box a:focus {
+    opacity: 1;
+}
+
+.ns-box p {
+    margin: 0;
+}
+
+.ns-close {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    overflow: hidden;
+    text-indent: 100%;
+    cursor: pointer;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.ns-close:hover,
+.ns-close:focus {
+    outline: none;
+}
+
+.ns-close::before,
+.ns-close::after {
+    content: '';
+    position: absolute;
+    width: 3px;
+    height: 60%;
+    top: 50%;
+    left: 50%;
+    background: #6e6e6e;
+}
+
+.ns-close:hover::before,
+.ns-close:hover::after {
+    background: #fff;
+}
+
+.ns-close::before {
+    -webkit-transform: translate(-50%,-50%) rotate(45deg);
+    transform: translate(-50%,-50%) rotate(45deg);
+}
+
+.ns-close::after {
+    -webkit-transform: translate(-50%,-50%) rotate(-45deg);
+    transform: translate(-50%,-50%) rotate(-45deg);
+}
+
+
+
+
+/* overlay styles, all needed */
+body.modal:after {
+    content: "";
+    display: block;
+    position: fixed; /* could also be absolute */
+    top: 0;
+    left: 0;
+    z-index:5000;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+/* just some content with arbitrary styles for explanation purposes */
+#modal {
+    width: 350px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    z-index: 5100;
+    margin-top: -100px;
+    margin-left: -175px;
+    text-align: center;
+    border-radius: 7px;
+    -webkit-transition: opacity 0.2s;
+    transition: opacity 0.2s;
+    color: #000;
+    opacity:0;
+    display: none;
+}
+.modal-inner {
+    padding: 15px;
+    border-bottom: 1px solid #b5b5b5;
+    border-radius: 7px 7px 0 0;
+    background: #e8e8e8;
+}
+
+.modal-title {
+    font-weight: bold;
+    font-size: 26px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+.modal-buttons {
+    height: 50px;
+    overflow: hidden;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+}
+.modal-button:first-child {
+    border-radius: 0 0 0 7px;
+}
+.modal-button:last-child {
+    border-right: none;
+    border-radius: 0 0 7px 0;
+}
+.modal-button {
+    width: 100%;
+    padding: 0 5px;
+    height: 50px;
+    font-size: 20px;
+    line-height: 50px;
+    text-align: center;
+    color: #007aff;
+    background: #e8e8e8;
+    display: block;
+    position: relative;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    cursor: pointer;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    border-right: 1px solid #b5b5b5;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+}
+body.modal #modal{
+    display: block;
+    opacity:1;
+}
+
+#checkout-bottom-block {
+    position: fixed;
+    z-index: 220;
+    width:100%;
+    height: 128px;
+    bottom: 0;
+    background: #fff;
+    border-top: 1.002px solid #e5e5e5;
+    -webkit-transition:  -webkit-transform 0.3s;
+    transition: transform 0.3s;
+    white-space: nowrap;
+}
+#checkout-bottom-block > div {
+    float:left;
+}
+#checkout-bottom-block .bottom-panel-btn {
+    width:100%;
+    max-width: none;
+}
+#checkout-page-wrapper{
+    padding-bottom:150px;
 }
