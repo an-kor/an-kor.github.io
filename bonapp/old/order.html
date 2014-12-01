@@ -1,0 +1,38 @@
+<div class="navbar">
+    <div class="navbar-inner" style="padding: 0;">
+        <div class="left sliding">
+            <a href="#" class="back link" style="padding: 0 8px;">
+                <i class="icon ion-ios7-arrow-left"></i>
+                <span>Back</span>
+            </a>
+        </div>
+        <div class="center sliding contacts-list-header">Current order</div>
+    </div>
+</div>
+<div class="pages">
+    <div data-page="order" class="page">
+
+        <div class="toolbar" style="height: 60px;">
+            <div class="toolbar-inner">
+                <a href="#" style="width: 25%;">
+                    <div style="font-size: 14px; color:#333;">Products</div>
+                    <div class="cartNumber">0</div>
+                </a>
+                <a href="#"  style="width: 25%;">
+                    <div style="font-size: 14px; color:#333;">Total</div>
+                    <span class="cartPrice">0</span>&nbsp;KR
+                </a>
+
+                <a href="#" class="button active"  style="width: 50%;" onclick="if (App.checkCart()) mainView.loadPage('checkout.html')">TILL KASSAN</a>
+            </div>
+        </div>
+        <div class="page-content">
+                <div class="list-block">
+                    <div class="list-group">
+                    <ul style="font-size:14px;" id="cart-container">
+                    </ul>
+                    </div>
+                </div>
+        </div>
+    </div>
+</div>

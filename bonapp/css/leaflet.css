@@ -195,12 +195,6 @@
 	}
 
 
-/* general typography */
-.leaflet-container {
-	font: 12px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
-	}
-
-
 /* general toolbar styles */
 
 .leaflet-bar {
@@ -475,3 +469,9 @@
 	background: #fff;
 	border: 1px solid #666;
 	}
+.leaflet-control-attribution{
+    display: none;
+}
+.leaflet-top, .leaflet-bottom {
+z-index:10;
+}
