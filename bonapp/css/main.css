@@ -465,6 +465,7 @@ div {
     background-repeat: no-repeat;
     -webkit-transition:  -webkit-transform 0.2s;
     transition: transform 0.2s;
+    opacity: 0.9;
 }
 #details-tabpanel {
     z-index: 210;
@@ -945,7 +946,27 @@ div {
     line-height: 60px;
     margin-bottom:1px;
 }
+.input-date {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.input-date label {
+    width:100px;
+}
+.input-date input {
+    -webkit-flex: 1;
+    flex: 1;
+}
 
+
+.input-date label {
+    color: #aaa;
+
+}
 .input-radio {
     color: #333;
     padding-left: 50px;
@@ -974,6 +995,10 @@ div {
     float:left;
     border-bottom: none;
     border-right: 1.002px solid #efefef;
+}
+
+#delivery-delivery{
+    border-right: none;
 }
 
 .input-radio-inline.checked{

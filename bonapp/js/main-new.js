@@ -195,10 +195,13 @@ var Views = {
                         m('div[id="method-credit-card"]',{className: "input-radio " +  (Data.checkout.paymentMethod == 'card'?"checked":"")}, Data.messages.creditCard),
 
                         Data.checkout.paymentMethod == 'card'?[
-                                m('input[type="number"][placeholder="Card number"]'),
-                                m('input[type="text"][placeholder="Card owner"]'),
-                                m('input[type="month"][placeholder="MM/YY"]'),
-                                m('input[type="number"][placeholder="CVV"]')
+                            m('input[type="number"][placeholder="Card number"]'),
+                            m('input[type="text"][placeholder="Card owner"]'),
+                            m('div[class="input-date"]',[
+                                m('label[for="card-date"]', "MM/YY"),
+                                m('input[type="month"][id="card-date"]')
+                            ]),
+                            m('input[type="number"][placeholder="CVV"]')
                         ]:null
                     ]
                 ]),
@@ -264,6 +267,8 @@ var Views = {
                                     }}(i)}),
                                     isCart?m('div[class="remove-item-btn"]', {
                                         onclick:function(i){return function(){
+                                            Data.modal.leftButton.text = Data.messages.data.no;
+                                            Data.modal.rightButton.text = Data.messages.data.yes;
                                             Data.modal.text = 'Are you sure want to remove this item?';
                                             Data.modal.rightButton.callback = function(){
                                                 Models.cart.remove(i);
@@ -483,7 +488,7 @@ var Views = {
                 m('div', Data.messages.currentOrder),
                 m('div[class="border-bottom"]')
             ]),
-            Data.order?m('div[id="orders-page-content"]', [
+            Data.order.path?m('div[id="orders-page-content"]', [
 
                 m('div[class="sub-header"]', [Data.messages.currentOrder]),
                 m('div[class="inputs-section"]', [
@@ -518,12 +523,13 @@ var Models = {
             save:'Save',
             no: 'No',
             yes: 'Yes',
+            agree: 'Agree',
             cartIsEmpty: 'Cart is empty',
             personalInfo: 'Personal info',
             deliveryMethod: 'Delivery',
             name: 'Name',
             phone: 'Phone',
-            delivery: 'Delivery (10kr)',
+            delivery: 'Delivery',
             pickup: 'Pick up',
             seating: 'Seating',
             paymentMethod: 'Payment method',
@@ -584,7 +590,9 @@ var Models = {
             phone: localStorage.getItem('phone')
         };
         Data.order = JSON.parse(localStorage.getItem('order'));
-        Data.order.statusMsg = Data.messages.waitingStatus;
+        if (!Data.order) {
+            Data.order = {};
+        }
         this.initObservers();
     },
     restaurants: {
@@ -662,31 +670,64 @@ var Models = {
         Models.initOrderTracker();
     },
     initOrderTracker:function(){
-        if (!Data.order) return false;
+        if (!Data.order.path) return false;
         var order = Data.order;
         var ref = new Firebase(order.path);
+
+        App.orderTracker = ref.once('value', function (order) {
+            order = order.val();
+            if (order.status == 'confirmed') {
+                Data.order.statusMsg = 'Your order has been confirmed by the restaurant.'+((order.preorder_time)?'':' Preparation time is ' + order.preparationTime + ' minutes.');
+            } else {
+                if (order.status == 'waiting') {
+                    Data.order.statusMsg = 'Your order has been sent to the restaurant. Waiting for the confirmation.';
+                } else {
+                    Data.order.statusMsg = 'Your order has been ' + order.status + ' by the restaurant';
+                }
+            }
+        });
         App.orderTracker = ref.on('child_changed', function (order) {
             var message = '';
             ref.once('value', function (order) {
                 order = order.val();
                 if (order.status == 'confirmed') {
+
                     Data.order.statusMsg = 'Your order has been confirmed by the restaurant.'+((order.preorder_time)?'':' Preparation time is ' + order.preparationTime + ' minutes.');
+
+                    Data.modal.text = Data.order.statusMsg + ' Do you agree this or would like to cancel the order?';
+                    Data.modal.leftButton.callback = function(){
+                        var ref = new Firebase(Data.order.path);
+                        ref.update({
+                            status: 'cancelled'
+                        }, function(){
+                            localStorage.removeItem('order');
+                            Data.order = {};
+                            Actions.modal.hide();
+                        });
+                    };
+                    Data.modal.leftButton.text = Data.messages.cancel;
+                    Data.modal.rightButton.text = Data.messages.agree;
+                    Actions.modal.show();
                 } else {
                     if (order.status == 'waiting') {
                         Data.order.statusMsg = 'Your order has been sent to the restaurant. Waiting for the confirmation.';
                     } else {
-                        Data.order.statusMsg = 'Your order has been '+order.status+' by the restaurant';
+                        Data.order.statusMsg = 'Your order has been ' + order.status;
                     }
 
-                    if (window.Notification && Notification.permission === "granted") {
-                        if (navigator.vibrate) {
-                            navigator.vibrate([300,200,300]);
-                        }
-                        var n = new Notification('Order status changed', {body: message});
-                    }
+                    Actions.notification.show(Data.order.statusMsg);
                 }
+
+                if (window.Notification && Notification.permission === "granted") {
+                    if (navigator.vibrate) {
+                        navigator.vibrate([300,200,300]);
+                    }
+                    var n = new Notification('Order status changed', {body: Data.order.statusMsg});
+                }
+
                 m.redraw();
             });
+
         });
     },
     initRestaurants: function(){
@@ -841,12 +882,14 @@ var Models = {
             restaurantTitle: Data.currentRestaurant.name,
             total: total
         };
+        Data.order.statusMsg = 'Your order has been sent to the restaurant. Waiting for the confirmation.';
         var newRecord = Fb.fb.child('orders').push();
         newRecord.setWithPriority(Data.order, Data.currentRestaurant.key, function(){
             localStorage.removeItem('bonapp-cart');
             Data.order.path = newRecord.toString();
             localStorage.setItem('order', JSON.stringify(Data.order));
             location.href = '#/orders';
+            m.redraw();
         });
     }
 };
@@ -904,6 +947,16 @@ var Actions = {
                 });
                 T.hideOverlay('main');
             });
+        }
+    },
+    notification: {
+        show: function(msg){
+            T.byId('notification-block-text').innerHTML = msg;
+            T.removeClass('notification-block', 'top-side');
+            T.async(Actions.notification.hide, 3000);
+        },
+        hide: function(){
+            T.addClass('notification-block', 'top-side')
         }
     },
     modal: {
@@ -1372,6 +1425,34 @@ var App = {
                     }
                 }
             });
+
+            Router.map("#/:filter").to(function route(){
+                var filter = this.params.filter;
+                if (Object.keys(Data.restaurants).length) {
+                    if (filter) {
+                        for (i in Data.restaurants) {
+                            if (Data.restaurants[i].name.toLowerCase().indexOf(filter) == -1) {
+                                if (App.map.markers[i]) {
+                                    App.map.removeLayer(App.map.markers[i])
+                                }
+                                delete Data.restaurants[i];
+                            }
+                        }
+                        Data.restaurants = T.clone(Data.restaurants);
+                        T.async(function(){
+                            Actions.restaurants.select(Object.keys(Data.restaurants)[0]);
+                        });
+                        location.href='#/map';
+
+                    }
+                } else {
+                    var self = this;
+                    T.async(function(){
+                        route.call(self);
+                    }, 200);
+                }
+            });
+
             Router.root("#/map");
             Router.listen();
         }, 200);
